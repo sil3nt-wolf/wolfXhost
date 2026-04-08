@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>TalkDrove Host Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Light Theme Colors */
+            --bg-light: #f4f6f9;
+            --bg-card-light: #ffffff;
+            --text-primary-light: #2c3e50;
+            --text-secondary-light: #7f8c8d;
+            --primary-light: #3498db;
+            --primary-hover-light: #2980b9;
+            --border-light: #e0e6ed;
+
+            /* Dark Theme Colors */
+            --bg-dark: #121826;
+            --bg-card-dark: #1e2433;
+            --text-primary-dark: #e6e6e6;
+            --text-secondary-dark: #a0aec0;
+            --primary-dark: #4a90e2;
+            --primary-hover-dark: #5499c7;
+            --border-dark: #2d3748;
+
+            /* Global Transitions */
+            --transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        /* Theme Switch */
+        body {
+            --bg: var(--bg-light);
+            --bg-card: var(--bg-card-light);
+            --text-primary: var(--text-primary-light);
+            --text-secondary: var(--text-secondary-light);
+            --primary: var(--primary-light);
+            --primary-hover: var(--primary-hover-light);
+            --border: var(--border-light);
+        }
+
+        body.dark-theme {
+            --bg: var(--bg-dark);
+            --bg-card: var(--bg-card-dark);
+            --text-primary: var(--text-primary-dark);
+            --text-secondary: var(--text-secondary-dark);
+            --primary: var(--primary-dark);
+            --primary-hover: var(--primary-hover-dark);
+            --border: var(--border-dark);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: var(--transition);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(135deg, var(--primary), color-mix(in srgb, var(--primary) 70%, black));
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            color: white;
+            transition: var(--transition);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 40px;
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-align: center;
+            justify-content: center;
+        }
+
+        .nav-links {
+            list-style: none;
+            flex-grow: 1;
+        }
+
+        .nav-links li {
+            margin-bottom: 15px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: rgba(255,255,255,0.8);
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            border-radius: 10px;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            background-color: rgba(255,255,255,0.2);
+            color: white;
+            transform: translateX(10px);
+        }
+
+        .nav-links a i {
+            margin-right: 15px;
+            font-size: 1.3rem;
+            opacity: 0.8;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            padding: 30px;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: var(--transition);
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(180deg);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .dashboard-card {
+            background: var(--bg-card);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            text-align: center;
+            transition: var(--transition);
+            cursor: pointer;
+            border: 1px solid var(--border);
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+        }
+
+        .dashboard-card i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        .dashboard-card h3 {
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+
+        .dashboard-card p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                flex-direction: row;
+                align-items: center;
+                padding: 15px;
+            }
+
+            .logo {
+                margin-bottom: 0;
+                margin-right: 20px;
+                font-size: 1.5rem;
+            }
+
+            .nav-links {
+                display: flex;
+                flex-grow: 1;
+                justify-content: space-around;
+            }
+
+            .nav-links li {
+                margin-bottom: 0;
+            }
+
+            .nav-links a {
+                flex-direction: column;
+                align-items: center;
+                padding: 10px;
+                font-size: 0.8rem;
+            }
+
+            .nav-links a i {
+                margin-right: 0;
+                margin-bottom: 5px;
+            }
+
+            .main-content {
+                padding: 15px;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .theme-toggle {
+                top: 10px;
+                right: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+    
+
+        <main class="main-content">
+            <button class="theme-toggle" aria-label="Toggle Theme">🌓</button>
+            <div class="dashboard-grid">
+                <div class="dashboard-card" data-href="/dashboard">
+                    <i>📊</i>
+                    <h3>Dashboard</h3>
+                    <p>Overview of your hosting performance</p>
+                </div>
+                <div class="dashboard-card" data-href="/dashboard/select-bot">
+                    <i>🤖</i>
+                    <h3>Select Bot</h3>
+                    <p>Choose and deploy your whatsapp bot</p>
+                </div>
+                <div class="dashboard-card" data-href="/dashboard/wallet">
+                    <i>💰</i>
+                    <h3>Wallet</h3>
+                    <p>Manage coins and transactions</p>
+                </div>
+                <div class="dashboard-card" data-href="/dashboard/account-settings">
+                    <i>⚙️</i>
+                    <h3>Settings</h3>
+                    <p>Chnage password, username and more.</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Theme Toggle Functionality
+        const themeToggle = document.querySelector('.theme-toggle');
+        const body = document.body;
+
+        // Check for saved theme preference or system preference
+        const savedTheme = localStorage.getItem('talkdrove-theme');
+        if (savedTheme) {
+            body.classList.toggle('dark-theme', savedTheme === 'dark');
+        } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            body.classList.add('dark-theme');
+        }
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-theme');
+            
+            // Save theme preference
+            const theme = body.classList.contains('dark-theme') ? 'dark' : 'light';
+            localStorage.setItem('talkdrove-theme', theme);
+        });
+
+        // Card Click Handling
+        document.querySelectorAll('.dashboard-card').forEach(card => {
+            card.addEventListener('click', function() {
+                window.location.href = this.getAttribute('data-href');
+            });
+        });
+    </script>
+</body>
+</html>

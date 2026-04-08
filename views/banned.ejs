@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Suspended | || H.TD</title>
+        <link rel="stylesheet" href="/styles/main.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-hover: #3a53d0;
+            --secondary: #e6f0ff;
+            --accent: #3f37c9;
+            --neutral: #333333;
+            --base-100: #ffffff;
+            --base-200: #f8fafc;
+            --base-300: #f1f5f9;
+            --base-hamza: #4895ef;
+            --loader: #f8fafc;
+            --success: #4ade80;
+            --error: #f87171;
+            --warning: #fbbf24;
+            --loaderText: #1e293b;
+            --text-primary: #333333;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+        }
+
+        [data-theme="dark"] {
+            --primary: #4361ee;
+            --primary-hover: #3a53d0;
+            --secondary: #1e293b;
+            --accent: #3f37c9;
+            --neutral: #f8fafc;
+            --base-100: #0f172a;
+            --base-200: #1e293b;
+            --base-300: #334155;
+            --base-hamza: #1e293b;
+            --loader: #0f172a;
+            --loaderText: #f8fafc;
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+            --border-color: #334155;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--base-200);
+            min-height: 100vh;
+            color: var(--text-primary);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Enhanced Header Styles */
+        .header {
+            background-color: var(--base-100);
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Enhanced Banned Container Styles */
+        .banned-container {
+            background-color: var(--base-100);
+            border-radius: 16px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+                        0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            padding: 3rem;
+            max-width: 600px;
+            width: 90%;
+            margin: 4rem auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .banned-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--error), var(--warning));
+        }
+
+        .suspended-badge {
+            background-color: var(--error);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 1.5rem;
+        }
+
+        .banned-icon {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 2rem;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .banned-icon i {
+            font-size: 4rem;
+            color: var(--error);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .appeal-section {
+            background-color: var(--base-300);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .appeal-form {
+            margin-top: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background-color: var(--base-100);
+            color: var(--text-primary);
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .status-timeline {
+            margin: 2rem 0;
+            padding: 1rem;
+            border-left: 2px solid var(--error);
+        }
+
+        .timeline-item {
+            margin-bottom: 1rem;
+            padding-left: 1rem;
+            position: relative;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -1.4rem;
+            top: 0.5rem;
+            width: 0.75rem;
+            height: 0.75rem;
+            background-color: var(--error);
+            border-radius: 50%;
+        }
+
+        .support-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            justify-content: center;
+        }
+
+        .support-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: transform 0.2s;
+        }
+
+        .support-link:hover {
+            transform: translateY(-2px);
+        }
+
+        .support-link.email {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .support-link.docs {
+            background-color: var(--secondary);
+            color: var(--primary);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 640px) {
+            .banned-container {
+                padding: 2rem;
+                margin: 2rem auto;
+            }
+
+            .support-links {
+                flex-direction: column;
+            }
+
+            .support-link {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+        .appeal-form {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background-color: var(--base-300);
+    border-radius: 8px;
+}
+
+.appeal-form h2 {
+    color: var(--text-primary);
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.appeal-form-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group label {
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.form-group textarea {
+    padding: 0.75rem;
+    border: 1px solid var(--base-300);
+    border-radius: 6px;
+    background-color: var(--base-100);
+    color: var(--text-primary);
+    min-height: 100px;
+    resize: vertical;
+}
+
+.appeal-btn {
+    margin-top: 1rem;
+}
+
+.appeal-status {
+    margin-top: 1rem;
+    padding: 1rem;
+    border-radius: 6px;
+    display: none;
+}
+
+.appeal-status.success {
+    display: block;
+    background-color: var(--success);
+    color: var(--base-100);
+}
+
+.appeal-status.error {
+    display: block;
+    background-color: var(--error);
+    color: var(--base-100);
+}
+    </style>
+</head>
+<body>
+    <header class="header">
+        <header class="header">
+            <div class="header-content">
+                <h1><a class="logo" href="/dashboard">Host.TalkDrove</a></h1>            <nav class="nav-controls">
+                   
+                    <button id="deployBotBtn" class="btn btn-primary" onclick="window.location.href='/dashboard/new-bot'">
+                        <i class="fas fa-code"></i>
+                        <span>Developor section</span>
+                    </button>
+                    <button id="themeToggle" class="btn btn-secondary">
+                        <i class="fas fa-adjust"></i>
+                    </button>
+            
+                    <div class="profile-container">
+                        <img src="https://cdn.talkdrove.com/host/Images/profile.webp" alt="Profile" class="profile-pic" id="profileBtn">
+                        <div class="dropdown" id="profileDropdown">
+                            <a href="/dashboard/my-bots" class="dropdown-item">
+                                <i class="fas fa-robot"></i>
+                                <span>My Bots</span>
+                            </a>
+                            <a href="/dashboard/invite" class="dropdown-item">
+                                <i class="fas fa-share"></i>
+                                <span>Invite</span>
+                            </a>
+                            <a href="/dashboard/wallet" class="dropdown-item">
+                                <i class="fas fa-wallet"></i>
+                                <span>Wallet</span>
+                            </a>
+                            <a href="/dashboard/account-settings" class="dropdown-item">
+                                <i class="fas fa-cog"></i>
+                                <span>Settings</span>
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="/logout" class="dropdown-item" id="logoutBtn">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span>Logout</span>
+                            </a>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </header>
+        <div class="banned-container">
+            <span class="suspended-badge">Account Suspended</span>
+            
+            <div class="banned-icon">
+                <i class="fas fa-ban"></i>
+            </div>
+            
+            <h1 style="color: var(--error); font-size: 2rem; margin-bottom: 1rem;">Account Access Restricted</h1>
+            
+            <p class="description" style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+                Your account has been temporarily suspended due to a violation of our Terms of Service. This restriction will remain in place until the issue is resolved.
+            </p>
+    
+            <div class="status-timeline">
+                <div class="timeline-item">
+                    <strong>Account Suspended</strong>
+                    <p>Your account has been restricted due to suspicious activity</p>
+                </div>
+                <div class="timeline-item">
+                    <strong>Review in Progress</strong>
+                    <p>Our team is reviewing your account activity</p>
+                </div>
+            </div>
+
+            <!-- Add this inside the banned-container div, before the contact-support div -->
+            <div class="appeal-form">
+                <h2>Submit an Appeal</h2>
+                <form id="appealForm" class="appeal-form-content">
+                    <div class="form-group">
+                        <label for="appealReason">Reason for Appeal</label>
+                        <textarea 
+                            id="appealReason" 
+                            name="appealReason" 
+                            required 
+                            placeholder="Please explain why your account should be unbanned..."
+                        ></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="additionalInfo">Additional Information</label>
+                        <textarea 
+                            id="additionalInfo" 
+                            name="additionalInfo" 
+                            placeholder="Provide any additional context or evidence..."
+                        ></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary appeal-btn">
+                        <i class="fas fa-paper-plane"></i> Submit Appeal
+                    </button>
+                </form>
+                <div id="appealStatus" class="appeal-status"></div>
+            </div>
+    
+            <div class="support-links">
+                <a href="mailto:support@talkdrove.com" class="support-link email">
+                    <i class="fas fa-envelope"></i>
+                    Contact Support
+                </a>
+                <a href="/help/suspended-accounts" class="support-link docs">
+                    <i class="fas fa-book"></i>
+                    Learn More
+                </a>
+            </div>
+        </div>
+<script>
+// appeal.js
+document.getElementById('appealForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const appealData = {
+        reason: document.getElementById('appealReason').value,
+        additionalInfo: document.getElementById('additionalInfo').value,
+    };
+
+    try {
+        const response = await fetch('/api/appeals/submit', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(appealData)
+        });
+
+        const data = await response.json();
+        
+        const statusDiv = document.getElementById('appealStatus');
+        if (response.ok) {
+            statusDiv.textContent = 'Appeal submitted successfully. We will review it shortly.';
+            statusDiv.className = 'appeal-status success';
+            document.getElementById('appealForm').reset();
+        } else {
+            statusDiv.textContent = data.message || 'Failed to submit appeal. Please try again.';
+            statusDiv.className = 'appeal-status error';
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        const statusDiv = document.getElementById('appealStatus');
+        statusDiv.textContent = 'An error occurred. Please try again later.';
+        statusDiv.className = 'appeal-status error';
+    }
+});
+</script>    
+
+<script src="/js/main.js"></script>    
+</body>
+</html>

@@ -1,0 +1,746 @@
+
+/* Empty state styling */
+.empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    background-color: var(--base-100);
+    border-radius: 1rem;
+    border: 1px solid rgba(229, 231, 235, 0.2);
+}
+
+.empty-state h3 {
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+}
+
+.empty-state p {
+    margin-bottom: 2rem;
+    color: var(--neutral);
+}
+
+
+
+
+.error,
+.success {
+    position: fixed;
+    top: 1.5rem;
+    right: 1.5rem;
+    padding: 1rem 1.5rem;
+    border-radius: 0.5rem;
+    color: white;
+    font-weight: 500;
+    z-index: 100;
+    animation: slideIn 0.3s ease;
+}
+
+.error {
+    background-color: var(--error);
+    display: none;
+}
+
+.success {
+    background-color: var(--success);
+    display: none;
+}
+
+
+.loader {
+    border: 3px solid var(--base-300);
+    border-top: 3px solid var(--primary);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@media (max-width: 768px) {
+    
+
+    #userApps {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+
+/* search and etc */
+.dashboard-controls {
+    background-color: var(--base-100);
+
+    border-radius: 1rem;
+    padding: 1.5rem;
+    border: 1px solid rgba(229, 231, 235, 0.2);
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.search-filter-container {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.search-container {
+    flex: 1;
+    min-width: 200px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--base-300);
+    background-color: var(--base-200);
+    color: var(--neutral);
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.1);
+}
+
+.filter-container {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--base-300);
+    background-color: var(--base-200);
+    color: var(--neutral);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.filter-btn.active {
+    background-color: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+.filter-btn:hover {
+    background-color: var(--base-300);
+}
+
+.filter-btn.active:hover {
+    background-color: var(--primary-hover);
+}
+
+.dashboard-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background-color: var(--base-100);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    border: 1px solid rgba(229, 231, 235, 0.2);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.stat-title {
+    font-size: 0.9rem;
+    color: var(--neutral);
+    opacity: 0.8;
+    margin-bottom: 0.5rem;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--neutral);
+}
+
+
+/* New Feature: Quick Actions Menu */
+.quick-actions {
+    position: fixed;
+    bottom: 5rem;
+    right: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    z-index: 60;
+}
+
+.quick-action-btn {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.quick-action-btn:hover {
+    transform: scale(1.1);
+    background-color: var(--primary-hover);
+}
+
+
+/* New Feature: Bot Statistics */
+.bot-stats {
+    background-color: var(--base-100);
+    border-radius: 1rem;
+    padding: 1rem;
+    margin: 1rem 0;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.stat-item {
+    flex: 1;
+    min-width: 150px;
+    text-align: center;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: var(--neutral);
+    opacity: 0.8;
+}
+
+
+/* Pickked from js */
+#userApps {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    gap: 2rem;
+
+}
+
+.dashboard-content {
+    flex-grow: 1;
+}
+
+.apps-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.app-card {
+    flex: 1;
+    min-width: 100px;
+    max-width: calc(33.333% - 1rem);
+    background: var(--base-100);
+    border: 1px solid rgba(229, 231, 235, 0.2);
+    border-radius: 1rem;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.app-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+        0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+
+.pagination-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 1rem 0;
+    background: var(--base-100);
+    border-top: 1px solid rgba(229, 231, 235, 0.1);
+    margin-top: auto;
+}
+
+.pagination {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    background: var(--base-200);
+    border-radius: 0.75rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.pagination-btn {
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--base-300);
+    background: var(--base-100);
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+}
+
+.pagination-btn:hover:not(.disabled) {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+.pagination-btn.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+.pagination-btn.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .app-card {
+        max-width: calc(50% - 1rem);
+    }
+}
+
+@media (max-width: 768px) {
+    .app-card {
+        max-width: 100%;
+    }
+
+    .app-item {
+        padding: 1rem;
+    }
+
+    .app-content {
+        flex-direction: row;
+    }
+
+    .pagination {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .pagination-btn {
+        padding: 0.375rem 0.75rem;
+        min-width: 36px;
+    }
+}
+
+
+/* // old css  */
+
+.no-results {
+    text-align: center;
+    padding: 2rem;
+    background-color: var(--base-100);
+    border-radius: 1rem;
+    border: 1px solid rgba(229, 231, 235, 0.2);
+}
+
+.bots-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.app-item {
+    background-color: var(--base-100);
+    border-radius: 1rem;
+    padding: 3.3rem;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    border: 1px solid rgba(229, 231, 235, 0.2);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.app-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex: 1;
+}
+
+.app-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background-color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.app-details {
+    flex: 1;
+}
+
+.app-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 0.25rem 0;
+}
+
+.app-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 0.9rem;
+    color: var(--neutral);
+    opacity: 0.8;
+}
+
+.app-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.status-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.status-green {
+    background-color: rgba(74, 222, 128, 0.1);
+    color: #4ade80;
+}
+
+.status-red {
+    background-color: rgba(248, 113, 113, 0.1);
+    color: #f87171;
+}
+
+.status-blue {
+    background-color: rgba(67, 97, 238, 0.1);
+    color: var(--primary);
+}
+
+/* Updated Pagination Styles */
+.pagination-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: var(--base-100);
+    padding: 1rem;
+    box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1);
+    z-index: 50;
+    display: flex;
+    justify-content: center;
+}
+
+.pagination {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: center;
+    padding: 0 1rem;
+}
+
+.pagination-btn {
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--base-300);
+    background-color: var(--base-200);
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: var(--pagination-text);
+}
+
+.pagination-btn.active {
+    background-color: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+.pagination-ellipsis {
+    padding: 0.5rem;
+    color: var(--neutral);
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .app-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .app-info {
+        width: 100%;
+    }
+
+    .app-actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+
+    .app-meta {
+        flex-wrap: wrap;
+    }
+
+    .pagination-container {
+        bottom: 0;
+        border-radius: 1rem 1rem 0 0;
+    }
+}
+
+
+
+.app-card.selected {
+    background-color: var(--primary-light);
+    border: 2px solid var(--primary);
+}
+
+.selection-checkbox {
+    margin-right: 1rem;
+}
+
+.selection-controls-container {
+    margin-bottom: 1rem;
+}
+
+.selection-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.5rem 1rem;
+    background-color: var(--background);
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.selected-count {
+    font-weight: 600;
+    color: var(--primary);
+}
+
+/* ////////////////////////////// */
+/* Action Button */
+.app-actions .action-btn {
+    background: var(--base-200);
+    /* Light background for visibility */
+    position: absolute;
+    bottom: 50px;
+    right: 40px;
+    color: var(--text-primary, #333);
+    /* Contrasting text color */
+    width: 40px;
+    /* Uniform button size */
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    /* Circular button */
+    display: flex;
+    /* align-items: center; */
+    /* justify-content: center; */
+    cursor: pointer;
+    /* transition: background-color 0.2s ease, transform 0.2s ease; */
+    /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); */
+    /* Subtle shadow for depth */
+    /* visibility: hidden; */
+}
+
+
+
+/* Dropdown Container */
+.app-actions .dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* Dropdown Content */
+.app-actions .dropdown-content {
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    overflow: auto;
+    /* margin-bottom: 200px; */
+    /* right: 0; */
+    min-width: 100px;
+    /* Ensure enough width for content */
+    padding: 0.5rem;
+    /* background-color: var(--base-100, #fff); */
+    /* Light dropdown background */
+    border-radius: 8px;
+    /* Rounded corners */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    /* Shadow for depth */
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    /* Stack buttons vertically */
+    transition: visibility 0s linear 0.2s, opacity 0.2s ease;
+    overflow: auto;
+}
+
+/* Show dropdown on hover and when .show class is present */
+.app-actions .dropdown:hover .dropdown-content,
+.app-actions .dropdown.show .dropdown-content {
+    visibility: visible;
+    opacity: 1;
+    transition-delay: 0s;
+}
+
+/* Dropdown Items */
+.app-actions .dropdown-content button {
+    /* width: 100%; */
+    
+    /* padding: 0.75rem 1rem; */
+    text-align: center;
+    background: var(--base-200, #f7f7f7);
+    /* Subtle background for visibility */
+    color: var(--text-primary, #333);
+    /* Readable text color */
+    font-size: 14px;
+    font-weight: 600;
+    /* Emphasize text */
+    border: none;
+    /* No border */
+    /* border-radius: 6px; */
+    /* Rounded buttons */
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+/* Hover Effect for Dropdown Items */
+.app-actions .dropdown-content button:hover {
+    background-color: var(--primary, #3b82f6);
+    /* Accent hover background */
+    
+    color: white;
+    /* Inverted text for hover */
+    transform: scale(1.05);
+    /* Slight scale for feedback */
+}
+
+/* Selected App Card */
+.app-card.selected {
+    background-color: var(--selection-bg, rgba(59, 130, 246, 0.1));
+    /* Highlight background */
+    border: 2px solid var(--selection-border, #3b82f6);
+    /* Accent border */
+    border-radius: 6px;
+    /* padding: 1rem; */
+    /* Add spacing for better visibility */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    /* Shadow for focus */
+}
+
+/* Multi-Delete Controls */
+.multi-delete-controls {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1rem;
+    background-color: var(--base-100, #fff);
+    /* Bright background for clarity */
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    /* Shadow for emphasis */
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    /* Space between buttons */
+    z-index: 1000;
+}
+
+/* Danger Button */
+.btn-danger {
+    background-color: #dc2626;
+    /* Strong red */
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    /* Emphasized text */
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.btn-danger:hover {
+    background-color: #b91c1c;
+    /* Darker hover red */
+    transform: scale(1.05);
+    /* Slight scale for hover feedback */
+}
+
+/* Secondary Button */
+.btn-secondary {
+    background-color: #6b7280;
+    /* Neutral gray */
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    font-weight: 600;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.btn-secondary:hover {
+    background-color: #4b5563;
+    /* Darker gray hover */
+    transform: scale(1.05);
+    /* Slight hover feedback */
+}
+
+/* Selection Checkbox */
+.selection-checkbox {
+    display: none;
+    margin-right: 1rem;
+}
+
+.selection-checkbox.visible {
+    display: block;
+}

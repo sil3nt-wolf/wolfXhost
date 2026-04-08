@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title id="page-title">H.TD Profile | TalkDrove</title>
+    <link rel="stylesheet" href="./styles/main.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://cdn.talkdrove.com/host/Images/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://cdn.talkdrove.com/host/Images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://cdn.talkdrove.com/host/Images/favicon/favicon-16x16.png">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-hover: #3a53d0;
+            --secondary: #e6f0ff;
+            --accent: #3f37c9;
+            --neutral: #333333;
+            --base-100: #ffffff;
+            --base-200: #f8fafc;
+            --base-300: #f1f5f9;
+            --base-hamza: #4895ef;
+            --loader: #f8fafc;
+            --success: #4ade80;
+            --error: #f87171;
+            --loaderText: #1e293b;
+            --text-primary: #333333;
+            --pagination-text: #333333;
+            --gradient-start: #4361ee;
+            --gradient-end: #3f37c9;
+        }
+
+        [data-theme="dark"] {
+            --primary: #4361ee;
+            --primary-hover: #3a53d0;
+            --secondary: #1e293b;
+            --accent: #3f37c9;
+            --neutral: #f8fafc;
+            --base-100: #0f172a;
+            --base-200: #1e293b;
+            --base-300: #334155;
+            --base-hamza: #1e293b;
+            --loader: #0f172a;
+            --loaderText: #f8fafc;
+            --text-primary: #ffffff;
+            --pagination-text: #ffffff;
+            --gradient-start: #3f37c9;
+            --gradient-end: #4361ee;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--base-200);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .profile-container {
+            max-width: 900px;
+            margin: 40px auto;
+            background: var(--base-100);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            overflow: hidden;
+            perspective: 1000px;
+        }
+
+        .profile-header {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+            position: relative;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+        }
+
+        .user-profile {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border: 5px solid white;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background-color: var(--secondary);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            transition: transform 0.4s ease;
+        }
+
+        .user-profile:hover {
+            transform: scale(1.05) rotate(3deg);
+        }
+
+        .user-profile.default {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            font-size: 80px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .user-profile img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .user-profile img:hover {
+            transform: scale(1.1);
+        }
+
+        .profile-name {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .profile-username {
+            font-size: 20px;
+            opacity: 0.9;
+            margin-bottom: 15px;
+            letter-spacing: 0.5px;
+        }
+
+        .profile-social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .social-link {
+            color: white;
+            font-size: 28px;
+            opacity: 0.7;
+            transition: all 0.3s ease;
+            transform: scale(1);
+        }
+
+        .social-link:hover {
+            opacity: 1;
+            transform: scale(1.2) translateY(-5px);
+        }
+
+        .profile-bio {
+            padding: 25px 40px;
+            text-align: center;
+            background-color: var(--base-200);
+            color: var(--text-primary);
+            font-size: 16px;
+            line-height: 1.7;
+            font-style: italic;
+        }
+
+        .bots-section {
+            padding: 30px 20px;
+            background-color: var(--base-100);
+        }
+
+        .bots-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 10px;
+        }
+
+        .bot-count {
+            background-color: var(--primary);
+            color: white;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .bots-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .bot-card {
+            background-color: var(--base-200);
+            border-radius: 15px;
+            padding: 25px;
+            transition: all 0.4s ease;
+            border: 2px solid transparent;
+            cursor: pointer;
+        }
+
+        .bot-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            border-color: var(--primary);
+        }
+
+        .bot-name {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .bot-name::before {
+            content: '🤖';
+            font-size: 24px;
+        }
+
+        .bot-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            text-align: center;
+        }
+
+        .bot-stat {
+            background-color: var(--base-300);
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .loading, .error-message {
+            text-align: center;
+            padding: 50px;
+            color: var(--text-primary);
+            background-color: var(--base-200);
+            font-size: 18px;
+        }
+
+        .error-message {
+            color: var(--error);
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .profile-container {
+                margin: 0;
+                border-radius: 0;
+            }
+
+            .bots-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .bot-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Subtle Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        #profile-content {
+            animation: fadeIn 0.8s ease forwards;
+        }
+        .profile-follow-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 15px 0;
+    padding: 10px;
+    background-color: #f4f4f4;
+    border-radius: 8px;
+}
+
+.follow-stats {
+    display: flex;
+    gap: 15px;
+    color: #666;
+}
+
+#follow-button {
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#follow-button.followed {
+    background-color: #6c757d;
+}
+
+#follow-button:hover {
+    opacity: 0.9;
+}
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <h1><a class="logo" href="/dashboard">H.TD</a></h1>
+            <nav class="nav-controls">
+                <button class="btn btn-primary" onclick="window.location.href='/dashboard/select-bot'">
+                    <i class="fas fa-plus"></i>
+                    <span>Deploy Bot</span>
+                </button>
+                <button id="themeToggle" class="btn btn-secondary">
+                    <i class="fas fa-adjust"></i>
+                </button>
+                <div class="profile-container">
+                    <img alt="Profile" class="profile-pic" id="profileBtn" loading="lazy">
+                       
+                    <div class="dropdown" id="profileDropdown">
+                        <a href="/dashboard/invite" class="dropdown-item">
+                            <i class="fas fa-share"></i>
+                            <span>Invite</span>
+                        </a>
+                        <a href="/dashboard/wallet" class="dropdown-item">
+                            <i class="fas fa-wallet"></i>
+                            <span>Wallet</span>
+                        </a>
+                        <a href="/dashboard/my-heroku" class="dropdown-item">
+                            <i class="fas fa-server"></i>
+                            <span>My Heroku</span>
+                        </a>
+                        <a href="/dashboard/settings" class="dropdown-item">
+                            <i class="fas fa-cog"></i>
+                            <span>Settings</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="/logout" class="dropdown-item" id="logoutBtn">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Logout</span>
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <div class="profile-container">
+        <div id="loading" class="loading">Loading profile...</div>
+        <div id="error-message" class="error-message"></div>
+        <div id="profile-content" style="display: none;">
+            <div class="profile-header">
+                <div class="user-profile" id="user-profile"></div>
+                <div class="profile-name" id="profile-name"></div>
+                <div class="profile-username" id="profile-username"></div>
+                <div class="profile-social-links" id="profile-social-links"></div>
+            </div>
+            <div class="profile-bio" id="profile-bio"></div>
+            <div class="bots-section">
+                <div class="bots-header">
+                    <span>My Bots</span>
+                    <span class="bot-count" id="bot-count">0 bots</span>
+                </div>
+                <div class="bots-grid" id="bots-grid"></div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+      function formatDate(dateString) {
+    if (!dateString) return 'N/A';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+    });
+}
+
+function createSocialLink(href, iconClass) {
+    if (!href) return '';
+    return `
+        <a href="${href}" target="_blank" class="social-link">
+            <i class="${iconClass}"></i>
+        </a>
+    `;
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+    // Extract username from URL
+    const pathParts = window.location.pathname.split('/');
+    const username = pathParts[pathParts.length - 1];
+    
+    // DOM Elements
+    const loadingEl = document.getElementById('loading');
+    const errorMessageEl = document.getElementById('error-message');
+    const profileContentEl = document.getElementById('profile-content');
+    const avatarEl = document.getElementById('user-profile');
+    const nameEl = document.getElementById('profile-name');
+    const usernameEl = document.getElementById('profile-username');
+    const socialLinksEl = document.getElementById('profile-social-links');
+    const bioEl = document.getElementById('profile-bio');
+    const botCountEl = document.getElementById('bot-count');
+    const botsGridEl = document.getElementById('bots-grid');
+    const pageTitle = document.getElementById('page-title');
+
+    try {
+        // Fetch profile data
+        const response = await fetch(`/api/profile/${username}`);
+        const profile = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(profile.error || 'Failed to load profile');
+        }
+
+        // Update page title
+        pageTitle.textContent = `${profile.username || 'User'} | TalkDrove`;
+
+        // Handle Profile Avatar
+        if (profile.profile_picture) {
+            avatarEl.innerHTML = `
+                <img src="${profile.profile_picture}" 
+                     alt="${profile.username}'s profile picture" 
+                     onerror="this.onerror=null; this.remove(); 
+                              this.parentElement.classList.add('default'); 
+                              this.parentElement.textContent='${(profile.first_name?.[0] || profile.username[0]).toUpperCase()}'"/>
+            `;
+        } else {
+            avatarEl.classList.add('default');
+            avatarEl.textContent = (profile.first_name?.[0] || profile.username[0]).toUpperCase();
+        }
+        
+        // Profile Name and Username
+        const fullName = `${profile.first_name || ''} ${profile.last_name || ''}`.trim() || 'TalkDrove Soldier';
+        nameEl.textContent = fullName;
+        usernameEl.textContent = `@${profile.username}`;
+
+        // Social Links
+        const socialLinks = [
+            { link: profile.whatsapp_link, icon: 'fab fa-whatsapp' },
+            { link: profile.youtube_link, icon: 'fab fa-youtube' },
+            { link: profile.website_link, icon: 'fas fa-globe' },
+            { link: profile.github_link, icon: 'fab fa-github' },
+            { link: profile.linkedin_link, icon: 'fab fa-linkedin' },
+            { link: profile.twitter_link, icon: 'fab fa-twitter' },
+            { link: profile.instagram_link, icon: 'fab fa-instagram' }
+        ];
+
+        socialLinksEl.innerHTML = socialLinks
+            .filter(social => social.link)
+            .map(social => createSocialLink(social.link, social.icon))
+            .join('');
+
+        // Profile Bio
+        bioEl.textContent = profile.bio || 'No bio provided';
+
+        // Follow Section
+        const followSectionEl = document.createElement('div');
+        followSectionEl.className = 'profile-follow-section';
+        followSectionEl.innerHTML = `
+            <div class="follow-stats">
+                <span>Followers: <span id="followers-count">${profile.followers_count || 0}</span></span>
+                <span>Following: <span id="following-count">${profile.following_count || 0}</span></span>
+            </div>
+            <button id="follow-button" class="${profile.is_following ? 'followed' : ''}">
+                ${profile.is_following ? 'Unfollow' : 'Follow'}
+            </button>
+        `;
+
+        // Insert follow section after profile header
+        const profileHeader = document.querySelector('.profile-header');
+        profileHeader.insertAdjacentElement('afterend', followSectionEl);
+
+        // Follow/Unfollow Event Listener
+        const followButton = document.getElementById('follow-button');
+        const followersCountEl = document.getElementById('followers-count');
+        
+        if (followButton) {
+            followButton.addEventListener('click', async () => {
+                try {
+                    const followResponse = await fetch(`/api/follow/${username}`, { 
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    const followResult = await followResponse.json();
+
+                    // Update button and followers count
+                    if (followResult.status === 'followed') {
+                        followButton.textContent = 'Unfollow';
+                        followButton.classList.add('followed');
+                        followersCountEl.textContent = parseInt(followersCountEl.textContent) + 1;
+                    } else {
+                        followButton.textContent = 'Follow';
+                        followButton.classList.remove('followed');
+                        followersCountEl.textContent = parseInt(followersCountEl.textContent) - 1;
+                    }
+                } catch (error) {
+                    console.error('Error following/unfollowing:', error);
+                    alert('Failed to follow/unfollow. Please try again.');
+                }
+            });
+        }
+
+        // Bots Section
+        const botCount = profile.bots.length;
+        botCountEl.textContent = `${botCount} bot${botCount !== 1 ? 's' : ''}`;
+
+        // Generate bot cards
+        botsGridEl.innerHTML = ''; // Clear any existing content
+        profile.bots.forEach(bot => {
+            const botCard = document.createElement('div');
+            botCard.className = 'bot-card';
+            botCard.onclick = () => {
+                window.location.href = `/dashboard/select-bot/prepare-deployment?botId=${bot.id}`;
+            };
+
+            botCard.innerHTML = `
+                <div class="bot-name">${bot.name}</div>
+                <div class="bot-stats">
+                    <div class="bot-stat">
+                        🚀 ${bot.total_deployments || 0} Deployments
+                    </div>
+                    <div class="bot-stat">
+                        💰 $${bot.deployment_cost || 0}
+                    </div>
+                    <div class="bot-stat">
+                        🕒 Updated ${formatDate(bot.updated_at)}
+                    </div>
+                </div>
+            `;
+
+            botsGridEl.appendChild(botCard);
+        });
+
+        // Show profile content
+        loadingEl.style.display = 'none';
+        profileContentEl.style.display = 'block';
+
+    } catch (error) {
+        // Error Handling
+        loadingEl.style.display = 'none';
+        errorMessageEl.textContent = error.message || 'Failed to load profile';
+        errorMessageEl.style.display = 'block';
+    }
+});
+    </script>
+<script src="./js/main.js"></script>    
+</body>
+</html>

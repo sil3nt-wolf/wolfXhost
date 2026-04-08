@@ -1,0 +1,459 @@
+/* Ticket Form Styling */
+.ticket-form {
+    background-color: var(--base-100);
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+    margin-bottom: 20px;
+}
+
+.ticket-form h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--base-300);
+    border-radius: 8px;
+    background-color: var(--base-200);
+    color: var(--text-primary);
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+}
+
+/* Ticket List Styling */
+.ticket-list {
+    background-color: var(--base-100);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+}
+
+.ticket-item {
+    border-bottom: 1px solid var(--base-300);
+    padding: 15px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.3s ease;
+}
+
+.ticket-item:hover {
+    background-color: var(--base-200);
+}
+
+.ticket-item:last-child {
+    border-bottom: none;
+}
+
+.ticket-status {
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.8em;
+    font-weight: 500;
+}
+
+.status-open {
+    background-color: var(--secondary);
+    color: var(--primary);
+}
+
+.status-in_progress {
+    background-color: #fff4de;
+    color: #ffa500;
+}
+
+.status-resolved {
+    background-color: #e6f7f0;
+    color: var(--success);
+}
+
+.status-closed {
+    background-color: #f0f0f0;
+    color: var(--neutral);
+}
+
+.priority-low { color: #10b981; }
+.priority-medium { color: #f59e0b; }
+.priority-high { color: #ef4444; }
+.priority-urgent { 
+    color: #b91c1c; 
+    font-weight: bold; 
+}
+
+/* Ticket Replies Styling */
+.ticket-replies {
+    margin-top: 20px;
+    border-top: 1px solid var(--base-300);
+    padding-top: 15px;
+}
+
+.reply-item {
+    background-color: var(--base-200);
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 12px;
+}
+
+.reply-item.internal-reply {
+    background-color: #e6f2ff;
+}
+
+.reply-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.internal-badge {
+    background-color: var(--primary);
+    color: var(--base-100);
+    padding: 3px 6px;
+    border-radius: 4px;
+    font-size: 0.7em;
+}
+
+/* Chat Box Styling */
+.ticket-chat {
+    background-color: var(--base-200);
+    border-radius: 12px;
+    padding: 15px;
+    margin-top: 20px;
+}
+
+.chat-messages {
+    max-height: 300px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 12px;
+    background-color: var(--base-100);
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.chat-message {
+    max-width: 80%;
+    padding: 12px;
+    border-radius: 10px;
+    position: relative;
+    clear: both;
+}
+
+.sent-message {
+    align-self: flex-end;
+    background-color: var(--primary);
+    color: var(--base-100);
+    margin-left: auto;
+}
+
+.received-message {
+    align-self: flex-start;
+    background-color: var(--base-300);
+    color: var(--text-primary);
+    margin-right: auto;
+}
+
+.message-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
+    font-size: 0.8em;
+}
+
+.sender .name {
+    font-weight: bold;
+}
+
+.message-time {
+    color: rgba(0,0,0,0.6);
+}
+
+.sent-message .message-time {
+    color: rgba(255,255,255,0.7);
+}
+
+.no-messages {
+    text-align: center;
+    color: var(--neutral);
+    padding: 20px;
+}
+
+.chat-input-section {
+    display: flex;
+    gap: 12px;
+    align-items: flex-end;
+}
+
+.chat-input-section textarea {
+    flex-grow: 1;
+    border: 1px solid var(--base-300);
+    border-radius: 8px;
+    padding: 12px;
+    resize: none;
+}
+
+.send-message-btn {
+    background-color: var(--primary);
+    color: var(--base-100);
+    border: none;
+    border-radius: 8px;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.send-message-btn:hover {
+    background-color: var(--primary-hover);
+}
+
+.send-message-btn svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+
+    .ticket-form, .ticket-list {
+        padding: 15px;
+    }
+
+    .ticket-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+/* Additional Enhancements */
+.filter-section {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.filter-section .form-group {
+    width: 48%;
+}
+
+/* Pagination Styling */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.pagination button {
+    margin: 0 5px;
+    padding: 8px 12px;
+    background-color: var(--base-300);
+    color: var(--text-primary);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.pagination button:hover {
+    background-color: var(--primary);
+    color: var(--base-100);
+}
+
+.pagination button.active {
+    background-color: var(--primary);
+    color: var(--base-100);
+}
+
+/* Chat and Ticket Details Modal */
+.ticket-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.ticket-modal-content {
+    background: var(--base-100);
+    border-radius: 12px;
+    padding: 30px;
+    width: 80%;
+    max-width: 600px;
+    max-height: 80%;
+    overflow-y: auto;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+
+
+
+
+/* Chat Box Styling */
+.ticket-chat {
+    background-color: var(--base-200);
+    border-radius: 12px;
+    padding: 15px;
+    margin-top: 20px;
+}
+
+.chat-messages {
+    max-height: 300px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 12px;
+    background-color: var(--base-100);
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.chat-message {
+    max-width: 80%;
+    padding: 12px;
+    border-radius: 10px;
+    position: relative;
+    clear: both;
+}
+
+.sent-message {
+    align-self: flex-end;
+    background-color: var(--primary);
+    color: var(--base-100);
+    margin-left: auto;
+}
+
+.received-message {
+    align-self: flex-start;
+    background-color: var(--base-300);
+    color: var(--text-primary);
+    margin-right: auto;
+}
+
+.message-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
+    font-size: 0.8em;
+}
+
+.sender .name {
+    font-weight: bold;
+}
+
+.message-time {
+    color: rgba(0,0,0,0.6);
+}
+
+.sent-message .message-time {
+    color: rgba(255,255,255,0.7);
+}
+
+.no-messages {
+    text-align: center;
+    color: var(--neutral);
+    padding: 20px;
+}
+
+.chat-input-section {
+    display: flex;
+    gap: 12px;
+    align-items: flex-end;
+}
+
+.chat-input-section textarea {
+    flex-grow: 1;
+    border: 1px solid var(--base-300);
+    border-radius: 8px;
+    padding: 12px;
+    resize: none;
+}
+
+.send-message-btn {
+    background-color: var(--primary);
+    color: var(--base-100);
+    border: none;
+    border-radius: 8px;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.send-message-btn:hover {
+    background-color: var(--primary-hover);
+}
+
+.send-message-btn svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* Modal Styling */
+.ticket-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.ticket-modal-content {
+    background: var(--base-100);
+    padding: 30px;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 600px;
+    max-height: 80%;
+    overflow-y: auto;
+}
+
+.ticket-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}

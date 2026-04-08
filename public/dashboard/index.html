@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta name="description" content="Bot.TalkDrove get unlimited free WhatsApp bots on your number here!">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">   
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="https://cdn.talkdrove.com/host/Images/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://cdn.talkdrove.com/host/Images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://cdn.talkdrove.com/host/Images/favicon/favicon-16x16.png">
+   
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>H.TD - Dashboard</title>
+    <meta name="robots" content="noindex, nofollow">
+    
+    <link rel="stylesheet" href="../styles/main.css">
+   
+</head>
+<body>
+
+
+    <div class="error"></div>
+    <div class="success"></div>
+
+    <header class="header">
+        <div class="header-content">
+            <h1>H.TD</h1>
+            <nav class="nav-controls">
+                <button id="deployBotBtn" class="btn btn-primary" onclick="window.location.href='/dashboard/select-bot'">
+                    <i class="fas fa-plus"></i>
+                    <span>Deploy Bot</span>
+                </button>
+                <button id="themeToggle" class="btn btn-secondary">
+                    <i class="fas fa-adjust"></i>
+                </button>
+
+                
+                <div class="profile-container">
+                    <img src="https://cdn.talkdrove.com/host/Images/profile.webp" alt="Profile" class="profile-pic" id="profileBtn">
+                    <div class="dropdown" id="profileDropdown">
+                        <a href="/dashboard/invite" class="dropdown-item">
+                            <i class="fas fa-share"></i>
+                            <span>Invite</span>
+                        </a>
+                        <a href="/dashboard/wallet" class="dropdown-item">
+                            <i class="fas fa-wallet"></i>
+                            <span>Wallet</span>
+                        </a>
+                        <a href="/dashboard/earn-coins" class="dropdown-item">
+                            <i class="fas fa-gift"></i>
+                            <span>Earn coins</span>
+                        </a>
+                     
+                        <a href="/dashboard/wallet/deposit" class="dropdown-item">
+                            <i class="fas fa-coins"></i>
+                            <span>Deposit</span>
+                        </a>
+                        <a href="/dashboard/my-heroku" class="dropdown-item">
+                            <i class="fas fa-server"></i>
+                            <span>My Heroku</span>
+                        </a>
+                        <a href="/dashboard/buy-heroku" class="dropdown-item">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>Buy Heroku</span>
+                        </a>
+                            <a href="/dashboard/account-settings" class="dropdown-item">
+                                <i class="fas fa-cog"></i>
+                                <span>Settings</span>
+                            </a>
+                            <a href="/dashboard/support" class="dropdown-item">
+                                <i class="fas fa-question-circle"></i>
+                                <span>Support</span>
+                            </a>                            
+                            <div class="dropdown-divider"></div>
+                            <a href="/logout" class="dropdown-item" id="logoutBtn">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span>Logout</span>
+                            </a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+    <main class="main">
+        
+        <div id="coinInfo">
+            <span id="coinBalance">Coins: loading...</span>
+        </div>
+        <div class="dashboard-controls">
+
+            
+            <div class="quick-actions">
+                <button class="quick-action-btn" title="Deploy New Bot" onclick="window.location.href='/dashboard/select-bot'">
+                    <i class="fas fa-plus"></i>
+                </button>
+                <button class="quick-action-btn" title="Refresh" onclick="refreshDashboard()">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+                <button class="quick-action-btn" title="WhatsApp Channel" onclick="window.location.href='https://whatsapp.com/channel/0029VaNRcHSJP2199iMQ4W0l'">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp Icon" style="width: 24px; height: 24px;">
+                </button>
+            </div>
+
+<div id="ezoic-pub-ad-placeholder-115"></div>
+
+
+            <div class="search-filter-container">
+                <div class="search-container">
+                    <input type="text" id="searchInput" class="search-input" placeholder="Search bots by name...">
+                </div>
+                <div class="filter-container">
+                    <button class="filter-btn active" data-status="all">
+                        <i class="fas fa-layer-group"></i>
+                        All
+                    </button>
+                    <button class="filter-btn" data-status="active">
+                        <i class="fas fa-check-circle"></i>
+                        Active
+                    </button>
+                    <button class="filter-btn" data-status="failed">
+                        <i class="fas fa-times-circle"></i>
+                        Failed
+                    </button>
+                    <button class="filter-btn" data-status="deploying">
+                        <i class="fas fa-spinner"></i>
+                        Deploying
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="dashboard-stats">
+            <div class="stat-card">
+                <div class="stat-title">Total Bots</div>
+                <div class="stat-value" id="totalBots">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-title">Active Bots</div>
+                <div class="stat-value" id="activeBots">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-title">Failed Bots</div>
+                <div class="stat-value" id="failedBots">0</div>
+            </div>
+        </div>
+
+        <div id="userApps"></div>
+        <div class="loader" id="loader"></div>
+    </main>
+    <script src="../js/main.js"></script>
+        
+ 
+    
+</body>
+
+</html>

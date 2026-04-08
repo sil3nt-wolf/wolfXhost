@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>User Management - Admin Panel</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-hover: #3a53d0;
+            --secondary: #e6f0ff;
+            --accent: #3f37c9;
+            --neutral: #333333;
+            --base-100: #ffffff;
+            --base-200: #f8fafc;
+            --base-300: #f1f5f9;
+            --base-hamza: #4895ef;
+            --loader: #f8fafc;
+            --success: #4ade80;
+            --error: #f87171;
+            --loaderText: #1e293b;
+            --text-primary: #333333;
+            --pagination-text: #333333;
+        }
+
+        [data-theme="dark"] {
+            --primary: #4361ee;
+            --primary-hover: #3a53d0;
+            --secondary: #1e293b;
+            --accent: #3f37c9;
+            --neutral: #f8fafc;
+            --base-100: #0f172a;
+            --base-200: #1e293b;
+            --base-300: #334155;
+            --base-hamza: #1e293b;
+            --loader: #0f172a;
+            --loaderText: #f8fafc;
+            --text-primary: #ffffff;
+            --pagination-text: #ffffff;
+        }
+
+        body {
+            background-color: var(--base-100);
+            color: var(--text-primary);
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            background-color: var(--base-200);
+            padding: 1rem;
+            border-bottom: 1px solid var(--base-300);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .nav-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .user-filters {
+            margin: 1rem 0;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .user-filters button {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.375rem;
+            background-color: var(--base-200);
+            color: var(--text-primary);
+            cursor: pointer;
+        }
+
+        .user-filters button.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .search-container {
+            margin: 1rem 0;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--base-300);
+            border-radius: 0.375rem;
+            background-color: var(--base-100);
+            color: var(--text-primary);
+        }
+
+        .user-item {
+            background-color: var(--base-200);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .user-details {
+            display: grid;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .user-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .pagination button {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--base-300);
+            background-color: var(--base-100);
+            color: var(--text-primary);
+            cursor: pointer;
+            border-radius: 0.375rem;
+        }
+
+        .pagination button.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .banned-user-item {
+            background-color: var(--base-200);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .ip-tracking-item {
+            background-color: var(--base-200);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <h1>User Management</h1>
+            <nav class="nav-controls">
+                <button onclick="window.location.href='bots.html'" class="btn btn-primary">
+                    <i class="fas fa-robot"></i>
+                    <span>Manage Bots</span>
+                </button>
+                <button id="themeToggle" class="btn btn-secondary">
+                    <i class="fas fa-adjust"></i>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section id="users">
+            <div class="user-filters">
+                <button id="activeUsersBtn" class="active">Active Users</button>
+                <button id="bannedUsersBtn">Banned Users</button>
+                <button id="ipTrackingBtn">IP Account Tracking</button>
+            </div>
+            <div class="search-container">
+                <input type="text" id="userSearch" class="search-input" placeholder="Search by email...">
+            </div>
+            <div id="usersList"></div>
+            <div id="usersPagination" class="pagination"></div>
+        </section>
+
+        <section id="bannedUsersList" style="display:none;">
+            <h2>Banned Users</h2>
+            <div id="bannedUsersContainer"></div>
+        </section>
+
+        <section id="ipTrackingList" style="display:none;">
+            <h2>IP Account Tracking</h2>
+            <div id="ipTrackingContainer"></div>
+        </section>
+    </main>
+
+    <script src="../js/main.js"></script>
+    <script>
+// users.js
+let allUsers = [];
+let currentUserPage = 1;
+const itemsPerPage = 10;
+
+// Theme Management
+document.getElementById('themeToggle').addEventListener('click', () => {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+});
+
+// Initialize everything when DOM loads
+document.addEventListener('DOMContentLoaded', () => {
+    // Set initial theme
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    
+    loadUsers();
+    setupEventListeners();
+    setupUserViewToggle();
+});
+
+function setupEventListeners() {
+    // Search functionality
+    document.getElementById('userSearch').addEventListener('input', (e) => {
+        filterAndDisplayUsers(e.target.value);
+    });
+}
+
+function filterAndDisplayUsers(searchQuery = '') {
+    const filtered = allUsers.filter(user => 
+        user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (user.username && user.username.toLowerCase().includes(searchQuery.toLowerCase()))
+    );
+    displayUsers(filtered);
+    updateUsersPagination(filtered.length);
+}
+
+function displayUsers(users) {
+    const start = (currentUserPage - 1) * itemsPerPage;
+    const paginatedUsers = users.slice(start, start + itemsPerPage);
+    const usersList = document.getElementById('usersList');
+    usersList.innerHTML = '';
+
+    paginatedUsers.forEach(user => {
+        const userElement = document.createElement('div');
+        userElement.className = 'user-item';
+        userElement.innerHTML = `
+            <div class="user-details">
+                <span><strong>Email:</strong> ${user.email}</span>
+                <span><strong>Username:</strong> ${user.username || 'N/A'}</span>
+                <span><strong>Coins:</strong> ${user.coins}</span>
+                <span><strong>Accounts Created:</strong> ${user.total_accounts_created || 0}</span>
+                <span><strong>IP Addresses:</strong> ${user.user_ip_addresses || 'N/A'}</span>
+            </div>
+            <div class="user-actions">
+                <div class="coin-update">
+                    <input type="number" id="coins-${user.id}" value="${user.coins}" class="coin-input">
+                    <button onclick="updateUserCoins(${user.id})" class="update-btn">Update Coins</button>
+                </div>
+                <button onclick="deleteUser(${user.id})" class="delete-btn">Delete User</button>
+                ${user.is_banned ? 
+                    `<button onclick="unbanUser(${user.id})" class="unban-btn">Unban User</button>` :
+                    `<button onclick="banUser(${user.id})" class="ban-btn">Ban User</button>`
+                }
+            </div>
+        `;
+        usersList.appendChild(userElement);
+    });
+}
+
+function createPaginationControls(totalItems, currentPage, onPageChange, containerId) {
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+    const container = document.getElementById(containerId);
+    container.innerHTML = '';
+
+    if (totalPages <= 1) return;
+
+    const prevButton = document.createElement('button');
+    prevButton.textContent = '←';
+    prevButton.disabled = currentPage === 1;
+    prevButton.onclick = () => onPageChange(currentPage - 1);
+    container.appendChild(prevButton);
+
+    for (let i = 1; i <= totalPages; i++) {
+        const pageButton = document.createElement('button');
+        pageButton.textContent = i;
+        pageButton.classList.toggle('active', i === currentPage);
+        pageButton.onclick = () => onPageChange(i);
+        container.appendChild(pageButton);
+    }
+
+    const nextButton = document.createElement('button');
+    nextButton.textContent = '→';
+    nextButton.disabled = currentPage === totalPages;
+    nextButton.onclick = () => onPageChange(currentPage + 1);
+    container.appendChild(nextButton);
+}
+
+function updateUsersPagination(totalItems) {
+    createPaginationControls(
+        totalItems, 
+        currentUserPage,
+        (page) => {
+            currentUserPage = page;
+            filterAndDisplayUsers(document.getElementById('userSearch').value);
+        },
+        'usersPagination'
+    );
+}
+
+// API Calls
+async function loadUsers() {
+    try {
+        const response = await fetch('/admin/users');
+        if (!response.ok) throw new Error('Failed to load users');
+        allUsers = await response.json();
+        filterAndDisplayUsers();
+    } catch (error) {
+        console.error('Error loading users:', error);
+        showErrorNotification('Failed to load users');
+    }
+}
+
+async function updateUserCoins(userId) {
+    const coinsInput = document.getElementById(`coins-${userId}`);
+    const newCoins = parseInt(coinsInput.value);
+    
+    if (isNaN(newCoins) || newCoins < 0) {
+        showErrorNotification('Please enter a valid number of coins');
+        return;
+    }
+
+    try {
+        const response = await fetch(`/admin/users/${userId}/coins`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ coins: newCoins }),
+        });
+        
+        if (!response.ok) throw new Error('Failed to update coins');
+        showSuccessNotification('Coins updated successfully');
+        loadUsers();
+    } catch (error) {
+        console.error('Error updating coins:', error);
+        showErrorNotification('Failed to update coins');
+    }
+}
+
+async function deleteUser(userId) {
+    if (!confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`/admin/users/${userId}`, {
+            method: 'DELETE',
+        });
+        
+        if (!response.ok) throw new Error('Failed to delete user');
+        showSuccessNotification('User deleted successfully');
+        loadUsers();
+    } catch (error) {
+        console.error('Error deleting user:', error);
+        showErrorNotification('Failed to delete user');
+    }
+}
+
+async function banUser(userId) {
+    if (!confirm('Are you sure you want to ban this user?')) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`/admin/users/${userId}/ban`, {
+            method: 'POST',
+        });
+        
+        if (!response.ok) throw new Error('Failed to ban user');
+        showSuccessNotification('User banned successfully');
+        loadUsers();
+    } catch (error) {
+        console.error('Error banning user:', error);
+        showErrorNotification('Failed to ban user');
+    }
+}
+
+async function unbanUser(userId) {
+    if (!confirm('Are you sure you want to unban this user?')) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`/admin/users/${userId}/unban`, {
+            method: 'POST',
+        });
+        
+        if (!response.ok) throw new Error('Failed to unban user');
+        showSuccessNotification('User unbanned successfully');
+        loadUsers();
+    } catch (error) {
+        console.error('Error unbanning user:', error);
+        showErrorNotification('Failed to unban user');
+    }
+}
+
+// View Toggle Setup
+function setupUserViewToggle() {
+    const activeUsersBtn = document.getElementById('activeUsersBtn');
+    const bannedUsersBtn = document.getElementById('bannedUsersBtn');
+    const ipTrackingBtn = document.getElementById('ipTrackingBtn');
+
+    const userSection = document.getElementById('users');
+    const bannedUsersSection = document.getElementById('bannedUsersList');
+    const ipTrackingSection = document.getElementById('ipTrackingList');
+
+    activeUsersBtn.addEventListener('click', () => {
+        setActiveView(activeUsersBtn, userSection);
+        loadUsers();
+    });
+
+    bannedUsersBtn.addEventListener('click', () => {
+        setActiveView(bannedUsersBtn, bannedUsersSection);
+        loadBannedUsers();
+    });
+
+    ipTrackingBtn.addEventListener('click', () => {
+        setActiveView(ipTrackingBtn, ipTrackingSection);
+        loadIpTracking();
+    });
+}
+
+function setActiveView(activeButton, activeSection) {
+    // Reset all buttons and sections
+    document.querySelectorAll('.user-filters button').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('main > section').forEach(section => section.style.display = 'none');
+    
+    // Set active button and section
+    activeButton.classList.add('active');
+    activeSection.style.display = 'block';
+}
+
+// Notification Helpers
+function showNotification(message, type) {
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    setTimeout(() => notification.remove(), 3000);
+}
+
+function showSuccessNotification(message) {
+    showNotification(message, 'success');
+}
+
+function showErrorNotification(message) {
+    showNotification(message, 'error');
+}
+
+
+ // Modify the loadBannedUsers function to include unban button
+ async function loadBannedUsers() {
+    try {
+        const response = await fetch('/admin/banned-users');
+        const bannedUsers = await response.json();
+        const container = document.getElementById('bannedUsersContainer');
+        container.innerHTML = '';
+
+        bannedUsers.forEach(user => {
+            const userElement = document.createElement('div');
+            userElement.className = 'banned-user-item';
+            userElement.innerHTML = `
+                <div class="user-details">
+                    <span><strong>Email:</strong> ${user.email}</span>
+                    <span><strong>Username:</strong> ${user.username || 'N/A'}</span>
+                    <span><strong>Total Accounts Created:</strong> ${user.total_accounts_created || 0}</span>
+                    <span><strong>IP Addresses:</strong> ${user.user_ip_addresses || 'N/A'}</span>
+                    <span><strong>Banned Since:</strong> ${new Date(user.updated_at).toLocaleString()}</span>
+                </div>
+                <div class="user-actions">
+                    <button onclick="unbanUser(${user.id})" class="unban-btn">Unban User</button>
+                </div>
+            `;
+            container.appendChild(userElement);
+        });
+    } catch (error) {
+        console.error('Error loading banned users:', error);
+    }
+}
+    async function loadIpTracking() {
+        try {
+            const response = await fetch('/admin/ip-tracking');
+            const ipTrackingData = await response.json();
+            const container = document.getElementById('ipTrackingContainer');
+            container.innerHTML = '';
+
+            ipTrackingData.forEach(entry => {
+                const entryElement = document.createElement('div');
+                entryElement.className = 'ip-tracking-item';
+                entryElement.innerHTML = `
+                    <div class="ip-details">
+                        <span><strong>IP Address:</strong> ${entry.ip_address}</span>
+                        <span><strong>Total Accounts:</strong> ${entry.account_count}</span>
+                        <span><strong>First Created:</strong> ${new Date(entry.created_at).toLocaleString()}</span>
+                        <span><strong>Last Signup:</strong> ${new Date(entry.last_signup).toLocaleString()}</span>
+                        <span><strong>Associated Emails:</strong> ${entry.associated_emails || 'N/A'}</span>
+                    </div>
+                `;
+                container.appendChild(entryElement);
+            });
+        } catch (error) {
+            console.error('Error loading IP tracking:', error);
+        }
+    }
+        // Load bot requests when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            loadUsers();
+        loadBots();
+        loadBotRequests();
+        setupUserViewToggle(); // Add this line
+        });
+
+    </script>
+</body>
+</html>

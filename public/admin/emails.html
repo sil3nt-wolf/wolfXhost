@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Email Sender Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            display: grid;
+            gap: 15px;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .error {
+            color: red;
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .edit-form {
+            display: none;
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Email Sender </h1>
+        
+        <form id="emailSenderForm">
+            <input type="email" id="email" placeholder="Email Address" required>
+            <input type="password" id="password" placeholder="Password" value="3800380@Hamza" required>
+            <input type="text" id="host" placeholder="Host" value="mail.talkdrove.cc.nf" required>
+            <input type="number" id="port" placeholder="Port" value="587" required>
+            <input type="number" id="dailyLimit" placeholder="Daily Limit" value="200" required>
+            <button type="submit">Add Email Sender</button>
+        </form>
+
+        <div id="errorMessage" class="error"></div>
+
+        <table id="emailSenderTable">
+            <thead>
+                <tr>
+                    <th>Email</th>
+                    <th>Host</th>
+                    <th>Port</th>
+                    <th>Daily Limit</th>
+                    <th>Current Count</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="emailSenderList"></tbody>
+        </table>
+    </div>
+
+    <script>
+        const API_BASE_URL = '/api/admin'; // Adjust as needed
+
+        // Fetch and display email senders
+        async function fetchEmailSenders() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/all-emails`);
+                const data = await response.json();
+                
+                const tableBody = document.getElementById('emailSenderList');
+                tableBody.innerHTML = '';
+
+                data.senders.forEach(sender => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${sender.email}</td>
+                        <td>${sender.host}</td>
+                        <td>${sender.port}</td>
+                        <td>${sender.daily_limit}</td>
+                        <td>${sender.current_daily_count}</td>
+                        <td>${sender.status}</td>
+                        <td class="action-buttons">
+                            <button onclick="editSender(${sender.id}, '${sender.email}', '${sender.host}', ${sender.port}, ${sender.daily_limit})">Edit</button>
+                            <button onclick="toggleSenderStatus(${sender.id}, ${sender.is_active})">${sender.is_active ? 'Disable' : 'Enable'}</button>
+                            <button onclick="deleteSender(${sender.id})">Delete</button>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                showError('Failed to fetch email senders');
+            }
+        }
+
+        // Add new email sender
+        document.getElementById('emailSenderForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const host = document.getElementById('host').value;
+            const port = document.getElementById('port').value;
+            const dailyLimit = document.getElementById('dailyLimit').value;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/add-email`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email, 
+                        password, 
+                        host, 
+                        port: parseInt(port), 
+                        daily_limit: parseInt(dailyLimit)
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    fetchEmailSenders();
+                    document.getElementById('emailSenderForm').reset();
+                } else {
+                    showError(result.message || 'Failed to add email sender');
+                }
+            } catch (error) {
+                showError('Error adding email sender');
+            }
+        });
+
+        // Edit sender
+        async function editSender(id, email, host, port, dailyLimit) {
+            try {
+                const newEmail = prompt('Enter new email', email);
+                const newHost = prompt('Enter new host', host);
+                const newPort = prompt('Enter new port', port);
+                const newDailyLimit = prompt('Enter new daily limit', dailyLimit);
+
+                if (newEmail && newHost && newPort && newDailyLimit) {
+                    const response = await fetch(`${API_BASE_URL}/update-email/${id}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            email: newEmail,
+                            host: newHost,
+                            port: parseInt(newPort),
+                            daily_limit: parseInt(newDailyLimit)
+                        })
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        fetchEmailSenders();
+                    } else {
+                        showError(result.message || 'Failed to update email sender');
+                    }
+                }
+            } catch (error) {
+                showError('Error updating email sender');
+            }
+        }
+
+        // Toggle sender status
+        async function toggleSenderStatus(id, currentStatus) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/update-email/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        is_active: !currentStatus
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    fetchEmailSenders();
+                } else {
+                    showError(result.message || 'Failed to toggle sender status');
+                }
+            } catch (error) {
+                showError('Error toggling sender status');
+            }
+        }
+
+        // Delete sender (optional - implement as needed)
+        async function deleteSender(id) {
+            if (confirm('Are you sure you want to delete this email sender?')) {
+                try {
+                    const response = await fetch(`${API_BASE_URL}/delete-email/${id}`, {
+                        method: 'DELETE'
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        fetchEmailSenders();
+                    } else {
+                        showError(result.message || 'Failed to delete email sender');
+                    }
+                } catch (error) {
+                    showError('Error deleting email sender');
+                }
+            }
+        }
+
+        // Show error message
+        function showError(message) {
+            const errorEl = document.getElementById('errorMessage');
+            errorEl.textContent = message;
+            setTimeout(() => {
+                errorEl.textContent = '';
+            }, 3000);
+        }
+
+        // Initial fetch of email senders
+        fetchEmailSenders();
+    </script>
+</body>
+</html>

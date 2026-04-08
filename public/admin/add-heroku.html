@@ -1,0 +1,325 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Admin - Add Heroku Account</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        .accounts-list {
+            margin-top: 30px;
+        }
+
+        .account-item {
+            padding: 10px;
+            border: 1px solid #ddd;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+
+        .success-message {
+            color: green;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .error-message {
+            color: red;
+            margin-top: 10px;
+            display: none;
+        }
+        .api-status {
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-size: 0.9em;
+    }
+    .api-status.valid {
+        background-color: #d4edda;
+        color: #155724;
+    }
+    .api-status.invalid {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+    .api-status.error {
+        background-color: #fff3cd;
+        color: #856404;
+    }
+    .help-text {
+        color: #6c757d;
+        font-size: 0.875em;
+        margin-top: 0.25rem;
+    }
+    .account-item {
+        padding: 1rem;
+        border: 1px solid #ddd;
+        margin-bottom: 1rem;
+        border-radius: 4px;
+    }
+
+    .invalid-account {
+        background-color: #fff3cd;
+        border-color: #ffeeba;
+    }
+
+    .account-actions {
+        margin-top: 0.5rem;
+    }
+
+    .check-validity-btn {
+        padding: 0.25rem 0.5rem;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+    }
+
+    .check-validity-btn:disabled {
+        background-color: #6c757d;
+        cursor: not-allowed;
+    }
+
+    .account-status {
+        display: inline-block;
+        padding: 0.25rem 0.5rem;
+        border-radius: 3px;
+        font-size: 0.875rem;
+    }
+
+    .status-valid {
+        background-color: #d4edda;
+        color: #155724;
+    }
+
+    .status-invalid {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>Add Heroku Account</h1>
+            <form id="herokuForm">
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" required>
+                </div>
+                <div class="form-group">
+                    <label for="apiKey">API Key:</label>
+                    <input type="password" id="apiKey" required>
+                    <small class="help-text">Enter the Heroku API key for account verification</small>
+                </div>
+                <div class="form-group">
+                    <label for="recoveryCodes">Recovery Codes:</label>
+                    <textarea id="recoveryCodes" required></textarea>
+                </div>
+                <button type="submit">Add Account</button>
+            </form>
+            <div id="successMessage" class="success-message">Account added successfully!</div>
+            <div id="errorMessage" class="error-message"></div>
+    
+            <div class="accounts-list">
+                <h2>Existing Accounts</h2>
+                <div id="accountsList"></div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('herokuForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = {
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value,
+                apiKey: document.getElementById('apiKey').value,
+                recoveryCodes: document.getElementById('recoveryCodes').value
+            };
+    
+            try {
+                document.querySelector('button[type="submit"]').disabled = true;
+                const response = await fetch('/admin/heroku-accounts', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+    
+                const data = await response.json();
+    
+                if (response.ok) {
+                    document.getElementById('successMessage').style.display = 'block';
+                    document.getElementById('errorMessage').style.display = 'none';
+                    document.getElementById('herokuForm').reset();
+                    loadAccounts();
+                } else {
+                    throw new Error(data.error || 'Failed to add account');
+                }
+            } catch (error) {
+                document.getElementById('errorMessage').textContent = error.message;
+                document.getElementById('errorMessage').style.display = 'block';
+                document.getElementById('successMessage').style.display = 'none';
+            } finally {
+                document.querySelector('button[type="submit"]').disabled = false;
+            }
+        });
+    
+ 
+        async function loadAccounts() {
+        try {
+            const response = await fetch('/admin/heroku-accounts');
+            const accounts = await response.json();
+            
+            const accountsList = document.getElementById('accountsList');
+            accountsList.innerHTML = accounts.map(account => `
+                <div class="account-item ${!account.is_valid ? 'invalid-account' : ''}">
+                    <div>Email: ${account.email}</div>
+                    <div>Status: ${account.is_sold ? 'Sold' : 'Available'}</div>
+                    <div>Validity: ${account.is_valid ? 'Valid' : 'Invalid'}</div>
+                    <div>Added: ${new Date(account.created_at).toLocaleDateString()}</div>
+                    <div>Purchase Count: ${account.purchase_count}</div>
+                    <div class="account-actions">
+                        <button 
+                            onclick="checkAccountValidity(${account.id})"
+                            class="check-validity-btn"
+                            ${account.is_sold ? 'disabled' : ''}
+                        >
+                            Check Validity
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        } catch (error) {
+            console.error('Error loading accounts:', error);
+        }
+    }
+        async function checkApiStatus(accountId, apiKey) {
+            try {
+                const response = await fetch('/verify-heroku-api', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ apiKey })
+                });
+    
+                const statusElement = document.querySelector(`.api-status[data-id="${accountId}"]`);
+                if (response.ok) {
+                    statusElement.textContent = 'Valid';
+                    statusElement.className = 'api-status valid';
+                } else {
+                    statusElement.textContent = 'Invalid';
+                    statusElement.className = 'api-status invalid';
+                }
+            } catch (error) {
+                const statusElement = document.querySelector(`.api-status[data-id="${accountId}"]`);
+                statusElement.textContent = 'Error';
+                statusElement.className = 'api-status error';
+            }
+        }
+        async function checkAccountValidity(accountId) {
+        const button = document.querySelector(`[onclick="checkAccountValidity(${accountId})"]`);
+        button.disabled = true;
+        button.textContent = 'Checking...';
+
+        try {
+            const response = await fetch('/admin/check-account-validity', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ accountId })
+            });
+
+            if (!response.ok) {
+                throw new Error('Validity check failed');
+            }
+
+            // Reload the accounts list to show updated status
+            await loadAccounts();
+        } catch (error) {
+            console.error('Error checking validity:', error);
+            button.textContent = 'Check Failed';
+        } finally {
+            setTimeout(() => {
+                button.disabled = false;
+                button.textContent = 'Check Validity';
+            }, 2000);
+        }
+    }
+
+        // Load accounts when page loads
+        loadAccounts();
+    </script>
+</body>
+</html>

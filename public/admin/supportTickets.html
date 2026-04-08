@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Support Ticket Admin Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #64748b;
+            --success: #22c55e;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --background: #f8fafc;
+            --surface: #ffffff;
+            --text: #0f172a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: var(--background);
+            color: var(--text);
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .stat-card h3 {
+            color: var(--secondary);
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card .value {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .tickets-table {
+            background: var(--surface);
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            width: 100%;
+            margin-bottom: 2rem;
+        }
+
+        .tickets-table th,
+        .tickets-table td {
+            padding: 1rem;
+            text-align: left;
+        }
+
+        .tickets-table th {
+            background: #f1f5f9;
+            font-weight: 600;
+        }
+
+        .tickets-table tr:not(:last-child) {
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .status-open { background: #dbeafe; color: #1e40af; }
+        .status-in_progress { background: #fef3c7; color: #92400e; }
+        .status-resolved { background: #dcfce7; color: #166534; }
+
+        .priority-high { color: var(--danger); }
+        .priority-medium { color: var(--warning); }
+        .priority-low { color: var(--success); }
+
+        .filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        select, button {
+            padding: 0.5rem 1rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.375rem;
+            background: white;
+            font-size: 0.875rem;
+        }
+
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        button:disabled {
+            background: var(--secondary);
+            cursor: not-allowed;
+        }
+
+        .pagination {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            align-items: center;
+            margin: 1rem 0;
+        }
+
+        .activity-log {
+            background: var(--surface);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-top: 2rem;
+        }
+
+        .activity-item {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .bulk-update-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .modal-content h2 {
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+               /* Existing styles... */
+               .chat-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    visibility: visible;
+    opacity: 1;
+}
+
+.chat-modal-content {
+    background: white;
+    width: 500px;
+    height: 600px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+        .chat-header {
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .chat-messages {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 15px;
+        }
+        .chat-input {
+            display: flex;
+            padding: 15px;
+            border-top: 1px solid #e0e0e0;
+        }
+        .chat-input input {
+            flex-grow: 1;
+            margin-right: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .message {
+            margin-bottom: 15px;
+            max-width: 80%;
+        }
+        .message.admin {
+            align-self: flex-end;
+            background-color: #e6f2ff;
+            border-radius: 8px;
+            padding: 10px;
+        }
+        .message.customer {
+            align-self: flex-start;
+            background-color: #f0f0f0;
+            border-radius: 8px;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 style="margin: 2rem 0">Support Ticket Dashboard</h1>
+
+        
+        <div class="dashboard-grid">
+            <div class="stat-card">
+                <h3>Total Tickets</h3>
+                <div class="value" id="total-tickets">-</div>
+            </div>
+            <div class="stat-card">
+                <h3>Open Tickets</h3>
+                <div class="value" id="open-tickets">-</div>
+            </div>
+            <div class="stat-card">
+                <h3>High Priority</h3>
+                <div class="value" id="high-priority-tickets">-</div>
+            </div>
+            <div class="stat-card">
+                <h3>Avg. Response Time</h3>
+                <div class="value" id="avg-response-time">-</div>
+            </div>
+        </div>
+
+        
+        <div class="filters">
+            <select id="status-filter">
+                <option value="">All Status</option>
+                <option value="open">Open</option>
+                <option value="in_progress">In Progress</option>
+                <option value="resolved">Resolved</option>
+            </select>
+            <select id="priority-filter">
+                <option value="">All Priority</option>
+                <option value="high">High</option>
+                <option value="medium">Medium</option>
+                <option value="low">Low</option>
+            </select>
+            <button onclick="applyFilters()">Apply Filters</button>
+            <button onclick="showBulkUpdateModal()" style="margin-left: auto;">Bulk Update</button>
+        </div>
+       
+       <div id="chat-modal" class="chat-modal" style="display: none;">
+        <div class="chat-modal-content">
+            <div class="chat-header">
+                <h3 id="chat-ticket-title">Chat for Ticket #</h3>
+                <button onclick="closeChatModal()">Close</button>
+            </div>
+            <div class="chat-messages" id="chat-messages"></div>
+            <div class="chat-input">
+                <input type="text" id="chat-message-input" placeholder="Type a message...">
+                <button onclick="sendChatMessage()">Send</button>
+            </div>
+        </div>
+    </div>
+        
+        <table class="tickets-table">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" id="select-all" onchange="toggleSelectAll(this)"></th>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Customer</th>
+                    <th>Status</th>
+                    <th>Priority</th>
+                    <th>Created</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="tickets-body"></tbody>
+        </table>
+
+        <div class="pagination" id="pagination"></div>
+
+        
+        <div class="activity-log">
+            <h2 style="margin-bottom: 1rem">Recent Activity</h2>
+            <div id="activity-log"></div>
+        </div>
+    </div>
+
+    
+    <div id="bulk-update-modal" class="bulk-update-modal">
+        <div class="modal-content">
+            <h2>Bulk Update Tickets</h2>
+            <div class="form-group">
+                <label for="bulk-status">Status</label>
+                <select id="bulk-status" class="form-control">
+                    <option value="">No change</option>
+                    <option value="open">Open</option>
+                    <option value="in_progress">In Progress</option>
+                    <option value="resolved">Resolved</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="bulk-priority">Priority</label>
+                <select id="bulk-priority" class="form-control">
+                    <option value="">No change</option>
+                    <option value="high">High</option>
+                    <option value="medium">Medium</option>
+                    <option value="low">Low</option>
+                </select>
+            </div>
+            <div style="display: flex; gap: 1rem; justify-content: flex-end">
+                <button onclick="hideBulkUpdateModal()" style="background: var(--secondary)">Cancel</button>
+                <button onclick="submitBulkUpdate()">Update Tickets</button>
+            </div>
+        </div>
+     
+    </div>
+
+    <script>
+        let currentPage = 1;
+        const ITEMS_PER_PAGE = 10;
+        let currentChatTicketId = null;
+
+        function openChatModal(ticketId, ticketTitle) {
+    console.log('Opening chat for ticket:', ticketId, ticketTitle);
+    
+    // Debug: Get references to modal elements
+    const chatModal = document.getElementById('chat-modal');
+    const chatModalContent = document.querySelector('.chat-modal-content');
+    
+    if (!chatModal || !chatModalContent) {
+        console.error('Chat modal elements not found');
+        return;
+    }
+
+    // Explicitly set display styles
+    chatModal.style.display = 'flex';
+    chatModal.style.visibility = 'visible';
+    chatModal.style.opacity = '1';
+
+    // Set current ticket
+    currentChatTicketId = ticketId;
+    
+    // Set ticket title
+    const ticketTitleElement = document.getElementById('chat-ticket-title');
+    if (ticketTitleElement) {
+        ticketTitleElement.textContent = `Chat for Ticket #${ticketId}`;
+    }
+    
+    // Load chat messages
+    loadTicketChat(ticketId);
+}
+function closeChatModal() {
+    const chatModal = document.getElementById('chat-modal');
+    if (chatModal) {
+        chatModal.style.display = 'none';
+    }
+    
+    const chatMessages = document.getElementById('chat-messages');
+    if (chatMessages) {
+        chatMessages.innerHTML = '';
+    }
+    
+    currentChatTicketId = null;
+}
+function loadTicketChat(ticketId) {
+    console.log('Attempting to load chat for ticket:', ticketId);
+    
+    fetch(`/api/admin/tickets/${ticketId}/chat`)
+        .then(response => {
+            console.log('Fetch response status:', response.status);
+            if (!response.ok) throw new Error('Network response was not ok');
+            return response.json();
+        })
+        .then(messages => {
+            console.log('Received chat messages:', messages);
+            renderChatMessages(messages);
+        })
+        .catch(error => {
+            console.error('Error loading chat:', error);
+            const messagesContainer = document.getElementById('chat-messages');
+            if (messagesContainer) {
+                messagesContainer.innerHTML = `
+                    <div class="message admin" style="color: red;">
+                        Could not load messages: ${error.message}
+                    </div>
+                `;
+            }
+        });
+}
+function renderChatMessages(messages) {
+    const chatMessages = document.getElementById('chat-messages');
+    if (!chatMessages) {
+        console.error('Chat messages container not found');
+        return;
+    }
+
+    // Clear previous messages
+    chatMessages.innerHTML = '';
+
+    // Render messages
+    if (messages.length === 0) {
+        chatMessages.innerHTML = `
+            <div class="message admin" style="text-align: center; color: gray;">
+                No messages yet
+            </div>
+        `;
+        return;
+    }
+
+    messages.forEach(msg => {
+        const messageElem = document.createElement('div');
+        messageElem.className = `message ${msg.is_admin ? 'admin' : 'customer'}`;
+        messageElem.innerHTML = `
+            <strong>${escapeHtml(msg.sender_name || 'Unknown')}</strong>
+            <p>${escapeHtml(msg.message_text)}</p>
+            <small>${new Date(msg.created_at).toLocaleString()}</small>
+        `;
+        chatMessages.appendChild(messageElem);
+    });
+
+    // Scroll to bottom
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+
+function sendChatMessage() {
+    const messageInput = document.getElementById('chat-message-input');
+    const messageText = messageInput.value.trim();
+
+    if (!messageText) {
+        console.warn('No message to send');
+        return;
+    }
+
+    if (!currentChatTicketId) {
+        console.error('No ticket selected for chat');
+        showError('Please select a ticket first');
+        return;
+    }
+
+    fetch(`/api/admin/tickets/${currentChatTicketId}/chat`, {
+        method: 'POST',
+        headers: { 
+            'Content-Type': 'application/json',
+            // Add any authentication headers if required
+        },
+        body: JSON.stringify({ messageText })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(() => {
+        messageInput.value = ''; // Clear input
+        loadTicketChat(currentChatTicketId); // Refresh chat
+        loadActivityLog(); // Update activity log
+    })
+    .catch(error => {
+        console.error('Failed to send chat message:', error);
+        showError('Failed to send message. Please try again.');
+    });
+}
+
+// Utility function to escape HTML to prevent XSS
+function escapeHtml(unsafe) {
+    return (unsafe + '')  // Convert to string
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+// Error display function
+function showError(message) {
+    // You can replace this with a more sophisticated error display
+    alert(message);
+}
+        // Initial load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadStats();
+            loadTickets();
+            loadActivityLog();
+        });
+
+        async function loadStats() {
+            try {
+                const response = await fetch('/api/admin/stats');
+                if (!response.ok) throw new Error('Failed to fetch stats');
+                
+                const stats = await response.json();
+                
+                document.getElementById('total-tickets').textContent = stats.total_tickets;
+                document.getElementById('open-tickets').textContent = stats.open_tickets;
+                document.getElementById('high-priority-tickets').textContent = stats.high_priority_tickets;
+                document.getElementById('avg-response-time').textContent = 
+                    `${Math.round(stats.avg_response_time || 0)}h`;
+            } catch (error) {
+                console.error('Failed to load stats:', error);
+                showError('Failed to load statistics');
+            }
+        }
+
+        async function loadTickets() {
+            try {
+                const status = document.getElementById('status-filter').value;
+                const priority = document.getElementById('priority-filter').value;
+                
+                const response = await fetch(
+                    `/api/admin/tickets?page=${currentPage}&limit=${ITEMS_PER_PAGE}` +
+                    `${status ? `&status=${status}` : ''}` +
+                    `${priority ? `&priority=${priority}` : ''}`
+                );
+                
+                if (!response.ok) throw new Error('Failed to fetch tickets');
+                
+                const data = await response.json();
+                renderTickets(data.tickets);
+                renderPagination(data.totalPages);
+            } catch (error) {
+                console.error('Failed to load tickets:', error);
+                showError('Failed to load tickets');
+            }
+        }
+
+        function renderTickets(tickets) {
+            const tbody = document.getElementById('tickets-body');
+            tbody.innerHTML = tickets.map(ticket => `
+                <tr>
+                    <td><input type="checkbox" class="ticket-checkbox" value="${ticket.ticket_id}"></td>
+                    <td>${ticket.ticket_id}</td>
+                    <td>${escapeHtml(ticket.title)}</td>
+                    <td>${escapeHtml(ticket.customer_name)}</td>
+                    <td><span class="status-badge status-${ticket.status}">${
+                        ticket.status.replace('_', ' ')
+                    }</span></td>
+                    <td class="priority-${ticket.priority}">${ticket.priority}</td>
+                    <td>${new Date(ticket.created_at).toLocaleDateString()}</td>
+                    <td>
+                        <button onclick="editTicket('${ticket.ticket_id}')">Edit</button>
+                        <button onclick="openChatModal('${ticket.ticket_id}', '${escapeHtml(ticket.title)}')">Chat</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function renderPagination(totalPages) {
+            const container = document.getElementById('pagination');
+            container.innerHTML = `
+                <button onclick="changePage(${currentPage - 1})"
+                    ${currentPage === 1 ? 'disabled' : ''}>Previous</button>
+                <span>Page ${currentPage} of ${totalPages}</span>
+                <button onclick="changePage(${currentPage + 1})"
+                    ${currentPage === totalPages ? 'disabled' : ''}>Next</button>
+            `;
+        }
+
+        async function loadActivityLog() {
+            try {
+                const response = await fetch('/api/admin/activity-log');
+                if (!response.ok) throw new Error('Failed to fetch activity log');
+                
+                const logs = await response.json();
+                
+                document.getElementById('activity-log').innerHTML = logs.map(log => `
+                    <div class="activity-item">
+                        <strong>${escapeHtml(log.user_name)}</strong> ${escapeHtml(log.action)}
+                        <span style="color: var(--secondary)">
+                            ${new Date(log.created_at).toLocaleString()}
+                        </span>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Failed to load activity log:', error);
+                showError('Failed to load activity log');
+            }
+        }
+
+        function showBulkUpdateModal() {
+            const selectedTickets = document.querySelectorAll('.ticket-checkbox:checked');
+            if (selectedTickets.length === 0) {
+                alert('Please select tickets to update');
+                return;
+            }
+            
+            document.getElementById('bulk-update-modal').style.display = 'flex';
+        }
+
+        function hideBulkUpdateModal() {
+            document.getElementById('bulk-update-modal').style.display = 'none';
+        }
+
+        async function submitBulkUpdate() {
+            const selectedTickets = Array.from(
+                document.querySelectorAll('.ticket-checkbox:checked')
+            ).map(cb => cb.value);
+
+            const status = document.getElementById('bulk-status').value;
+            const priority = document.getElementById('bulk-priority').value;
+
+            if (!status && !priority) {
+                alert('Please select at least one field to update');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/admin/tickets/bulk-update', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        ticketIds: selectedTickets,
+                        status,
+                        priority
+                    })
+                });
+
+                if (!response.ok) throw new Error('Failed to update tickets');
+
+                hideBulkUpdateModal();
+                loadTickets();
+                loadStats();
+                loadActivityLog();
+            } catch (error) {
+                console.error('Failed to bulk update tickets:', error);
+                showError('Failed to update tickets');
+            }
+        }
+
+        function toggleSelectAll(checkbox) {
+            document.querySelectorAll('.ticket-checkbox')
+                .forEach(cb => cb.checked = checkbox.checked);
+        }
+
+     // Continue from previous script section...
+        
+     function changePage(page) {
+            if (page < 1) return;
+            currentPage = page;
+            loadTickets();
+        }
+
+        function applyFilters() {
+            currentPage = 1;
+            loadTickets();
+        }
+
+        function editTicket(ticketId) {
+            // Redirect to ticket edit page
+            window.location.href = `/support/tickets/${ticketId}/edit`;
+        }
+
+        function escapeHtml(unsafe) {
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function showError(message) {
+            // You can implement a more sophisticated error display
+            alert(message);
+        }
+    </script>
+</body>
+</html>

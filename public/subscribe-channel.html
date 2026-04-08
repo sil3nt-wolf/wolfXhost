@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Subscribe to TalkDrove | Earn Coins! || H.TD</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.2/axios.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="./styles/main.css">
+   
+      <link rel="apple-touch-icon" sizes="180x180" href="https://cdn.talkdrove.com/host/Images/favicon/apple-touch-icon.png">
+      <link rel="icon" type="image/png" sizes="32x32" href="https://cdn.talkdrove.com/host/Images/favicon/favicon-32x32.png">
+      <link rel="icon" type="image/png" sizes="16x16" href="https://cdn.talkdrove.com/host/Images/favicon/favicon-16x16.png">
+    <style>
+       /* Theme Variables - Light */
+:root {
+    --primary: #4361ee;
+    --primary-hover: #3a53d0;
+    --secondary: #e6f0ff;
+    --accent: #3f37c9;
+    --neutral: #333333;
+    --base-100: #ffffff;
+    --base-200: #f8fafc;
+    --base-300: #f1f5f9;
+    --success: #4ade80;
+    --error: #f87171;
+    --warning: #fbbf24;
+    --text-primary: #333333;
+    --text-secondary: #64748b;
+}
+
+/* Dark Theme Override */
+[data-theme="dark"] {
+    --primary: #4361ee;
+    --primary-hover: #3a53d0;
+    --secondary: #1e293b;
+    --accent: #3f37c9;
+    --neutral: #f8fafc;
+    --base-100: #0f172a;
+    --base-200: #1e293b;
+    --base-300: #334155;
+    --text-primary: #ffffff;
+    --text-secondary: #94a3b8;
+}
+
+/* Container Styles */
+.card {
+    background: var(--base-200);
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    text-align: center;
+    border: 1px solid rgba(229, 231, 235, 0.2);
+    transition: all 0.3s ease;
+}
+
+[data-theme="dark"] .card {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+}
+
+/* Channel Info Styles */
+.channel-info {
+    margin: 2rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.channel-logo {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--primary);
+    padding: 2px;
+    background: var(--base-100);
+}
+
+/* Button Styles */
+.button {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 24px;
+    font-size: 1rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+    font-weight: 500;
+}
+
+.button:hover:not(:disabled) {
+    background: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.button:disabled {
+    background: var(--base-300);
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+[data-theme="dark"] .button:disabled {
+    background: var(--base-300);
+    opacity: 0.5;
+}
+
+/* Status Messages */
+.status {
+    margin-top: 1rem;
+    padding: 1rem;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.success {
+    background: var(--success);
+    color: var(--base-100);
+}
+
+.error {
+    background: var(--error);
+    color: var(--base-100);
+}
+
+.warning {
+    background: var(--warning);
+    color: var(--base-100);
+}
+
+/* Coin Balance Display */
+#coinBalance {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--text-primary);
+    margin: 1rem 0;
+    padding: 1rem;
+    background: var(--base-300);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+/* Steps Section */
+.steps {
+    text-align: left;
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background: var(--base-300);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.steps h3 {
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+}
+
+.steps ol {
+    margin: 0;
+    padding-left: 1.5rem;
+    color: var(--text-primary);
+}
+
+.steps li {
+    margin: 0.75rem 0;
+    line-height: 1.5;
+}
+
+/* Checkbox Container */
+.checkbox-container {
+    margin: 1.5rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+#subscriptionCheckbox {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--primary);
+    cursor: pointer;
+}
+
+.checkbox-container label {
+    color: var(--text-primary);
+    cursor: pointer;
+}
+
+/* Timer Display */
+.subscription-timer {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+/* Verify Button Specific */
+#verifyButton {
+    background: var(--success);
+    margin-top: 1rem;
+}
+
+#verifyButton:hover:not(:disabled) {
+    background: #45c674;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .card {
+        padding: 1.5rem;
+        margin: 1rem;
+    }
+
+    .channel-info {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .button {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .checkbox-container {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+/* Dark Theme Specific Adjustments */
+[data-theme="dark"] .steps,
+[data-theme="dark"] #coinBalance {
+    background: var(--base-300);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .card {
+    background: var(--base-200);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .button {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+}
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <h1><a class="logo" href="/dashboard">H.TD</a></h1>
+                        <nav class="nav-controls">
+            
+                <button id="deployBotBtn" class="btn btn-primary" onclick="window.location.href='/dashboard/select-bot'">
+                    <i class="fas fa-plus"></i>
+                    <span>Deploy Bot</span>
+                </button>
+                <button id="themeToggle" class="btn btn-secondary">
+                    <i class="fas fa-adjust"></i>
+                </button>
+
+                <div class="profile-container">
+                    <img src="https://cdn.talkdrove.com/host/Images/profile.webp" alt="Profile" class="profile-pic" id="profileBtn">
+                    <div class="dropdown" id="profileDropdown">
+                        <a href="/dashboard/invite" class="dropdown-item">
+                            <i class="fas fa-share"></i>
+                            <span>Invite</span>
+                        </a>
+                        <a href="/dashboard/wallet" class="dropdown-item">
+                            <i class="fas fa-wallet"></i>
+                            <span>Wallet</span>
+                        </a>
+                        <a href="/dashboard/wallet/deposit" class="dropdown-item">
+                            <i class="fas fa-coins"></i>
+                            <span>Deposit</span>
+                        </a>
+                        <a href="/dashboard/my-heroku" class="dropdown-item">
+                            <i class="fas fa-server"></i>
+                            <span>My Heroku</span>
+                        </a>
+                        <a href="/dashboard/account-settings" class="dropdown-item">
+                            <i class="fas fa-cog"></i>
+                            <span>Settings</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="/logout" class="dropdown-item" id="logoutBtn">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Logout</span>
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+  
+    <div class="card">
+        <div class="channel-info">
+            <img src="https://cdn.talkdrove.com/talkdrove/images/lander/TalkDrove_logo.png" alt="TalkDrove" class="channel-logo">
+            <h1>Subscribe to TalkDrove</h1>
+        </div>
+        
+        <div id="coinBalance">Your balance: <span id="balance">loading</span></div>
+        
+        <p>Subscribe to TalkDrove channel and earn 10 coins as a reward!</p>
+
+        <div class="steps">
+            <h3>How to get your reward:</h3>
+            <ol>
+                <li>Click the "Subscribe on YouTube" button below</li>
+                <li>Subscribe to TalkDrove channel</li>
+                <li>Check the confirmation box below</li>
+                <li>Click "Verify Subscription" to receive your reward</li>
+            </ol>
+        </div>
+
+        <button id="subscribeButton" onclick="handleSubscribe()" class="button">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path>
+                <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon>
+            </svg>
+            Subscribe on YouTube
+        </button>
+        
+        <div id="subscriptionTimer" class="subscription-timer"></div>
+        <div class="checkbox-container">
+            <input type="checkbox" id="subscriptionCheckbox" onchange="handleCheckboxChange()">
+            <label for="subscriptionCheckbox">I confirm that I have subscribed to the TalkDrove channel</label>
+        </div>
+        
+        <button id="verifyButton" class="button" style="background: var(--success);" disabled="disabled">
+            Verify Subscription
+        </button>
+
+        <div id="status" class="status" style="display: none;"></div>
+    </div>
+
+    <script>
+        let subscribeWindowRef = null;
+        let verificationTimer = null;
+        const VERIFICATION_DELAY = 10; // seconds to wait before enabling verification
+
+        function handleSubscribe() {
+            subscribeWindowRef = window.open('https://youtube.com/@TalkDrove', '_blank');
+            document.getElementById('subscriptionCheckbox').disabled = false;
+            startVerificationTimer();
+        }
+
+        function startVerificationTimer() {
+            let timeLeft = VERIFICATION_DELAY;
+            const timerElement = document.getElementById('subscriptionTimer');
+            
+            clearInterval(verificationTimer);
+            verificationTimer = setInterval(() => {
+                if (timeLeft > 0) {
+                    timerElement.textContent = `Please wait ${timeLeft} seconds before confirming your subscription`;
+                    timeLeft--;
+                } else {
+                    timerElement.textContent = 'You can now confirm your subscription';
+                    clearInterval(verificationTimer);
+                }
+            }, 1000);
+        }
+
+        function handleCheckboxChange() {
+            const checkbox = document.getElementById('subscriptionCheckbox');
+            const verifyButton = document.getElementById('verifyButton');
+            const timerElement = document.getElementById('subscriptionTimer');
+            
+            if (checkbox.checked) {
+                verifyButton.style.display = 'inline-flex';
+                if (!timerElement.textContent.includes('can now confirm')) {
+                    verifyButton.disabled = true;
+                } else {
+                    verifyButton.disabled = false;
+                }
+            } else {
+                verifyButton.style.display = 'none';
+            }
+        }
+
+        async function checkSubscriptionStatus() {
+            try {
+                const response = await axios.get('/api/youtube-subscription-status');
+                if (response.data.subscribed) {
+                    showStatus('You have already received rewards for this channel', 'warning');
+                    document.getElementById('subscribeButton').disabled = true;
+                    document.getElementById('subscriptionCheckbox').disabled = true;
+                }
+            } catch (error) {
+                console.error('Error checking subscription status:', error);
+            }
+        }
+
+        document.getElementById('verifyButton').addEventListener('click', async () => {
+            try {
+                const response = await axios.post('/api/youtube-subscribe', {
+                    channelId: 'TalkDrove'
+                });
+                
+                if (response.data.success) {
+                    showStatus('Successfully verified! 10 coins have been added to your wallet.', 'success');
+                    updateBalance();
+                    document.getElementById('subscribeButton').disabled = true;
+                    document.getElementById('subscriptionCheckbox').disabled = true;
+                    document.getElementById('verifyButton').disabled = true;
+                }
+            } catch (error) {
+                showStatus(error.response?.data?.error || 'An error occurred', 'error');
+            }
+        });
+
+        async function updateBalance() {
+            try {
+                const response = await axios.get('/api/wallet');
+                document.getElementById('balance').textContent = response.data.coins;
+            } catch (error) {
+                console.error('Error fetching balance:', error);
+            }
+        }
+
+        function showStatus(message, type) {
+            const statusElement = document.getElementById('status');
+            statusElement.textContent = message;
+            statusElement.className = `status ${type}`;
+            statusElement.style.display = 'block';
+            
+            if (type !== 'warning') {
+                setTimeout(() => {
+                    statusElement.style.display = 'none';
+                }, 5000);
+            }
+        }
+
+        // Initialize
+        updateBalance();
+        checkSubscriptionStatus();
+    </script>
+        <script src="./js/main.js"></script>   
+</body>
+</html>

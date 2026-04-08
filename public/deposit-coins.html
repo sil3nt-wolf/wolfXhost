@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Deposit Coins || H.TD</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://cdn.talkdrove.com/host/Images/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://cdn.talkdrove.com/host/Images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://cdn.talkdrove.com/host/Images/favicon/favicon-16x16.png">
+    <link rel="stylesheet" href="./styles/main.css">
+    <style>
+
+
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .card {
+            background: var(--base-100);
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .card h1, .card h2 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            background-color: var(--base-100);
+            color: var(--text-primary);
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px var(--primary-hover);
+        }
+
+        .file-upload {
+            border: 2px dashed var(--border-color);
+            padding: 2rem;
+            text-align: center;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .file-upload:hover {
+            border-color: var(--primary);
+        }
+
+        .file-upload input[type="file"] {
+            display: none;
+        }
+
+        .preview-image {
+            max-width: 100%;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            background: var(--base-100);
+            color: var(--text-primary);
+            box-shadow: var(--shadow-md);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            animation: slideIn 0.3s ease-out;
+            z-index: 1000;
+        }
+
+        .toast.success {
+            border-left: 4px solid var(--success);
+        }
+
+        .toast.error {
+            border-left: 4px solid var(--error);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .transactions {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .transactions th,
+        .transactions td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .transactions th {
+            background: var(--base-200);
+            font-weight: 600;
+        }
+
+        .status {
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-weight: 500;
+            font-size: 0.875rem;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-approved {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-rejected {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        @media (max-width: 640px) {
+            .card {
+                padding: 1rem;
+            }
+
+            .transactions th,
+            .transactions td {
+                padding: 0.75rem;
+                font-size: 0.875rem;
+            }
+        }
+
+
+    .thumbnail:hover {
+        opacity: 0.8;
+    }
+
+    .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.9);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+    }
+
+    .modal-content {
+        position: relative;
+        width: 90%;
+        height: 90%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+    }
+
+    .modal-image {
+        max-width: 95%;
+        max-height: 95vh;
+        object-fit: contain;
+        border-radius: 4px;
+    }
+
+    .close-button {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: rgba(255, 255, 255, 0.2);
+        border: none;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.5rem;
+        transition: background-color 0.3s ease;
+    }
+
+    .close-button:hover {
+        background: rgba(255, 255, 255, 0.3);
+    }
+
+    .thumbnail {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+    }
+
+    .thumbnail:hover {
+        transform: scale(1.05);
+    }
+
+    @keyframes modalFadeIn {
+        from {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    @keyframes modalFadeOut {
+        from {
+            opacity: 1;
+            transform: scale(1);
+        }
+        to {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+    }
+
+    .modal.fade-in {
+        animation: modalFadeIn 0.3s ease forwards;
+    }
+
+    .modal.fade-out {
+        animation: modalFadeOut 0.3s ease forwards;
+    }
+    .searchLink{
+        color: white;
+        text-decoration: none;
+    }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <h1><a class="logo" href="/dashboard">H.TD</a></h1>
+            <nav class="nav-controls">
+                
+                <button id="deployBotBtn" class="btn btn-primary" onclick="window.location.href='/dashboard/select-bot'">
+                    <i class="fas fa-plus"></i>
+                    <span>Deploy Bot</span>
+                </button>
+                <button id="themeToggle" class="btn btn-secondary">
+                    <i class="fas fa-adjust"></i>
+                </button>
+                
+                
+                <div class="profile-container">
+                    <img src="https://cdn.talkdrove.com/host/Images/profile.webp" alt="Profile" class="profile-pic" id="profileBtn">
+                    <div class="dropdown" id="profileDropdown">
+                        <a href="/dashboard/invite" class="dropdown-item">
+                            <i class="fas fa-share"></i>
+                            <span>Invite</span>
+                        </a>
+                        <a href="/dashboard/wallet" class="dropdown-item">
+                            <i class="fas fa-wallet"></i>
+                            <span>Wallet</span>
+                        </a>
+                        <a href="/dashboard/account-settings" class="dropdown-item">
+                            <i class="fas fa-cog"></i>
+                            <span>Settings</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="/logout" class="dropdown-item" id="logoutBtn">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Logout</span>
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+
+    <div class="container">
+        <div class="card">
+            <h1>Deposit Coins</h1>
+            <form id="depositForm">
+                <div class="form-group">
+                    <label for="paymentMethod">Payment Method</label>
+                    <select id="paymentMethod" class="form-control" required>
+                        <option value="">Select Payment Method</option>
+                    </select>
+                </div>
+
+                <div id="paymentDetails" class="card" style="display: none; margin: 1rem 0;">
+                    <h2>Payment Details</h2>
+                    <div id="paymentDetailsContent"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="amount">Coins</label>
+                    <input type="number" id="amount" class="form-control" min="100" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Payment Screenshot</label>
+                    <div class="file-upload" id="dropZone">
+                        <i class="fas fa-camera fa-2x"></i>
+                        <p>Click or drag screenshot here</p>
+                        <input type="file" id="screenshot" accept="image/*" required>
+                    </div>
+                    <img id="previewImage" class="preview-image">
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="submitBtn">
+                    Submit Deposit Request
+                </button>
+            </form>
+        </div>
+
+        <div class="card">
+            <h2>Transaction History</h2>
+            <div id="transactionsLoading">Loading transactions...</div>
+            <table class="transactions" id="transactionsTable">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Screenshot</th>
+                    </tr>
+                </thead>
+                <tbody id="transactionsBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+ <script>
+    // Toast notification system
+function showToast(message, type = 'success') {
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.innerHTML = `
+        <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+        <span>${message}</span>
+    `;
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+        toast.style.animation = 'slideOut 0.3s ease-in forwards';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
+// File handling system
+function handleFile(file) {
+    if (!file) return;
+    
+    const fileInput = document.getElementById('screenshot');
+    const previewImage = document.getElementById('previewImage');
+
+    if (!file.type.startsWith('image/')) {
+        showToast('Please select an image file (JPG, PNG, or GIF)', 'error');
+        fileInput.value = '';
+        previewImage.style.display = 'none';
+        return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) { // 5MB limit
+        showToast('File size must be less than 5MB', 'error');
+        fileInput.value = '';
+        previewImage.style.display = 'none';
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        previewImage.src = e.target.result;
+        previewImage.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+}
+
+// Payment System Initialization
+const initializePayments = () => {
+    let currentUserCurrency = null;
+    let exchangeRates = null;
+    const BASE_COIN_PRICE_USD = 0.0006;
+
+    const COUNTRY_CURRENCIES = {
+    'AD': 'EUR', // Andorra
+    'AE': 'AED', // United Arab Emirates
+    'AF': 'AFN', // Afghanistan
+    'AG': 'XCD', // Antigua and Barbuda
+    'AI': 'XCD', // Anguilla
+    'AL': 'ALL', // Albania
+    'AM': 'AMD', // Armenia
+    'AO': 'AOA', // Angola
+    'AR': 'ARS', // Argentina
+    'AS': 'USD', // American Samoa
+    'AT': 'EUR', // Austria
+    'AU': 'AUD', // Australia
+    'AW': 'AWG', // Aruba
+    'AZ': 'AZN', // Azerbaijan
+    'BA': 'BAM', // Bosnia and Herzegovina
+    'BB': 'BBD', // Barbados
+    'BD': 'BDT', // Bangladesh
+    'BE': 'EUR', // Belgium
+    'BF': 'XOF', // Burkina Faso
+    'BG': 'BGN', // Bulgaria
+    'BH': 'BHD', // Bahrain
+    'BI': 'BIF', // Burundi
+    'BJ': 'XOF', // Benin
+    'BM': 'BMD', // Bermuda
+    'BN': 'BND', // Brunei
+    'BO': 'BOB', // Bolivia
+    'BR': 'BRL', // Brazil
+    'BS': 'BSD', // Bahamas
+    'BT': 'BTN', // Bhutan
+    'BW': 'BWP', // Botswana
+    'BY': 'BYN', // Belarus
+    'BZ': 'BZD', // Belize
+    'CA': 'CAD', // Canada
+    'CD': 'CDF', // Democratic Republic of the Congo
+    'CH': 'CHF', // Switzerland
+    'CI': 'XOF', // Côte d'Ivoire
+    'CK': 'NZD', // Cook Islands
+    'CL': 'CLP', // Chile
+    'CM': 'XAF', // Cameroon
+    'CN': 'CNY', // China
+    'CO': 'COP', // Colombia
+    'CR': 'CRC', // Costa Rica
+    'CU': 'CUP', // Cuba
+    'CV': 'CVE', // Cape Verde
+    'CY': 'EUR', // Cyprus
+    'CZ': 'CZK', // Czech Republic
+    'DE': 'EUR', // Germany
+    'DJ': 'DJF', // Djibouti
+    'DK': 'DKK', // Denmark
+    'DM': 'XCD', // Dominica
+    'DO': 'DOP', // Dominican Republic
+    'DZ': 'DZD', // Algeria
+    'EC': 'USD', // Ecuador
+    'EE': 'EUR', // Estonia
+    'EG': 'EGP', // Egypt
+    'ES': 'EUR', // Spain
+    'ET': 'ETB', // Ethiopia
+    'EU': 'EUR', // European Union
+    'FI': 'EUR', // Finland
+    'FJ': 'FJD', // Fiji
+    'FK': 'FKP', // Falkland Islands
+    'FR': 'EUR', // France
+    'GA': 'XAF', // Gabon
+    'GB': 'GBP', // United Kingdom
+    'GD': 'XCD', // Grenada
+    'GE': 'GEL', // Georgia
+    'GH': 'GHS', // Ghana
+    'GI': 'GIP', // Gibraltar
+    'GM': 'GMD', // Gambia
+    'GN': 'GNF', // Guinea
+    'GR': 'EUR', // Greece
+    'GT': 'GTQ', // Guatemala
+    'GU': 'USD', // Guam
+    'GW': 'XOF', // Guinea-Bissau
+    'GY': 'GYD', // Guyana
+    'HK': 'HKD', // Hong Kong
+    'HN': 'HNL', // Honduras
+    'HR': 'HRK', // Croatia
+    'HT': 'HTG', // Haiti
+    'HU': 'HUF', // Hungary
+    'ID': 'IDR', // Indonesia
+    'IE': 'EUR', // Ireland
+    'IL': 'ILS', // Israel
+    'IN': 'INR', // India
+    'IQ': 'IQD', // Iraq
+    'IR': 'IRR', // Iran
+    'IS': 'ISK', // Iceland
+    'IT': 'EUR', // Italy
+    'JM': 'JMD', // Jamaica
+    'JO': 'JOD', // Jordan
+    'JP': 'JPY', // Japan
+    'KE': 'KES', // Kenya
+    'KG': 'KGS', // Kyrgyzstan
+    'KH': 'KHR', // Cambodia
+    'KM': 'KMF', // Comoros
+    'KP': 'KPW', // North Korea
+    'KR': 'KRW', // South Korea
+    'KW': 'KWD', // Kuwait
+    'KY': 'KYD', // Cayman Islands
+    'KZ': 'KZT', // Kazakhstan
+    'LA': 'LAK', // Laos
+    'LB': 'LBP', // Lebanon
+    'LC': 'XCD', // Saint Lucia
+    'LI': 'CHF', // Liechtenstein
+    'LK': 'LKR', // Sri Lanka
+    'LR': 'LRD', // Liberia
+    'LS': 'LSL', // Lesotho
+    'LT': 'EUR', // Lithuania
+    'LU': 'EUR', // Luxembourg
+    'LV': 'EUR', // Latvia
+    'LY': 'LYD', // Libya
+    'MA': 'MAD', // Morocco
+    'MC': 'EUR', // Monaco
+    'MD': 'MDL', // Moldova
+    'ME': 'EUR', // Montenegro
+    'MG': 'MGA', // Madagascar
+    'MH': 'USD', // Marshall Islands
+    'MK': 'MKD', // North Macedonia
+    'ML': 'XOF', // Mali
+    'MM': 'MMK', // Myanmar
+    'MN': 'MNT', // Mongolia
+    'MO': 'MOP', // Macau
+    'MP': 'USD', // Northern Mariana Islands
+    'MR': 'MRU', // Mauritania
+    'MS': 'XCD', // Montserrat
+    'MT': 'EUR', // Malta
+    'MU': 'MUR', // Mauritius
+    'MV': 'MVR', // Maldives
+    'MW': 'MWK', // Malawi
+    'MX': 'MXN', // Mexico
+    'MY': 'MYR', // Malaysia
+    'MZ': 'MZN', // Mozambique
+    'NA': 'NAD', // Namibia
+    'NC': 'XPF', // New Caledonia
+    'NE': 'XOF', // Niger
+    'NG': 'NGN', // Nigeria
+    'NI': 'NIO', // Nicaragua
+    'NL': 'EUR', // Netherlands
+    'NO': 'NOK', // Norway
+    'NP': 'NPR', // Nepal
+    'NR': 'AUD', // Nauru
+    'NZ': 'NZD', // New Zealand
+    'OM': 'OMR', // Oman
+    'PA': 'PAB', // Panama
+    'PE': 'PEN', // Peru
+    'PF': 'XPF', // French Polynesia
+    'PG': 'PGK', // Papua New Guinea
+    'PH': 'PHP', // Philippines
+    'PK': 'PKR', // Pakistan
+    'PL': 'PLN', // Poland
+    'PR': 'USD', // Puerto Rico
+    'PT': 'EUR', // Portugal
+    'PW': 'USD', // Palau
+    'PY': 'PYG', // Paraguay
+    'QA': 'QAR', // Qatar
+    'RO': 'RON', // Romania
+    'RS': 'RSD', // Serbia
+    'RU': 'RUB', // Russia
+    'RW': 'RWF', // Rwanda
+    'SA': 'SAR', // Saudi Arabia
+    'SB': 'SBD', // Solomon Islands
+    'SC': 'SCR', // Seychelles
+    'SD': 'SDG', // Sudan
+    'SE': 'SEK', // Sweden
+    'SG': 'SGD', // Singapore
+    'SI': 'EUR', // Slovenia
+    'SK': 'EUR', // Slovakia
+    'SL': 'SLL', // Sierra Leone
+    'SM': 'EUR', // San Marino
+    'SN': 'XOF', // Senegal
+    'SO': 'SOS', // Somalia
+    'SR': 'SRD', // Suriname
+    'SS': 'SSP', // South Sudan
+    'ST': 'STN', // São Tomé and Príncipe
+    'SV': 'USD', // El Salvador
+    'SY': 'SYP', // Syria
+    'SZ': 'SZL', // Eswatini
+    'TC': 'USD', // Turks and Caicos Islands
+    'TD': 'XAF', // Chad
+    'TG': 'XOF', // Togo
+    'TH': 'THB', // Thailand
+    'TJ': 'TJS', // Tajikistan
+    'TL': 'USD', // East Timor
+    'TM': 'TMT', // Turkmenistan
+    'TN': 'TND', // Tunisia
+    'TO': 'TOP', // Tonga
+    'TR': 'TRY', // Turkey
+    'TT': 'TTD', // Trinidad and Tobago
+    'TV': 'AUD', // Tuvalu
+    'TW': 'TWD', // Taiwan
+    'TZ': 'TZS', // Tanzania
+    'UA': 'UAH', // Ukraine
+    'UG': 'UGX', // Uganda
+    'US': 'USD', // United States
+    'UY': 'UYU', // Uruguay
+    'UZ': 'UZS', // Uzbekistan
+    'VA': 'EUR', // Vatican City
+    'VC': 'XCD', // Saint Vincent and the Grenadines
+    'VE': 'VES', // Venezuela
+    'VG': 'USD', // British Virgin Islands
+    'VI': 'USD', // U.S. Virgin Islands
+    'VN': 'VND', // Vietnam
+    'VU': 'VUV', // Vanuatu
+    'WS': 'WST', // Samoa
+    'XK': 'EUR', // Kosovo
+    'YE': 'YER', // Yemen
+    'ZA': 'ZAR', // South Africa
+    'ZM': 'ZMW', // Zambia
+    'ZW': 'ZWL'  // Zimbabwe
+};
+
+    // Fallback exchange rates
+    const FALLBACK_RATES = {
+        USD: 1,
+        EUR: 0.92,
+        GBP: 0.79,
+        PKR: 278.50,
+        NGN: 1525.00,
+        INR: 83.12
+    };
+
+    async function fetchExchangeRates() {
+        try {
+            const response = await fetch('https://api.frankfurter.app/latest?from=USD');
+            if (!response.ok) throw new Error('Failed to fetch rates');
+            const data = await response.json();
+            exchangeRates = { ...data.rates, USD: 1 };
+            updateCurrencyDisplay();
+        } catch (error) {
+            console.error('Error fetching rates:', error);
+            exchangeRates = FALLBACK_RATES;
+            showToast('Using stored exchange rates', 'warning');
+            updateCurrencyDisplay();
+        }
+    }
+
+    async function loadPaymentMethods() {
+        try {
+            const response = await fetch('/api/payment-methods');
+            if (!response.ok) throw new Error('Failed to load payment methods');
+            
+            const data = await response.json();
+            // Convert country code to currency
+            const countryCode = data.userCountry || 'US'; // Default to US if not provided
+            currentUserCurrency = COUNTRY_CURRENCIES[countryCode] || 'USD'; // Default to USD if country not found
+            
+            const select = document.getElementById('paymentMethod');
+            select.innerHTML = '<option value="">Select Payment Method</option>';
+            
+            data.methods.forEach(method => {
+                const option = document.createElement('option');
+                option.value = method.id;
+                option.textContent = method.name;
+                select.appendChild(option);
+            });
+
+            // After getting currency, fetch exchange rates and update display
+            await fetchExchangeRates();
+            
+        } catch (error) {
+            console.error('Error loading payment methods:', error);
+            showToast('Error loading payment methods', 'error');
+        }
+    }
+
+    function formatCurrency(amount, currency) {
+        return new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: currency,
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        }).format(amount);
+    }
+
+    function updateCurrencyDisplay() {
+    if (!exchangeRates || !currentUserCurrency) return;
+
+    const coinPriceInUSD = BASE_COIN_PRICE_USD;
+    let currencyInfoDiv = document.getElementById('currencyInfo');
+    
+    if (!currencyInfoDiv) {
+        currencyInfoDiv = document.createElement('div');
+        currencyInfoDiv.id = 'currencyInfo';
+        currencyInfoDiv.className = 'card mb-4';
+        const form = document.getElementById('depositForm');
+        form.parentNode.insertBefore(currencyInfoDiv, form);
+    }
+
+    currencyInfoDiv.innerHTML = `
+        <div class="p-4">
+            <h3 class="text-lg font-semibold mb-2">Currency Information</h3>
+            <div class="grid gap-2">
+                <div class="flex justify-between items-center">
+                    <span>1 Coin Price:</span>
+                    <span class="font-semibold">${formatCurrency(BASE_COIN_PRICE_USD, 'USD')}</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span>1000 Coins Price:</span>
+                    <span class="font-semibold">${formatCurrency(BASE_COIN_PRICE_USD * 1000, 'USD')}</span>
+                </div>
+                <div class="text-sm text-gray-600">
+                    <span>Your Currency:</span>
+                    <span class="font-semibold ml-1">${currentUserCurrency}</span>
+                </div>
+            </div>
+        </div>
+    `;
+
+    setupAmountCalculator(coinPriceInUSD);
+}
+    function setupAmountCalculator(coinPrice) {
+    const amountInput = document.getElementById('amount');
+    let totalDiv = document.getElementById('totalAmount');
+    
+    if (!totalDiv) {
+        totalDiv = document.createElement('div');
+        totalDiv.id = 'totalAmount';
+        totalDiv.className = 'mt-2';
+        amountInput.parentNode.appendChild(totalDiv);
+    }
+
+    const updateTotal = (coins) => {
+        if (coins > 0) {
+            const totalUSD = (coins * BASE_COIN_PRICE_USD); // Calculate total in USD
+            const totalLocalCurrency = coins * coinPrice;
+            
+            // Create Google search query for currency conversion
+            const searchQuery = `${totalUSD.toFixed(2)} USD to ${currentUserCurrency}`;
+            const googleSearchURL = `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`;
+
+            totalDiv.innerHTML = `
+                <div class="bg-secondary p-3 rounded">
+                    <div class="flex justify-between items-center">
+                        <span>Pay USD:</span>
+                        <span class="font-semibold">${formatCurrency(totalUSD, 'USD')}</span>
+                    </div>
+                    <div class="mt-3 text-sm">
+                        <a class = "searchLink"  href="${googleSearchURL}" 
+                           target="_blank" 
+                           class="text-blue-500 hover:text-blue-700 flex items-center gap-2">
+                            <i class="fas fa-external-link-alt"></i>
+                            Check price in your currency
+                        </a>
+                    </div>
+                </div>
+            `;
+        } else {
+            totalDiv.innerHTML = '';
+        }
+    };
+
+    // Remove existing event listener and create new one
+    const newAmountInput = amountInput.cloneNode(true);
+    amountInput.parentNode.replaceChild(newAmountInput, amountInput);
+    
+    newAmountInput.addEventListener('input', (e) => {
+        updateTotal(Number(e.target.value));
+    });
+}
+
+    return {
+        initialize: async () => {
+            await loadPaymentMethods(); // This will also trigger exchange rates fetch and display updates
+            setInterval(fetchExchangeRates, 1800000); // Update rates every 30 minutes
+            fetchTransactions();
+        }
+    };
+
+
+
+
+    };
+
+
+// Event Listeners Setup
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('depositForm');
+    const fileInput = document.getElementById('screenshot');
+    const dropZone = document.getElementById('dropZone');
+    const submitBtn = document.getElementById('submitBtn');
+
+    // File input handling
+    fileInput.addEventListener('change', (e) => {
+        handleFile(e.target.files[0]);
+    });
+
+    dropZone.addEventListener('click', (e) => {
+        if (e.target !== fileInput) {
+            fileInput.click();
+        }
+    });
+
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.style.borderColor = 'var(--primary)';
+    });
+
+    dropZone.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        dropZone.style.borderColor = 'var(--border-color)';
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.style.borderColor = 'var(--border-color)';
+        const file = e.dataTransfer.files[0];
+        fileInput.files = e.dataTransfer.files;
+        handleFile(file);
+    });
+
+    // Form submission
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        submitBtn.disabled = true;
+
+        const amount = document.getElementById('amount').value;
+        const paymentMethod = document.getElementById('paymentMethod').value;
+        const screenshot = fileInput.files[0];
+
+        if (!amount || amount <= 0) {
+            showToast('Please enter a valid amount', 'error');
+            submitBtn.disabled = false;
+            return;
+        }
+
+        if (!paymentMethod) {
+            showToast('Please select a payment method', 'error');
+            submitBtn.disabled = false;
+            return;
+        }
+
+        if (!screenshot) {
+            showToast('Please upload a payment screenshot', 'error');
+            submitBtn.disabled = false;
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('amount', amount);
+        formData.append('paymentMethod', paymentMethod);
+        formData.append('paymentScreenshot', screenshot);
+
+        try {
+            const response = await fetch('/api/deposit-coins', {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                showToast(data.message, 'success');
+                form.reset();
+                document.getElementById('previewImage').style.display = 'none';
+                fetchTransactions();
+            } else {
+                throw new Error(data.error || 'Failed to submit deposit request');
+            }
+        } catch (error) {
+            showToast(error.message, 'error');
+        } finally {
+            submitBtn.disabled = false;
+        }
+    });
+
+    // Payment method change handler
+    document.getElementById('paymentMethod').addEventListener('change', async function(e) {
+        const methodId = e.target.value;
+        const detailsDiv = document.getElementById('paymentDetails');
+        const detailsContent = document.getElementById('paymentDetailsContent');
+        
+        if (!methodId) {
+            detailsDiv.style.display = 'none';
+            return;
+        }
+        
+        try {
+            const response = await fetch(`/api/payment-method-details/${methodId}`);
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error('Failed to load payment details');
+            }
+            
+            detailsContent.innerHTML = `
+                <div class="payment-info">
+                    <div class="mb-4">
+                        <div class="font-medium mb-2">Account Name</div>
+                        <div class="flex items-center gap-2">
+                            <code class="bg-secondary p-2 rounded flex-1">${data.account_name}</code>
+                            <button class="btn btn-secondary" onclick="copyToClipboard('${data.account_name}')">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <div class="font-medium mb-2">Account Number</div>
+                        <div class="flex items-center gap-2">
+                            <code class="bg-secondary p-2 rounded flex-1">${data.account_number}</code>
+                            <button class="btn btn-secondary" onclick="copyToClipboard('${data.account_number}')">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                    ${data.additional_info ? `
+                        <div>
+                            <div class="font-medium mb-2">Additional Information</div>
+                            <div class="bg-secondary p-2 rounded">${data.additional_info}</div>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+            detailsDiv.style.display = 'block';
+        } catch (error) {
+            showToast('Error loading payment details', 'error');
+        }
+    });
+
+    // Initialize the payments system
+    const paymentsSystem = initializePayments();
+    paymentsSystem.initialize();
+});
+
+// Transaction management
+async function fetchTransactions() {
+    const loadingDiv = document.getElementById('transactionsLoading');
+    const tbody = document.getElementById('transactionsBody');
+    const table = document.getElementById('transactionsTable');
+
+    try {
+        loadingDiv.style.display = 'block';
+        table.style.display = 'none';
+
+        const response = await fetch('/api/user-transactions');
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch transactions');
+        }
+
+        tbody.innerHTML = '';
+
+        if (data.transactions.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="4" class="text-center py-8">
+                        <div class="flex flex-col items-center justify-center gap-2">
+                            <i class="fas fa-inbox fa-2x text-gray-400"></i>
+                            <p>No transactions found</p>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        } else {
+            data.transactions.forEach(tx => {
+                const row = document.createElement('tr');
+                const date = new Date(tx.created_at).toLocaleString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+
+                row.innerHTML = `
+                    <td>${date}</td>
+                    <td>${tx.amount}</td>
+                    <td>
+                        <span class="status status-${tx.status.toLowerCase()}">
+                            ${tx.status}
+                        </span>
+                    </td>
+                    <td>
+                        ${tx.payment_screenshot !== 'N/A' 
+                            ? `<img src="/uploads/${tx.payment_screenshot}" 
+                                   alt="Payment Screenshot" 
+                                   class="thumbnail"
+                                   onclick="openScreenshot('/uploads/${tx.payment_screenshot}')">`
+                            : 'N/A'
+                        }
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+    } catch (error) {
+        showToast('Error fetching transactions', 'error');
+    } finally {
+        loadingDiv.style.display = 'none';
+        table.style.display = 'table';
+    }
+}
+
+// Screenshot modal
+function openScreenshot(url) {
+    const modal = document.createElement('div');
+    modal.className = 'modal fade-in';
+    
+    modal.innerHTML = `
+        <div class="modal-content">
+            <button class="close-button" aria-label="Close modal">
+                <i class="fas fa-times"></i>
+            </button>
+            <img src="${url}" alt="Payment Screenshot" class="modal-image">
+        </div>
+    `;
+
+   // Screenshot modal (continued)
+   const closeModal = () => {
+        modal.classList.remove('fade-in');
+        modal.classList.add('fade-out');
+        setTimeout(() => {
+            modal.remove();
+            document.body.style.overflow = '';
+        }, 300);
+    };
+    
+    // Close on button click
+    const closeButton = modal.querySelector('.close-button');
+    closeButton.addEventListener('click', (e) => {
+        e.stopPropagation();
+        closeModal();
+    });
+
+    // Close on background click
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeModal();
+        }
+    });
+
+    // Close on escape key
+    document.addEventListener('keydown', function closeOnEscape(e) {
+        if (e.key === 'Escape') {
+            closeModal();
+            document.removeEventListener('keydown', closeOnEscape);
+        }
+    });
+    
+    document.body.appendChild(modal);
+    document.body.style.overflow = 'hidden';
+
+    // Re-enable scrolling when modal is closed
+    modal.addEventListener('animationend', (e) => {
+        if (e.animationName === 'modalFadeOut') {
+            document.body.style.overflow = '';
+        }
+    });
+}
+
+// Clipboard functionality
+async function copyToClipboard(text) {
+    try {
+        await navigator.clipboard.writeText(text);
+        showToast('Copied to clipboard', 'success');
+    } catch (err) {
+        showToast('Failed to copy text', 'error');
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const paymentsSystem = initializePayments();
+    paymentsSystem.initialize().catch(error => {
+        console.error('Failed to initialize payment system:', error);
+        showToast('Error initializing payment system', 'error');
+    });
+});
+// Start periodic transaction refresh
+setInterval(fetchTransactions, 60000); // Refresh every minute
+ </script>
+<script src="./js/main.js"></script>
+</body>
+</html>

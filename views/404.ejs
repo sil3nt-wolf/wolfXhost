@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Not found >>  <%= url %></title>
+    <style>
+     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+
+
+     :root {
+    --primary: #4361ee;
+    --primary-hover: #3a53d0;
+    --secondary: #e6f0ff;
+    --accent: #3f37c9;
+    --neutral: #333333;
+    --base-100: #ffffff;
+    --base-200: #f8fafc;
+    --base-300: #f1f5f9;
+    --base-hamza: #4895ef;
+    --loader: #f8fafc;
+    --success: #4ade80;
+    --error: #f87171;
+    --loaderText: #1e293b;
+    --text-primary: #333333;
+    --pagination-text: #333333;
+}
+
+[data-theme="dark"] {
+    --primary: #4361ee;
+    --primary-hover: #3a53d0;
+    --secondary: #1e293b;
+    --accent: #3f37c9;
+    --neutral: #f8fafc;
+    --base-100: #0f172a;
+    --base-200: #1e293b;
+    --base-300: #334155;
+    --base-hamza: #1e293b;
+    --loader: #0f172a;
+    --loaderText: #f8fafc;
+    --text-primary: #ffffff;
+    --pagination-text: #ffffff;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    font-family: 'Inter', sans-serif;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    overflow: hidden;
+}
+
+.box {
+    width: 400px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border-radius: 24px;
+    padding: 40px;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.ghost {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    background: #fff;
+    border-radius: 60px 60px 0 0;
+    margin: 0 auto 20px;
+    animation: float 3s ease-in-out infinite;
+}
+
+.ghost-eyes {
+    position: absolute;
+    left: 50%;
+    top: 45%;
+    height: 12px;
+    width: 70px;
+    transform: translateX(-50%);
+}
+
+.eye {
+    width: 12px;
+    height: 12px;
+    background: #16213e;
+    border-radius: 50%;
+    position: absolute;
+}
+
+.eye-left {
+    left: 0;
+}
+
+.eye-right {
+    right: 0;
+}
+
+.ghost-bottom {
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    right: 0;
+    display: flex;
+}
+
+.ghost-bottom div {
+    flex: 1;
+    height: 20px;
+    background: #fff;
+    border-radius: 0 0 50% 50%;
+}
+
+.ghost-bottom div:nth-child(2n) {
+    background: transparent;
+    border-top: 15px solid #16213e;
+}
+
+.ghost-shadow {
+    width: 80px;
+    height: 15px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    margin: 0 auto;
+    animation: shadow 3s ease-in-out infinite;
+}
+
+.error-code {
+    font-size: 64px;
+    font-weight: 700;
+    color: #ff5e65;
+    margin: 20px 0 10px;
+}
+
+.error-title {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.error-text {
+    color: #a1a1aa;
+    margin-bottom: 30px;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.url-text {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-family: monospace;
+    margin: 10px 0;
+    word-break: break-all;
+}
+
+.button {
+    display: block;
+    position: relative;
+    background: #ff5e65;
+    border: 1px solid transparent;
+    border-radius: 50px;
+    height: 50px;
+    text-align: center;
+    text-decoration: none;
+    color: #fff;
+    line-height: 50px;
+    font-size: 18px;
+    padding: 0 70px;
+    white-space: nowrap;
+    margin-top: 25px;
+    transition: background 0.5s;
+    overflow: hidden;
+    /* -webkit-mask-image: -webkit-radial-gradient(white, black); */
+}
+
+.button:before {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 100px;
+    background: #fff;
+    bottom: -25px;
+    left: 0;
+    border: 2px solid #fff;
+    transform: translateX(-50px) rotate(45deg);
+    transition: transform 0.5s;
+}
+
+.button:hover {
+    background: transparent;
+    border-color: #fff;
+}
+
+.button:hover:before {
+    transform: translateX(450px) rotate(45deg);
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+}
+
+@keyframes shadow {
+    0%, 100% { transform: scale(1); opacity: 0.4; }
+    50% { transform: scale(0.8); opacity: 0.2; }
+}
+    </style>
+</head>
+<body>
+  <div class="box">
+        <div class="ghost">
+            <div class="ghost-eyes">
+                <div class="eye eye-left"></div>
+                <div class="eye eye-right"></div>
+            </div>
+            <div class="ghost-bottom">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+        <div class="ghost-shadow"></div>
+        
+        <div class="error-code">404</div>
+        <h1 class="error-title">Not Found</h1>
+        <p class="error-text">Sorry, we could't find this page, or you may have jumped on a wrong line:(</p>
+        <div class="url-text">This page isn't available >>> <%= url %></div>
+        
+        <div style="margin-top: 30px;">
+            <a href="/" class="button">Go Home</a>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('mousemove', (e) => {
+        const eyes = document.querySelectorAll('.eye');
+        eyes.forEach(eye => {
+            const rect = eye.getBoundingClientRect();
+            const x = (rect.left + rect.width / 2);
+            const y = (rect.top + rect.height / 2);
+            
+            const rad = Math.atan2(e.pageX - x, e.pageY - y);
+            const rot = (rad * (180 / Math.PI) * -1) + 180;
+            
+            eye.style.transform = `rotate(${rot}deg)`;
+        });
+    });
+    </script>
+</body>
+</html>

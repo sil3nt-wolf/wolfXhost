@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Payment Method Management</title>
+    <link rel="stylesheet" href="../nav/app.css">
+    <style>
+        .country-select {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            width: 100%;
+        }
+
+        .method-card {
+            position: relative;
+        }
+
+        .country-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #e2e8f0;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+        }
+
+        .moderator-section {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 8px;
+        }
+
+        .moderator-form {
+            display: grid;
+            gap: 15px;
+            max-width: 500px;
+            margin: 20px 0;
+        }
+
+        .country-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .country-chip {
+            background: #e2e8f0;
+            padding: 4px 12px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .country-chip button {
+            background: none;
+            border: none;
+            color: #64748b;
+            cursor: pointer;
+            padding: 0 2px;
+        }
+
+        .pending-deposits {
+            margin-top: 20px;
+        }
+
+        .deposit-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+
+        .deposit-card .actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .deposit-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .screenshot-preview {
+            max-width: 200px;
+            margin-top: 10px;
+        }
+
+        .btn-approve {
+            background: #22c55e;
+            color: white;
+        }
+
+        .btn-reject {
+            background: #ef4444;
+            color: white;
+        }
+
+        .error {
+            border-color: #dc3545;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 0.875em;
+            margin-top: 4px;
+        }
+
+        .method-card .detail-item {
+            transition: background-color 0.2s;
+        }
+
+        .method-card .detail-item:hover {
+            background-color: #f1f3f5;
+        }
+
+        .search-filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+        }
+
+        .status-filter {
+            padding: 8px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            min-width: 120px;
+        }
+
+        @media (max-width: 768px) {
+            .search-filters {
+                flex-direction: column;
+            }
+
+            .method-card {
+                padding: 15px;
+            }
+
+            .method-actions {
+                flex-wrap: wrap;
+            }
+
+            .btn {
+                flex: 1;
+                min-width: 120px;
+            }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .payment-methods-grid {
+            display: grid;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .method-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .method-card.inactive {
+            opacity: 0.7;
+            background: #f8f9fa;
+        }
+
+        .method-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .method-name {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .method-status {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-inactive {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .method-details {
+            display: grid;
+            gap: 10px;
+        }
+
+        .detail-item {
+            border: 1px solid #e9ecef;
+            padding: 10px;
+            border-radius: 4px;
+            background: #f8f9fa;
+        }
+
+        .detail-label {
+            font-weight: 500;
+            color: #495057;
+            margin-bottom: 5px;
+        }
+
+        .detail-value {
+            color: #212529;
+            white-space: pre-wrap;
+        }
+
+        .method-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+
+        .btn-edit {
+            background: #007bff;
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background: #0056b3;
+        }
+
+        .btn-toggle {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-toggle:hover {
+            background: #545b62;
+        }
+
+        .btn-delete {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background: #c82333;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            width: 90%;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .modal-title {
+            font-size: 1.25em;
+            font-weight: 600;
+            color: #212529;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5em;
+            cursor: pointer;
+            color: #6c757d;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #495057;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 1em;
+        }
+
+        textarea.form-control {
+            min-height: 100px;
+        }
+
+        .instruction-item {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .btn-add-instruction {
+            background: #28a745;
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        .btn-add-instruction:hover {
+            background: #218838;
+        }
+
+        .remove-instruction {
+            background: #dc3545;
+            color: white;
+            padding: 4px 8px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #dee2e6;
+        }
+
+        .moderator-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+            background-color: white;
+        }
+
+        .moderator-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .moderator-info {
+            margin-bottom: 12px;
+        }
+
+        .moderator-countries {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .country-badge {
+            background-color: #e3e3e3;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        .moderator-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .status-active {
+            color: green;
+        }
+
+        .status-inactive {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <div class="container">
+        <div class="method-header">
+            <h1>Payment Method Management</h1>
+            <button class="btn btn-add-instruction" onclick="openModal()">Add New Payment Method</button>
+        </div>
+
+        <div class="search-filters">
+            <input type="text" id="searchMethods" class="search-input" placeholder="Search payment methods...">
+            <select id="countryFilter" class="country-select">
+                <option value="all">All Countries</option>
+                
+            </select>
+            <select id="statusFilter" class="status-filter">
+                <option value="all">All Status</option>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+            </select>
+        </div>
+
+        <div class="payment-methods-grid" id="paymentMethodsGrid">
+            
+        </div>
+
+        
+        <div class="modal" id="paymentMethodModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title" id="modalTitle">Add Payment Method</h2>
+                    <button class="close-modal" onclick="closeModal()">&times;</button>
+                </div>
+                <form id="paymentMethodForm">
+                    <input type="hidden" id="methodId" name="methodId">
+
+                    <div class="form-group">
+                        <label for="methodName">Method Name</label>
+                        <input type="text" id="methodName" name="methodName" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="countryCode">Country</label>
+                        <select id="countryCode" name="countryCode" class="form-control" required>
+                            <option value="ALL">All Countries</option>
+                            
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="accountName">Account Name</label>
+                        <input type="text" id="accountName" name="accountName" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="accountNumber">Account Number</label>
+                        <input type="text" id="accountNumber" name="accountNumber" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Instructions</label>
+                        <div id="instructionsContainer">
+                            <div class="instruction-item">
+                                <input type="text" class="form-control" name="instructions[]" placeholder="Enter instruction">
+                                <button type="button" class="remove-instruction" onclick="removeInstruction(this)">×</button>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-add-instruction" onclick="addInstruction()">Add
+                            Instruction</button>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="additionalInfo">Additional Information</label>
+                        <textarea id="additionalInfo" name="additionalInfo" class="form-control"></textarea>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-toggle" onclick="closeModal()">Cancel</button>
+                        <button type="submit" class="btn btn-edit">Save Payment Method</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="moderator-management-section">
+            <h2>Moderator Management</h2>
+            <div class="moderator-list" id="moderatorList">
+                
+            </div>
+        </div>
+        <div class="moderator-section">
+            <h2>Moderator Management</h2>
+            <form id="moderatorForm" class="moderator-form">
+                <div class="form-group">
+                    <label for="phoneNumber">Phone Number</label>
+                    <input type="tel" id="phoneNumber" name="phoneNumber" class="form-control" placeholder="Enter phone number" required>
+                </div>
+                <div class="form-group">
+                    <label>Assigned Countries</label>
+                    <select id="countrySelect" class="form-control">
+                        
+                    </select>
+                    <button type="button" class="btn" onclick="addCountryToModerator()">Add Country</button>
+                    <div id="selectedCountries" class="country-list">
+                        
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-edit">Create Moderator</button>
+            </form>
+        </div>
+    </div>
+    <script>
+        // Countries data
+        const countries = [
+            { code: 'ALL', name: 'All Countries' },
+            { code: 'PK', name: 'Pakistan' },
+            { code: 'NG', name: 'Nigeria' },
+            { code: 'ZW', name: 'Zimbabwe' },
+            { code: 'IN', name: 'India' },
+            { code: 'KE', name: 'Kenya' }
+
+        ];
+
+        // Populate country dropdowns
+        function populateCountryDropdowns() {
+            const countryFilter = document.getElementById('countryFilter');
+            const countrySelect = document.getElementById('countrySelect');
+            const countryCode = document.getElementById('countryCode');
+
+            countries.forEach(country => {
+                countryFilter.innerHTML += `<option value="${country.code}">${country.name}</option>`;
+                countrySelect.innerHTML += `<option value="${country.code}">${country.name}</option>`;
+                countryCode.innerHTML += `<option value="${country.code}">${country.name}</option>`;
+            });
+        }
+
+        // Modified loadPaymentMethods function to include country filtering
+        async function loadPaymentMethods() {
+            try {
+                const response = await fetch('/api/admin/payment-methods');
+                const data = await response.json();
+
+                currentMethods = data.methods.map(method => ({
+                    ...method,
+                    country_code: method.country_code || 'ALL'
+                }));
+
+                renderPaymentMethods();
+            } catch (error) {
+                console.error('Error loading payment methods:', error);
+                document.getElementById('paymentMethodsGrid').innerHTML = `
+                    <div class="error-message">Unable to load payment methods. Please try again later.</div>
+                `;
+            }
+        }
+        async function loadModerators() {
+            try {
+                const response = await fetch('/api/moderators');
+                const data = await response.json();
+                renderModerators(data.moderators);
+            } catch (error) {
+                console.error('Error loading moderators:', error);
+                document.getElementById('moderatorList').innerHTML =
+                    '<div class="error-message">Failed to load moderators</div>';
+            }
+        }
+
+        function renderModerators(moderators) {
+            const container = document.getElementById('moderatorList');
+            container.innerHTML = moderators.map(mod => `
+        <div class="moderator-card">
+            <div class="moderator-header">
+                <h3>${mod.phone_number}</h3>
+                <span class="status-${mod.status.toLowerCase()}">${mod.status}</span>
+            </div>
+            <div class="moderator-info">
+                <p>Created: ${new Date(mod.created_at).toLocaleDateString()}</p>
+            </div>
+            <div class="moderator-countries">
+                ${mod.countries.map(country => `
+                    <span class="country-badge">${getCountryName(country)}</span>
+                `).join('')}
+            </div>
+            <div class="moderator-actions">
+                <button class="btn btn-edit" onclick="editModerator(${mod.id})">Edit</button>
+                <button class="btn btn-toggle" onclick="toggleModeratorStatus(${mod.id})">
+                    ${mod.status === 'active' ? 'Deactivate' : 'Activate'}
+                </button>
+                <button class="btn btn-delete" onclick="deleteModerator(${mod.id})">Delete</button>
+            </div>
+        </div>
+    `).join('');
+        }
+
+        async function toggleModeratorStatus(id) {
+            try {
+                const response = await fetch(`/api/moderators/${id}/toggle-status`, {
+                    method: 'POST'
+                });
+
+                if (!response.ok) throw new Error('Failed to toggle status');
+
+                loadModerators();
+            } catch (error) {
+                console.error('Error toggling moderator status:', error);
+                alert('Failed to toggle moderator status');
+            }
+        }
+
+        async function deleteModerator(id) {
+            if (!confirm('Are you sure you want to delete this moderator?')) return;
+
+            try {
+                const response = await fetch(`/api/moderators/${id}`, {
+                    method: 'DELETE'
+                });
+
+                if (!response.ok) throw new Error('Failed to delete moderator');
+
+                loadModerators();
+            } catch (error) {
+                console.error('Error deleting moderator:', error);
+                alert('Failed to delete moderator');
+            }
+        }
+
+        async function editModerator(id) {
+            try {
+                const response = await fetch(`/api/moderators/${id}`);
+                const moderator = await response.json();
+
+                // Populate the form with moderator data
+                document.getElementById('phoneNumber').value = moderator.phone_number;
+                selectedCountriesList.clear();
+                moderator.countries.forEach(country => {
+                    selectedCountriesList.add(country);
+                });
+                renderSelectedCountries();
+
+                // Update form for edit mode
+                document.getElementById('moderatorForm').dataset.editId = id;
+                document.querySelector('#moderatorForm button[type="submit"]')
+                    .textContent = 'Update Moderator';
+            } catch (error) {
+                console.error('Error loading moderator details:', error);
+                alert('Failed to load moderator details');
+            }
+        }
+        // Modified renderPaymentMethods to include country information
+        function renderPaymentMethods() {
+            const grid = document.getElementById('paymentMethodsGrid');
+            const countryFilter = document.getElementById('countryFilter').value;
+            const statusFilter = document.getElementById('statusFilter').value;
+            const searchTerm = document.getElementById('searchMethods').value.toLowerCase();
+
+            const filteredMethods = currentMethods.filter(method => {
+                const matchesCountry = countryFilter === 'all' || method.country_code === countryFilter;
+                const matchesStatus = statusFilter === 'all' || method.status === statusFilter;
+                const matchesSearch = method.name.toLowerCase().includes(searchTerm) ||
+                    method.account_name.toLowerCase().includes(searchTerm);
+
+                return matchesCountry && matchesStatus && matchesSearch;
+            });
+
+            grid.innerHTML = filteredMethods.map(method => `
+                <div class="method-card ${method.status === 'inactive' ? 'inactive' : ''}">
+                    <span class="country-badge">${getCountryName(method.country_code)}</span>
+                    <div class="method-header">
+                        <span class="method-name">${method.name}</span>
+                        <span class="method-status status-${method.status}">
+                            ${method.status.charAt(0).toUpperCase() + method.status.slice(1)}
+                        </span>
+                    </div>
+                    <div class="method-details">
+                        <div class="detail-item">
+                            <div class="detail-label">Account Name</div>
+                            <div class="detail-value">${method.account_name}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Account Number</div>
+                            <div class="detail-value">${method.account_number}</div>
+                        </div>
+                        ${addInstruction(method.instructions)}
+                        ${method.additional_info ? `
+                            <div class="detail-item">
+                                <div class="detail-label">Additional Information</div>
+                                <div class="detail-value">${method.additional_info}</div>
+                            </div>
+                        ` : ''}
+                    </div>
+                    <div class="method-actions">
+                        <button class="btn btn-edit" onclick="editMethod(${method.id})">Edit</button>
+                        <button class="btn btn-toggle" onclick="toggleStatus(${method.id})">
+                            ${method.status === 'active' ? 'Deactivate' : 'Activate'}
+                        </button>
+                        <button class="btn btn-delete" onclick="deleteMethod(${method.id})">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        // Ensure functions are defined in global scope
+        window.deleteMethod = async function (id) {
+            if (!confirm('Are you sure you want to delete this payment method?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/payment-methods/${id}`, {
+                    method: 'DELETE'
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error || 'Failed to delete payment method');
+                }
+
+                await loadPaymentMethods();
+                alert('Payment method deleted successfully');
+            } catch (error) {
+                console.error('Error deleting payment method:', error);
+                alert(error.message);
+            }
+        };
+
+        window.editMethod = async function (id) {
+            try {
+                const method = window.currentMethods.find(m => m.id === id);
+                if (!method) {
+                    throw new Error('Payment method not found');
+                }
+
+                // Update modal title and store method ID
+                document.getElementById('modalTitle').textContent = 'Edit Payment Method';
+                document.getElementById('methodId').value = id;
+
+                // Populate form fields
+                document.getElementById('methodName').value = method.name;
+                document.getElementById('accountName').value = method.account_name;
+                document.getElementById('accountNumber').value = method.account_number;
+                document.getElementById('countryCode').value = method.country_code || 'ALL';
+                document.getElementById('additionalInfo').value = method.additional_info || '';
+
+                // Clear existing instructions
+                const instructionsContainer = document.getElementById('instructionsContainer');
+                instructionsContainer.innerHTML = '';
+
+                // Add instruction fields
+                const instructions = Array.isArray(method.instructions)
+                    ? method.instructions
+                    : method.instructions?.split('\n') || [];
+
+                if (instructions.length === 0) {
+                    // Add one empty instruction field if none exist
+                    window.addInstruction();
+                } else {
+                    instructions.forEach(instruction => {
+                        const div = document.createElement('div');
+                        div.className = 'instruction-item';
+                        div.innerHTML = `
+                    <input type="text" class="form-control" name="instructions[]" 
+                           value="${instruction.replace(/"/g, '&quot;')}" placeholder="Enter instruction">
+                    <button type="button" class="remove-instruction" onclick="removeInstruction(this)">×</button>
+                `;
+                        instructionsContainer.appendChild(div);
+                    });
+                }
+
+                // Show the modal
+                document.getElementById('paymentMethodModal').style.display = 'block';
+            } catch (error) {
+                console.error('Error editing payment method:', error);
+                alert(error.message);
+            }
+        };
+
+        window.toggleStatus = async function (id) {
+            try {
+                const response = await fetch(`/api/payment-methods/${id}/toggle-status`, {
+                    method: 'POST'
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error || 'Failed to toggle payment method status');
+                }
+
+                const result = await response.json();
+                await loadPaymentMethods();
+                alert(`Payment method ${result.status === 'active' ? 'activated' : 'deactivated'} successfully`);
+            } catch (error) {
+                console.error('Error toggling payment method status:', error);
+                alert(error.message);
+            }
+        };
+
+        // Make sure addInstruction and removeInstruction are also in global scope
+        window.addInstruction = function () {
+            const container = document.getElementById('instructionsContainer');
+            const div = document.createElement('div');
+            div.className = 'instruction-item';
+            div.innerHTML = `
+        <input type="text" class="form-control" name="instructions[]" placeholder="Enter instruction">
+        <button type="button" class="remove-instruction" onclick="removeInstruction(this)">×</button>
+    `;
+            container.appendChild(div);
+        };
+
+        window.removeInstruction = function (button) {
+            button.parentElement.remove();
+        };
+
+        // Initialize currentMethods in global scope
+        window.currentMethods = window.currentMethods || [];
+
+        // Add initialization to ensure everything loads properly
+        document.addEventListener('DOMContentLoaded', function () {
+            // Initialize the currentMethods array if not already done
+            window.currentMethods = window.currentMethods || [];
+
+            // Make sure other functions are available
+            if (typeof populateCountryDropdowns === 'function') {
+                populateCountryDropdowns();
+            }
+            if (typeof setupSearchAndFilters === 'function') {
+                setupSearchAndFilters();
+            }
+            if (typeof loadPaymentMethods === 'function') {
+                loadPaymentMethods();
+            }
+
+            // Ensure filters are properly initialized
+            const countryFilter = document.getElementById('countryFilter');
+            const statusFilter = document.getElementById('statusFilter');
+            if (countryFilter) countryFilter.value = 'all';
+            if (statusFilter) statusFilter.value = 'all';
+        });
+        // Helper function to get country name from code
+        function getCountryName(code) {
+            const country = countries.find(c => c.code === code);
+            return country ? country.name : code;
+        }
+
+        // Moderator management functions
+        const selectedCountriesList = new Set();
+
+        function addCountryToModerator() {
+            const select = document.getElementById('countrySelect');
+            const countryCode = select.value;
+            const countryName = select.options[select.selectedIndex].text;
+
+            if (selectedCountriesList.has(countryCode)) return;
+
+            selectedCountriesList.add(countryCode);
+            const countriesContainer = document.getElementById('selectedCountries');
+
+            const chip = document.createElement('div');
+            chip.className = 'country-chip';
+            chip.innerHTML = `
+                ${countryName}
+                <button onclick="removeCountry('${countryCode}')">×</button>
+            `;
+
+            countriesContainer.appendChild(chip);
+        }
+
+        function removeCountry(code) {
+            selectedCountriesList.delete(code);
+            renderSelectedCountries();
+        }
+
+        function renderSelectedCountries() {
+            const container = document.getElementById('selectedCountries');
+            container.innerHTML = '';
+
+            selectedCountriesList.forEach(code => {
+                const countryName = getCountryName(code);
+                const chip = document.createElement('div');
+                chip.className = 'country-chip';
+                chip.innerHTML = `
+                    ${countryName}
+                    <button onclick="removeCountry('${code}')">×</button>
+                `;
+                container.appendChild(chip);
+            });
+        }
+
+        function setupSearchAndFilters() {
+            const searchInput = document.getElementById('searchMethods');
+            const countryFilter = document.getElementById('countryFilter');
+            const statusFilter = document.getElementById('statusFilter');
+
+            searchInput.addEventListener('input', renderPaymentMethods);
+            countryFilter.addEventListener('change', renderPaymentMethods);
+            statusFilter.addEventListener('change', renderPaymentMethods);
+        }
+        function openModal() {
+            document.getElementById('paymentMethodModal').style.display = 'block';
+            document.getElementById('modalTitle').textContent = 'Add Payment Method';
+            document.getElementById('paymentMethodForm').reset();
+            document.getElementById('methodId').value = '';
+        }
+        // Add instruction management functions
+        function addInstruction() {
+            const container = document.getElementById('instructionsContainer');
+            const div = document.createElement('div');
+            div.className = 'instruction-item';
+            div.innerHTML = `
+        <input type="text" class="form-control" name="instructions[]" placeholder="Enter instruction">
+        <button type="button" class="remove-instruction" onclick="removeInstruction(this)">×</button>
+    `;
+            container.appendChild(div);
+        }
+
+        function removeInstruction(button) {
+            button.parentElement.remove();
+        }
+        function closeModal() {
+            document.getElementById('paymentMethodModal').style.display = 'none';
+        }
+        // Add form submission handler
+        document.getElementById('paymentMethodForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const formData = {
+                name: document.getElementById('methodName').value,
+                account_name: document.getElementById('accountName').value,
+                account_number: document.getElementById('accountNumber').value,
+                country_code: document.getElementById('countryCode').value,
+                instructions: Array.from(document.getElementsByName('instructions[]'))
+                    .map(input => input.value)
+                    .filter(value => value.trim() !== ''),
+                additional_info: document.getElementById('additionalInfo').value
+            };
+
+            const methodId = document.getElementById('methodId').value;
+            const url = methodId ?
+                `/api/payment-methods/${methodId}` :
+                '/api/payment-methods';
+            const method = methodId ? 'PUT' : 'POST';
+
+            try {
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (!response.ok) throw new Error('Failed to save payment method');
+
+                closeModal();
+                loadPaymentMethods();
+                alert(methodId ? 'Payment method updated successfully' : 'Payment method created successfully');
+            } catch (error) {
+                console.error('Error saving payment method:', error);
+                alert('Failed to save payment method');
+            }
+        });
+        // Update the moderator form submission handler
+        document.getElementById('moderatorForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const phoneNumber = document.getElementById('phoneNumber').value;
+            const countries = Array.from(selectedCountriesList);
+
+            if (!phoneNumber) {
+                alert('Please enter a phone number');
+                return;
+            }
+
+            if (countries.length === 0) {
+                alert('Please select at least one country');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/moderators', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        phone_number: phoneNumber,
+                        countries: countries
+                    })
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error || 'Failed to create moderator');
+                }
+
+                const result = await response.json();
+                alert(result.message);
+                e.target.reset();
+                selectedCountriesList.clear();
+                renderSelectedCountries();
+            } catch (error) {
+                console.error('Error creating moderator:', error);
+                alert(error.message);
+            }
+        });
+        async function deleteModerator(id) {
+            if (!confirm('Are you sure you want to delete this moderator?')) return;
+
+            try {
+                const response = await fetch(`/api/moderators/${id}`, {
+                    method: 'DELETE'
+                });
+
+                if (!response.ok) throw new Error('Failed to delete moderator');
+
+                loadModerators();
+            } catch (error) {
+                console.error('Error deleting moderator:', error);
+                alert('Failed to delete moderator');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            populateCountryDropdowns();
+            setupSearchAndFilters();
+            loadPaymentMethods();
+            loadModerators();
+
+
+            // Add event listeners for filters
+            document.getElementById('countryFilter').addEventListener('change', renderPaymentMethods);
+            document.getElementById('statusFilter').addEventListener('change', renderPaymentMethods);
+            document.getElementById('searchMethods').addEventListener('input', renderPaymentMethods);
+        });
+
+    </script>
+</body>
+
+</html>

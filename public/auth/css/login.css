@@ -1,0 +1,645 @@
+:root {
+    --primary-color: #4361ee;
+    --secondary-color: #ffffff;
+    --success-color: #34d399;
+    --error-color: #f87171;
+    --verification-border: #e2e4e4;
+    --text-primary: #2d3748;
+    --text-secondary: #718096;
+    --bg-primary: #ffffff;
+    --bg-secondary: #f7fafc;
+    --border-color: #e2e8f0;
+    --text-input: rgb(0, 0, 0);
+    --bg-input: white;
+    --input-focus: rgba(0, 45, 244, 0.1);
+}
+
+[data-theme="dark"] {
+    --primary-color: #4361ee;
+    --text-input: rgb(248, 245, 245);
+    --bg-input: black;
+    --secondary-color: #000000;
+    --verification-border: #2d3748;
+    --text-primary: #fefefe;
+    --text-secondary: #fafcff;
+    --bg-primary: #1f2937;
+    --bg-secondary: #000000;
+    --border-color: #000000;
+    --input-focus: rgba(0, 0, 0, 0.1);
+  }
+
+
+* {
+    text-decoration: none;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-top: 6rem;
+    /* Add padding to the top of the body to make space for the header */
+
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    padding: 0 20px;
+    transition: all 0.3s ease;
+}
+h1{
+    color: var(--text-primary);
+}
+.container {
+    background: var(--bg-primary);
+    /* padding: 2.5rem; */
+    border-radius: 40px;
+    /* border: 1px solid var(--text-primary); */
+    max-width: 450px;
+    width: 100%;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+.login-container {
+    background: var(--bg-primary);
+    padding: 2.5rem;
+    border-radius: 24px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    max-width: 450px;
+    width: 100%;
+    margin-top: 10rem;
+    transition: all 0.3s ease;
+}
+
+.logo {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.logo h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.logo p {
+    color: var(--text-primary);
+    ;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.form-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    font-size: 1rem;
+    color: balck;
+    transition: all 0.3s ease;
+    /* background: var(--bg-input); */
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px var(--input-focus);
+}
+
+.btn {
+    width: 100%;
+    padding: 1rem;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: white;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px var(--input-focus);
+}
+
+.verification-container {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.verification-inputs {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    margin: 1.5rem 0;
+}
+
+.verification-input {
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
+    text-align: center;
+    border: 2px solid var(--input-focus);
+    border-radius: 12px;
+    background: var(--verification-border);
+    color: var(--text-primary);
+    transition: all 0.3s ease;
+}
+
+.verification-input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px var(--input-focus);
+    outline: none;
+}
+
+.footer-text {
+    text-align: center;
+    margin-top: 1.5rem;
+    color: var(--text-primary);
+    font-size: 0.9rem;
+}
+
+.footer-text a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    color: white;
+    font-weight: 500;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: all 0.3s ease;
+    z-index: 1000;
+    max-width: 350px;
+    pointer-events: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.toast.success {
+    background: linear-gradient(135deg, var(--success-color) 0%, #059669 100%);
+}
+
+.toast.error {
+    background: linear-gradient(135deg, var(--error-color) 0%, #dc2626 100%);
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Toast animation keyframes */
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+/* Toast container for stacking */
+.toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 1000;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: var(--text-secondary);
+}
+
+.password-wrapper {
+    position: relative;
+}
+
+
+@media (max-width: 480px) {
+    .container {
+        padding: 1.5rem;
+    }
+
+    .verification-input {
+        width: 40px;
+        height: 40px;
+        font-size: 1.25rem;
+    }
+}
+
+
+/* Header styles */
+.header {
+    border-radius: 209px;
+    border: none;
+    position: fixed;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0);
+    backdrop-filter: blur(8px);
+    z-index: 50;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    top: 0;
+    left: 0;
+}
+
+.header-nav {
+    display: flex;
+    color: var(--text-primary);
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+    max-width: 100%;
+    position: relative;
+    /* Added this */
+}
+
+@media (max-width: 768px) {
+    .header-nav {
+        padding: 0.5rem;
+    }
+}
+
+.logo-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    z-index: 60;
+    /* Ensure logo stays above mobile menu */
+}
+
+
+.desktop-nav {
+    display: none;
+}
+
+h1,
+h2,
+h3,
+p {
+    max-width: 100%;
+    word-wrap: break-word;
+}
+
+@media (min-width: 769px) {
+    .desktop-nav {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+
+    }
+
+
+}
+
+.nav-link {
+    color: var(--warning);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.nav-link:hover {
+    color: var(--primary);
+}
+
+/* Coin indicator responsive adjustments */
+.coin-indicator {
+    display: none;
+    /* Hide by default on mobile */
+}
+
+@media (min-width: 768px) {
+    .coin-indicator {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background-color: #EEF2FF;
+        padding: 0.5rem 1rem;
+        border-radius: 9999px;
+    }
+}
+
+.mobile-login-button {
+    margin-top: auto;
+    margin-left: 80px;
+    background-color: var(--primary);
+    color: white;
+    padding: 10px;
+    border: none;
+    width: 100px;
+    height: 20px;
+    border-radius: 30%;
+    text-align: center;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.login-button {
+    background-color: var(--primary);
+    color: white;
+    padding: 0.5rem 1rem;
+    /* Smaller padding on mobile */
+    border-radius: 0.5rem;
+    text-decoration: none;
+    transition: background-color 0.2s;
+    white-space: nowrap;
+}
+
+@media (min-width: 768px) {
+    .login-button {
+        padding: 0.5rem 1.5rem;
+        /* Larger padding on desktop */
+    }
+}
+
+/* Safe area adjustments for modern mobile devices */
+@supports (padding: max(0px)) {
+    .header {
+        padding-left: max(1rem, env(safe-area-inset-left));
+        padding-right: max(1rem, env(safe-area-inset-right));
+    }
+}
+
+
+
+
+
+
+/* Mobile menu improvements */
+.mobile-menu-button {
+    display: block;
+    padding: 0.5rem;
+    color: var(--text-primary);
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 60;
+}
+
+@media (min-width: 769px) {
+    .mobile-menu-button {
+        display: none;
+    }
+}
+
+.mobile-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 100;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.mobile-menu.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.mobile-menu-content {
+    position: absolute;
+    /* Changed from 'fixed' to 'absolute' */
+    top: 4rem;
+    /* Moved the menu below the header */
+    right: 1rem;
+    width: 80%;
+    /* Reduced the width */
+    max-width: 320px;
+    background: var(--bg-primary);
+    z-index: 101;
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.mobile-menu.active .mobile-menu-content {
+    transform: translateX(0);
+}
+
+
+#verificationText {
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+}
+
+#verificationTitle {
+    font-size: 1.5rem;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+}
+#resendText{
+    margin-top: 1rem; color: var(--text-primary);
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+@media (max-width: 768px) {
+    .nav-links {
+        display: none;
+        /* Hide on mobile */
+    }
+}
+
+/* Close button styling */
+.mobile-menu-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    padding: 0.5rem;
+    cursor: pointer;
+    color: var(--gray-600);
+}
+
+/* Mobile navigation links */
+.mobile-nav-links {
+    margin-top: 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.mobile-nav-link {
+    display: block;
+    padding: 1rem;
+    color: var(--gray-900);
+    text-decoration: none;
+    font-size: 1.125rem;
+    font-weight: 500;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.mobile-nav-link:active {
+    background-color: var(--gray-100);
+    transform: scale(0.98);
+}
+.password-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: -0.5rem;
+    margin-bottom: 1rem;
+}
+.forgot-password-link {
+    color: var(--primary-color);
+    font-size: 0.875rem;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.forgot-password-link:hover {
+    text-decoration: underline;
+}
+.reset-title{
+    color: var(--text-primary);
+}
+#resetPasswordContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+#emailStep,
+#codeStep,
+#passwordStep {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+#resetEmail,
+#newPassword,
+#confirmPassword {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    background-color: var(--bg-input);
+    color: var(--text-input);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+#resetEmail:focus,
+#newPassword:focus,
+#confirmPassword:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px var(--input-focus);
+}
+
+#requestResetButton,
+#verifyResetCodeButton,
+#resetPasswordButton {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#requestResetButton:hover,
+#verifyResetCodeButton:hover,
+#resetPasswordButton:hover {
+    opacity: 0.9;
+}
+
+.verification-inputs {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.verification-inputs input {
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    font-size: 1.2rem;
+    border: 1px solid var(--verification-border);
+    border-radius: 0.5rem;
+    background-color: var(--bg-input);
+    color: var(--text-input);
+    transition: all 0.3s ease;
+}
+
+.verification-inputs input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px var(--input-focus);
+}
+
+@media (max-width: 480px) {
+    .verification-inputs input {
+        width: 35px;
+        height: 35px;
+        font-size: 1rem;
+    }
+}

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Moderator Deposit Requests</title>
+    <style>
+       
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+      
+
+        .deposits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .deposit-card {
+            background: white;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 20px;
+            transition: transform 0.2s;
+            position: relative;
+        }
+
+        .deposit-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .deposit-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .deposit-amount {
+            font-size: 24px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .deposit-date {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .deposit-details {
+            margin: 15px 0;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            color: #666;
+        }
+
+        .detail-label {
+            font-weight: 500;
+            color: #444;
+        }
+
+        .screenshot-preview {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin: 10px 0;
+            border: 1px solid #eee;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            flex: 1;
+            transition: background-color 0.2s;
+        }
+
+        .btn-approve {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .btn-approve:hover {
+            background-color: #45a049;
+        }
+
+        .btn-reject {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .btn-reject:hover {
+            background-color: #da190b;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .error {
+            background-color: #feeced;
+            color: #dc3545;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .country-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 4px 8px;
+            background-color: #e3f2fd;
+            color: #1976d2;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .no-deposits {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            grid-column: 1 / -1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Pending Deposit Requests</h1>
+        </div>
+        
+        <div id="errorContainer" class="error" style="display: none;"></div>
+        <div id="loadingContainer" class="loading">Loading deposit requests...</div>
+        <div id="depositsContainer" class="deposits-grid"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const depositsContainer = document.getElementById('depositsContainer');
+            const loadingContainer = document.getElementById('loadingContainer');
+            const errorContainer = document.getElementById('errorContainer');
+
+            function showLoading(show) {
+                loadingContainer.style.display = show ? 'block' : 'none';
+            }
+
+            function showError(message) {
+                errorContainer.textContent = message;
+                errorContainer.style.display = 'block';
+            }
+
+            async function fetchPendingDeposits() {
+                showLoading(true);
+                try {
+                    const response = await fetch('/api/moderator/pending-deposits');
+                    if (!response.ok) throw new Error('Failed to fetch deposits');
+                    const data = await response.json();
+                    displayDeposits(data.transactions);
+                } catch (error) {
+                    showError('Failed to load deposit requests');
+                } finally {
+                    showLoading(false);
+                }
+            }
+
+            function displayDeposits(deposits) {
+                depositsContainer.innerHTML = '';
+                
+                if (!deposits || deposits.length === 0) {
+                    depositsContainer.innerHTML = `
+                        <div class="no-deposits">
+                            <h3>No pending deposit requests</h3>
+                            <p>New requests will appear here automatically</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                deposits.forEach(deposit => {
+                    const card = createDepositCard(deposit);
+                    depositsContainer.appendChild(card);
+                });
+            }
+
+            function createDepositCard(deposit) {
+                const card = document.createElement('div');
+                card.className = 'deposit-card';
+                
+                card.innerHTML = `
+                    <div class="country-badge">${deposit.country_code}</div>
+                    <div class="deposit-header">
+                        <div class="deposit-amount">${deposit.amount.toFixed(2)} coins</div>
+                        <div class="deposit-date">${new Date(deposit.created_at).toLocaleString()}</div>
+                    </div>
+                    <div class="deposit-details">
+                        <div class="detail-row">
+                            <span class="detail-label">Phone:</span>
+                            <span>${deposit.phone_number}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Payment Method:</span>
+                            <span>${deposit.payment_method}</span>
+                        </div>
+                    </div>
+                    <img src="/uploads/${deposit.payment_screenshot}" alt="Payment Screenshot" class="screenshot-preview">
+                    <div class="action-buttons">
+                        <button class="btn btn-approve" onclick="handleDeposit(${deposit.id}, true)">Approve</button>
+                        <button class="btn btn-reject" onclick="handleDeposit(${deposit.id}, false)">Reject</button>
+                    </div>
+                `;
+                
+                return card;
+            }
+
+            // Handle deposit approval/rejection
+            window.handleDeposit = async function(depositId, approve) {
+                try {
+                    const response = await fetch('/api/moderator/process-deposit', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            transactionId: depositId,
+                            approve: approve
+                        })
+                    });
+
+                    if (!response.ok) throw new Error('Failed to process deposit');
+                    
+                    // Refresh the deposits list
+                    fetchPendingDeposits();
+                } catch (error) {
+                    showError('Failed to process deposit request');
+                }
+            }
+
+            // Initial fetch
+            fetchPendingDeposits();
+
+            // Refresh every 30 seconds
+            setInterval(fetchPendingDeposits, 30000);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Admin Bot Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+        }
+        .message {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            border-radius: 5px;
+            z-index: 2000;
+        }
+        .success-message {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .error-message {
+            background-color: #f44336;
+            color: white;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto p-6">
+        <h1 class="text-3xl font-bold mb-6">Admin Bot Management</h1>
+        
+        <div id="botRequestsList" class="grid gap-4">
+            
+        </div>
+    </div>
+
+    
+    <div id="botDetailsModal" class="modal">
+        <div class="modal-content bg-white rounded-lg shadow-xl p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-semibold" id="modalTitle">Bot Request Details</h2>
+                <span class="close cursor-pointer text-2xl">&times;</span>
+            </div>
+            
+            <div id="modalDetails">
+                
+            </div>
+
+            <div class="flex justify-end space-x-3 mt-4">
+                <button id="rejectBtn" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+                    Reject
+                </button>
+                <button id="approveBtn" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+                    Approve
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentBotRequests = [];
+        let selectedBotRequestId = null;
+
+        // Fetch bot requests
+        function loadBotRequests() {
+            fetch('/admin/bot-requests')
+                .then(response => response.json())
+                .then(requests => {
+                    currentBotRequests = requests;
+                    const requestsContainer = document.getElementById('botRequestsList');
+                    requestsContainer.innerHTML = requests.length === 0 
+                        ? '<p class="text-center text-gray-500">No pending bot requests</p>'
+                        : requests.map(request => `
+                            <div class="bg-white p-4 rounded-lg shadow hover:shadow-md transition-shadow cursor-pointer" 
+                                 onclick="showBotRequestDetails(${request.id})">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <h3 class="text-xl font-bold">${request.name}</h3>
+                                        <p class="text-gray-600">Submitted by: ${request.user_name}</p>
+                                        <p class="text-gray-500">Repo: ${request.repo_url}</p>
+                                    </div>
+                                    <span class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">
+                                        Pending
+                                    </span>
+                                </div>
+                            </div>
+                        `).join('');
+                })
+                .catch(error => {
+                    console.error('Error loading bot requests:', error);
+                    showMessage('Error loading bot requests', 'error');
+                });
+        }
+
+        // Show bot request details in modal
+        function showBotRequestDetails(requestId) {
+    const request = currentBotRequests.find(r => r.id === requestId);
+    if (!request) return;
+
+    selectedBotRequestId = requestId;
+    
+    const modalDetails = document.getElementById('modalDetails');
+    modalDetails.innerHTML = `
+        <div class="space-y-2">
+            <p><strong>Current Bot Name:</strong> ${request.current_bot_name}</p>
+            <p><strong>Proposed Name:</strong> ${request.name}</p>
+            <p><strong>Current Repo URL:</strong> ${request.current_repo_url}</p>
+            <p><strong>Proposed Repo URL:</strong> ${request.repo_url}</p>
+            <p><strong>Current Website URL:</strong> ${request.current_website_url || 'N/A'}</p>
+            <p><strong>Proposed Website URL:</strong> ${request.website_url || 'N/A'}</p>
+            
+            <div>
+                <strong>Proposed Environment Variables:</strong>
+                <div class="bg-gray-100 p-2 rounded mt-2">
+                    ${request.env_vars.map(env => `
+                        <p>${env.name}: ${env.description}</p>
+                    `).join('') || 'No new environment variables'}
+                </div>
+            </div>
+        </div>
+    `;
+
+    document.getElementById('botDetailsModal').style.display = 'block';
+}
+        function approveBotRequest() {
+            if (!selectedBotRequestId) return;
+
+            fetch(`/admin/approve-bot-request/${selectedBotRequestId}`, { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('botDetailsModal').style.display = 'none';
+                        loadBotRequests();
+                        showMessage('Bot request approved successfully', 'success');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error approving bot request:', error);
+                    showMessage('Error approving bot request', 'error');
+                });
+        }
+
+        // Reject bot request
+        function rejectBotRequest() {
+            if (!selectedBotRequestId) return;
+
+            fetch(`/admin/reject-bot-request/${selectedBotRequestId}`, { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('botDetailsModal').style.display = 'none';
+                        loadBotRequests();
+                        showMessage('Bot request rejected successfully', 'success');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error rejecting bot request:', error);
+                    showMessage('Error rejecting bot request', 'error');
+                });
+        }
+
+        // Show message function
+        function showMessage(message, type = 'success') {
+            const existingMessage = document.querySelector('.message');
+            if (existingMessage) {
+                existingMessage.remove();
+            }
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}-message`;
+            messageDiv.textContent = message;
+            document.body.appendChild(messageDiv);
+            
+            setTimeout(() => {
+                messageDiv.remove();
+            }, 3000);
+        }
+
+        // Modal close functionality
+        document.querySelector('.close').addEventListener('click', () => {
+            document.getElementById('botDetailsModal').style.display = 'none';
+        });
+
+        // Approve and Reject button event listeners
+        document.getElementById('approveBtn').addEventListener('click', approveBotRequest);
+        document.getElementById('rejectBtn').addEventListener('click', rejectBotRequest);
+
+        // Initial load
+        loadBotRequests();
+    </script>
+</body>
+</html>

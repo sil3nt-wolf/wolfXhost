@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Admin Panel - Approve Deposits</title>
+    <style>
+        .transaction-row { margin-bottom: 10px; }
+        .screenshot-img { 
+            max-width: 200px; 
+            cursor: pointer;
+        }
+        .screenshot-img:hover {
+            transform: scale(1.1);
+        }
+        .message { margin-top: 10px; color: green; }
+        .error { color: red; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        .loading {
+            text-align: center;
+            padding: 20px;
+        }
+        .no-transactions {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <h1>Admin Panel - Pending Deposits</h1>
+
+    <div id="message"></div>
+    
+    <div id="loading" class="loading">Loading...</div>
+    
+    <table id="depositTable">
+        <thead>
+            <tr>
+                <th>Transaction ID</th>
+                <th>Phone Number</th>
+                <th>Amount</th>
+                <th>Payment Method</th>
+                <th>Payment Screenshot</th>
+                <th>Submitted At</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+        </tbody>
+    </table>
+
+    <script>
+        const messageDiv = document.getElementById('message');
+        const loadingDiv = document.getElementById('loading');
+        
+        async function fetchPendingTransactions() {
+            try {
+                loadingDiv.style.display = 'block';
+                const response = await fetch('/api/get-pending-deposits');
+                if (!response.ok) throw new Error('Failed to fetch transactions');
+                
+                const data = await response.json();
+                const tbody = document.querySelector('#depositTable tbody');
+                tbody.innerHTML = '';
+                
+                if (data.transactions.length === 0) {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="7" class="no-transactions">
+                                No pending deposits found
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+                
+                data.transactions.forEach(transaction => {
+                    const row = document.createElement('tr');
+                    row.className = 'transaction-row';
+                    row.innerHTML = `
+                        <td>${transaction.id}</td>
+                        <td>${transaction.phone_number}</td>
+                        <td>${transaction.amount}</td>
+                        <td>${transaction.payment_method || 'N/A'}</td>
+                        <td>${
+                            transaction.payment_screenshot !== 'N/A'
+                            ? `<img src="/uploads/${transaction.payment_screenshot}" 
+                                   alt="Payment Screenshot" 
+                                   class="screenshot-img"
+                                   onclick="window.open('/uploads/${transaction.payment_screenshot}', '_blank')"
+                              >`
+                            : 'N/A'
+                        }</td>
+                        <td>${transaction.created_at}</td>
+                        <td>
+                            <button onclick="handleDeposit(${transaction.id}, true)">Approve</button>
+                            <button onclick="handleDeposit(${transaction.id}, false)">Reject</button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error:', error);
+                messageDiv.textContent = 'Error fetching transactions';
+                messageDiv.className = 'error';
+            } finally {
+                loadingDiv.style.display = 'none';
+            }
+        }
+
+        async function handleDeposit(transactionId, approve) {
+            try {
+                const response = await fetch('/api/approve-deposit', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ transactionId, approve })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    messageDiv.textContent = data.message;
+                    messageDiv.className = 'message';
+                    await fetchPendingTransactions();
+                } else {
+                    throw new Error(data.error);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                messageDiv.textContent = error.message || 'Error processing request';
+                messageDiv.className = 'error';
+            }
+        }
+
+        // Refresh data every 30 seconds
+        setInterval(fetchPendingTransactions, 30000);
+
+        // Initial load
+        fetchPendingTransactions();
+    </script>
+</body>
+</html>

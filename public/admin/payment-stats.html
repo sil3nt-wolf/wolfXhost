@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Admin Panel - Deposit Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        .stat-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background: #f8f9fa;
+        }
+        .filters {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .filters select, .filters input {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .approved { color: green; }
+        .rejected { color: red; }
+        .pending { color: orange; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h2>Deposit Management Dashboard</h2>
+            <div class="filters">
+                <input type="date" id="startDate" onchange="updateStats()">
+                <input type="date" id="endDate" onchange="updateStats()">
+                <select id="statusFilter" onchange="loadTransactions()">
+                    <option value="">All Statuses</option>
+                    <option value="pending">Pending</option>
+                    <option value="approved">Approved</option>
+                    <option value="rejected">Rejected</option>
+                </select>
+                <select id="moderatorFilter" onchange="loadTransactions()">
+                    <option value="">All Moderators</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Overall Statistics</h3>
+            <div class="stats-grid" id="overallStats">
+                
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Moderator Performance</h3>
+            <table id="moderatorStats">
+                <thead>
+                    <tr>
+                        <th>Moderator</th>
+                        <th>Total Handled</th>
+                        <th>Approved</th>
+                        <th>Rejected</th>
+                        <th>Total Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card">
+            <h3>Recent Transactions</h3>
+            <table id="transactionsTable">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>User</th>
+                        <th>Amount</th>
+                        <th>Payment Method</th>
+                        <th>Status</th>
+                        <th>Handled By</th>
+                        <th>Screenshot</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Initialize date filters to last 7 days
+        const today = new Date();
+        const lastWeek = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+        document.getElementById('startDate').value = lastWeek.toISOString().split('T')[0];
+        document.getElementById('endDate').value = today.toISOString().split('T')[0];
+
+        async function updateStats() {
+            try {
+                const startDate = document.getElementById('startDate').value;
+                const endDate = document.getElementById('endDate').value;
+                
+                const response = await fetch(`/api/admin/deposit-stats?startDate=${startDate}&endDate=${endDate}`);
+                const data = await response.json();
+
+                // Update overall stats
+                document.getElementById('overallStats').innerHTML = `
+                    <div class="stat-card">
+                        <h4>Total Requests</h4>
+                        <div>${data.overall.total_requests}</div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Approved</h4>
+                        <div class="approved">${data.overall.approved_count}</div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Rejected</h4>
+                        <div class="rejected">${data.overall.rejected_count}</div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Pending</h4>
+                        <div class="pending">${data.overall.pending_count}</div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Total Amount</h4>
+                        <div>${data.overall.total_approved_amount}</div>
+                    </div>
+                `;
+
+                // Update moderator stats
+                const moderatorRows = data.moderatorStats.map(mod => `
+                    <tr>
+                        <td>${mod.moderator_phone}</td>
+                        <td>${mod.total_handled}</td>
+                        <td class="approved">${mod.approved_count}</td>
+                        <td class="rejected">${mod.rejected_count}</td>
+                        <td>${mod.total_approved_amount}</td>
+                    </tr>
+                `).join('');
+                
+                document.getElementById('moderatorStats').querySelector('tbody').innerHTML = moderatorRows;
+
+                // Update moderator filter options
+                const moderatorOptions = data.moderatorStats.map(mod => `
+                    <option value="${mod.moderator_id}">${mod.moderator_phone}</option>
+                `).join('');
+                document.getElementById('moderatorFilter').innerHTML += moderatorOptions;
+            } catch (error) {
+                console.error('Error updating stats:', error);
+            }
+        }
+
+        async function loadTransactions() {
+            try {
+                const startDate = document.getElementById('startDate').value;
+                const endDate = document.getElementById('endDate').value;
+                const status = document.getElementById('statusFilter').value;
+                const moderatorId = document.getElementById('moderatorFilter').value;
+
+                const response = await fetch(
+                    `/api/admin/transactions?startDate=${startDate}&endDate=${endDate}` +
+                    `&status=${status}&moderatorId=${moderatorId}`
+                );
+                const data = await response.json();
+
+                const rows = data.transactions.map(tx => `
+                    <tr>
+                        <td>${new Date(tx.created_at).toLocaleString()}</td>
+                        <td>${tx.recipient_phone}</td>
+                        <td>${tx.amount}</td>
+                        <td>${tx.payment_method}</td>
+                        <td class="${tx.status}">${tx.status}</td>
+                        <td>${tx.moderator_phone || 'Pending'}</td>
+                        <td>
+                            <a href="/uploads/${tx.payment_screenshot}" target="_blank">
+                                View
+                            </a>
+                        </td>
+                    </tr>
+                `).join('');
+
+                document.getElementById('transactionsTable').querySelector('tbody').innerHTML = rows;
+            } catch (error) {
+                console.error('Error loading transactions:', error);
+            }
+        }
+
+        // Initial load
+        updateStats();
+        loadTransactions();
+
+        // Refresh data every 5 minutes
+        setInterval(() => {
+            updateStats();
+            loadTransactions();
+        }, 5 * 60 * 1000);
+    </script>
+</body>
+</html>

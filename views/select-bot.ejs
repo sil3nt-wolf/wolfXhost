@@ -1,0 +1,1860 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+   
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Select a WhatsApp bot to deploy on Host.TalkDrove">
+    <title>Select Bot || H.TD</title>
+          <!-- Favicon and App Icons -->
+          <link rel="apple-touch-icon" sizes="180x180" href="https://cdn.talkdrove.com/host/Images/favicon/apple-touch-icon.png">
+          <link rel="icon" type="image/png" sizes="32x32" href="https://cdn.talkdrove.com/host/Images/favicon/favicon-32x32.png">
+          <link rel="icon" type="image/png" sizes="16x16" href="https://cdn.talkdrove.com/host/Images/favicon/favicon-16x16.png">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles/main.css">
+    <style>
+
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, var(--base-200), var(--base-300));
+            color: var(--neutral);
+            margin: 0;
+            min-height: 100vh;
+            transition: background-color 0.3s ease;
+        }
+
+        .header {
+            background-color: var(--base-100);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(229, 231, 235, 0.2);
+            padding: 1rem 1.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .header-content {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin: 0;
+        }
+
+        .controls {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: none;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: var(--base-200);
+            color: var(--neutral);
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .search-container {
+            max-width: 1280px;
+            margin: 2rem auto 1rem;
+            padding: 0 1.5rem;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 0.5rem;
+            background-color: var(--base-100);
+            border: 1px solid rgba(229, 231, 235, 0.2);
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .search-box input {
+            flex: 1;
+            border: none;
+            background: none;
+            outline: none;
+            color: var(--neutral);
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .search-box input::placeholder {
+            color: var(--neutral);
+            opacity: 0.5;
+        }
+
+        .search-icon {
+            color: var(--neutral);
+            opacity: 0.5;
+        }
+
+        .bot-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            padding: 1.5rem;
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        .bot-card {
+            background-color: var(--base-100);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            border: 1px solid rgba(229, 231, 235, 0.2);
+            transition: all 0.2s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .bot-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .bot-card.selected {
+            border: 2px solid var(--primary);
+            background-color: var(--secondary);
+        }
+
+        .bot-card.hidden {
+            display: none;
+        }
+
+        .bot-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--neutral);
+            margin: 0;
+        }
+
+        .bot-cost {
+            font-size: 0.875rem;
+            color: var(--neutral);
+            opacity: 0.8;
+        }
+
+        .bot-icon {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-container {
+            max-width: 1280px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            text-align: center;
+        }
+
+        .hidden-select {
+            display: none;
+        }
+
+        .no-results {
+            text-align: center;
+            color: var(--neutral);
+            padding: 2rem;
+            grid-column: 1 / -1;
+            display: none;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--neutral);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            color: var(--primary);
+        }
+
+        @media (max-width: 768px) {
+            .bot-grid {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+            }
+
+            .search-container {
+                padding: 0 1rem;
+                margin: 1rem auto;
+            }
+
+            .controls {
+                gap: 0.5rem;
+            }
+
+            .btn {
+                padding: 0.5rem;
+            }
+
+            .btn span {
+                display: none;
+            }
+        }
+                /* Updated navigation styles */
+      .header-content {
+        max-width: 1280px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.5rem 1.5rem;
+    }
+
+    .nav-controls {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+    }
+
+    .profile-container {
+        position: relative;
+    }
+
+    .profile-pic {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        cursor: pointer;
+        border: 2px solid var(--primary);
+        padding: 2px;
+        background: var(--base-100);
+    }
+
+    .dropdown {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background: var(--base-100);
+        border-radius: 0.5rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        min-width: 200px;
+        display: none;
+        z-index: 100;
+        border: 1px solid var(--base-300);
+        margin-top: 0.5rem;
+    }
+
+    .dropdown.show {
+        display: block;
+    }
+
+    .dropdown-item {
+        padding: 0.75rem 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--neutral);
+        text-decoration: none;
+        transition: background-color 0.2s;
+        cursor: pointer;
+    }
+
+    .dropdown-item:hover {
+        background-color: var(--base-200);
+    }
+
+    .dropdown-divider {
+        height: 1px;
+        background-color: var(--base-300);
+        margin: 0.5rem 0;
+    }
+
+    .btn-group {
+        position: relative;
+    }
+
+    .btn-group .dropdown {
+        left: 0;
+        right: auto;
+    }
+    .bot-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        margin-top: 0.5rem;
+    }
+
+    .bot-deployments {
+        font-size: 0.875rem;
+        color: var(--neutral);
+        opacity: 0.8;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    .bot-deployments i {
+        color: var(--primary);
+    }
+    .bot-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+        padding: 1.5rem;
+        max-width: 1280px;
+        margin: 0 auto;
+    }
+
+    .bot-card {
+        background-color: var(--base-100);
+        border-radius: 1rem;
+        padding: 1.5rem;
+        border: 1px solid rgba(229, 231, 235, 0.2);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .bot-card.most-deployed {
+        grid-column: 1 / -1;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        /* gap: 2rem; */
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        color: white;
+    }
+
+    .bot-card.most-deployed .bot-icon,
+    .bot-card.most-deployed .bot-cost i,
+    .bot-card.most-deployed .bot-deployments i {
+        color: white;
+    }
+
+    .bot-card.most-deployed .bot-info {
+        color: rgba(255, 255, 255, 0.9);
+    }
+
+    .bot-card.popular {
+        border: 2px solid var(--primary);
+        transform: scale(1.02);
+    }
+
+    .bot-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1rem;
+    }
+
+    .top-badge,
+    .popularity-badge {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    .top-badge {
+        background-color: var(--primary);
+        color: white;
+    }
+
+    .popularity-badge {
+        background-color: var(--secondary);
+        color: var(--primary);
+    }
+
+    .deployment-bar {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 4px;
+        width: var(--deployment-percentage);
+        background: linear-gradient(90deg, var(--primary), var(--accent));
+        transition: width 0.3s ease;
+    }
+
+    .bot-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 1rem;
+        font-size: 0.875rem;
+    }
+
+    .bot-deployments {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    .bot-icon {
+        font-size: 1.5rem;
+        color: var(--primary);
+    }
+
+    @media (max-width: 768px) {
+        .bot-card.most-deployed {
+            /* grid-template-columns: 1fr; */
+            gap: 1rem;
+        }
+
+        .bot-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* Animation for new cards */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .bot-card {
+        animation: fadeInUp 0.3s ease-out;
+        animation-fill-mode: both;
+    }
+
+    .bot-card:nth-child(n) {
+        animation-delay: calc(n * 0.1s);
+    }
+    /* Add these styles to your existing CSS */
+.pagination {
+    margin: 2rem auto;
+    text-align: center;
+}
+
+.pagination-controls {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+}
+
+.pagination-info {
+    color: var(--neutral);
+    font-size: 0.875rem;
+    opacity: 0.8;
+}
+a{
+    text-decoration: none;
+}
+.bot-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn-favorite,
+.btn-share {
+    background: none;
+    border: none;
+    color: var(--neutral);
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.btn-favorite:hover,
+.btn-share:hover {
+    background-color: var(--base-200);
+}
+
+.btn-favorite.active {
+    color: #ff4b4b;
+}
+
+.btn-favorite.active i {
+    animation: heartBeat 0.3s ease-in-out;
+}
+
+@keyframes heartBeat {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .pagination-controls {
+        gap: 0.25rem;
+    }
+    
+    .pagination-controls .btn {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+    }
+}
+   .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+    }
+
+    .modal.show {
+        opacity: 1;
+    }
+
+    .modal-content {
+        background-color: var(--base-100);
+        margin: 15% auto;
+        padding: 20px;
+        border-radius: 8px;
+        width: 80%;
+        max-width: 500px;
+        position: relative;
+        transform: translateY(-50px);
+        opacity: 0;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .modal.show .modal-content {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .modal-header h2 {
+        margin: 0;
+        color: var(--primary)
+    }
+
+    .close {
+        color: var(--primary);
+        background: var(--base-100);
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+        border: none;
+        transition: color 0.2s;
+    }
+
+    .close:hover {
+        color: var(--base-300);
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        color: #666;
+    }
+
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+
+    .form-group textarea {
+        min-height: 100px;
+        resize: vertical;
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+    }
+/* Updated bot-actions positioning and styling */
+.bot-actions {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 10;
+}
+
+.menu-dots {
+    background: none;
+    border: none;
+    color: var(--neutral);
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+}
+
+.menu-dots:hover {
+    background-color: var(--base-200);
+}
+
+.menu-dropdown {
+    position: absolute;
+    top: calc(100% + 5px);
+    right: 0;
+    background-color: var(--base-100);
+    border: 1px solid var(--base-300);
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    min-width: 200px;
+    z-index: 50;
+    display: none;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.2s, transform 0.2s;
+}
+
+.menu-dropdown.show {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    color: var(--neutral);
+    cursor: pointer;
+    transition: background-color 0.2s;
+    /* min-height: 44px; */
+    font-size: 0.9rem;
+}
+
+.menu-item:hover {
+    background-color: var(--base-200);
+}
+
+.menu-item i {
+    width: 1rem;
+    text-align: center;
+    font-size: 1rem;
+}
+
+.menu-item:first-child {
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+}
+
+.menu-item:last-child {
+    border-bottom-left-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+}
+
+/* Add divider between menu items */
+.menu-item:not(:last-child) {
+    border-bottom: 1px solid var(--base-300);
+}
+
+/* Ensure bot card has proper positioning context */
+.bot-card {
+    position: relative;
+    min-height: 180px;
+}
+.bot-grid.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+/* Modal Base */
+/* Comments Button Styling */
+.btn-comments {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: var(--primary);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    z-index: 5;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-comments:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* Modal Base */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.modal.show {
+    display: flex;
+    opacity: 1;
+}
+
+/* Modal Content */
+.modal-content {
+    background-color: var(--base-100);
+    color: var(--text-primary);
+    padding: 24px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    transform: scale(0.95);
+    transition: transform 0.3s ease;
+    margin: 0 auto;
+}
+
+.modal.show .modal-content {
+    transform: scale(1);
+}
+
+/* Modal Header */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--base-300);
+    padding-bottom: 16px;
+    margin-bottom: 16px;
+}
+
+.modal-header h2 {
+    margin: 0;
+    color: var(--text-primary);
+    font-weight: 600;
+    font-size: 1.25rem;
+}
+
+.modal-header .close {
+    background: none;
+    border: none;
+    font-size: 1.5em;
+    cursor: pointer;
+    color: var(--text-primary);
+    opacity: 0.7;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    padding: 4px 8px;
+    border-radius: 4px;
+    line-height: 1;
+}
+
+.modal-header .close:hover {
+    opacity: 1;
+    transform: scale(1.1);
+    background-color: var(--base-200);
+}
+
+/* Comments List */
+.comments-list {
+    max-height: 300px;
+    overflow-y: auto;
+    margin-bottom: 16px;
+    border-radius: 8px;
+    background-color: var(--base-200);
+    padding: 12px;
+}
+
+.comment {
+    margin-bottom: 12px;
+    padding: 12px;
+    border: 1px solid var(--base-300);
+    border-radius: 8px;
+    background-color: var(--base-100);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.comment:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.comment:last-child {
+    margin-bottom: 0;
+}
+
+.comment-author {
+    font-weight: 600;
+    color: var(--primary);
+    margin-bottom: 4px;
+}
+
+.comment-date {
+    font-size: 0.8em;
+    color: var(--text-primary);
+    opacity: 0.6;
+    margin-top: 6px;
+}
+
+/* Add Comment Section */
+.add-comment textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--base-300);
+    border-radius: 8px;
+    resize: vertical;
+    margin-bottom: 12px;
+    background-color: var(--base-200);
+    color: var(--text-primary);
+    min-height: 80px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    font-family: 'Inter', sans-serif;
+}
+
+.add-comment textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.2);
+}
+
+.add-comment button {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.add-comment button:hover {
+    background-color: var(--accent);
+}
+
+.add-comment button:active {
+    transform: translateY(1px);
+}
+
+/* Custom Scrollbar for Comments List */
+.comments-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.comments-list::-webkit-scrollbar-track {
+    background: var(--base-200);
+    border-radius: 8px;
+}
+
+.comments-list::-webkit-scrollbar-thumb {
+    background-color: var(--base-300);
+    border-radius: 8px;
+}
+
+.comments-list::-webkit-scrollbar-thumb:hover {
+    background-color: var(--primary);
+}
+
+/* Modal Scrollbar */
+.modal-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+    background: var(--base-200);
+    border-radius: 8px;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+    background-color: var(--base-300);
+    border-radius: 8px;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+    background-color: var(--primary);
+}
+
+/* Focus styles for accessibility */
+.modal-header .close:focus,
+.add-comment button:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--primary);
+}
+
+/* Comment content styles */
+.comment-content {
+    line-height: 1.5;
+    word-break: break-word;
+}
+
+/* Empty state for comments */
+.comments-list:empty::after {
+    content: "No comments yet. Be the first to add one!";
+    display: block;
+    text-align: center;
+    padding: 20px;
+    color: var(--text-primary);
+    opacity: 0.6;
+}
+
+/* Mobile Responsive Adjustments */
+@media (max-width: 768px) {
+    .modal-content {
+        width: 95%;
+        padding: 16px;
+        max-height: 80vh;
+    }
+    
+    .modal-header h2 {
+        font-size: 1.2rem;
+    }
+    
+    .comments-list {
+        max-height: 250px;
+    }
+    
+    .comment {
+        padding: 10px;
+    }
+    
+    .add-comment textarea {
+        min-height: 60px;
+    }
+    
+    .bot-card {
+        padding-bottom: 3.5rem; /* Make space for the comments button */
+    }
+    
+    .btn-comments {
+        bottom: 0.75rem;
+        right: 0.75rem;
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+    }
+}
+
+/* Fix for most-deployed card layout */
+.bot-card.most-deployed .btn-comments {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+}
+
+/* Ensure buttons don't get cut off in different screen sizes */
+.bot-card {
+    padding-bottom: 3rem;
+    min-height: 150px;
+}
+
+/* Fix to prevent button from being covered by other elements */
+.bot-card .deployment-bar {
+    pointer-events: none;
+}
+
+/* Make sure the comments button is always clickable */
+.btn-comments {
+    pointer-events: auto;
+}
+
+/* Animation for comments modal */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.modal.show .modal-content {
+    animation: fadeInUp 0.3s ease forwards;
+}
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <h1><a class="logo" href="/dashboard">H.TD</a></h1>            <nav class="nav-controls">
+               
+                <button id="deployBotBtn" class="btn btn-primary" onclick="window.location.href='/dashboard/new-bot'">
+                    <i class="fas fa-code"></i>
+                    <span>Developor section</span>
+                </button>
+                <button id="themeToggle" class="btn btn-secondary">
+                    <i class="fas fa-adjust"></i>
+                </button>
+        
+                <div class="profile-container">
+                    <img src="https://cdn.talkdrove.com/host/Images/profile.webp" alt="Profile" class="profile-pic" id="profileBtn">
+                    <div class="dropdown" id="profileDropdown">
+                        <a href="/dashboard/my-bots" class="dropdown-item">
+                            <i class="fas fa-robot"></i>
+                            <span>My Bots</span>
+                        </a>
+                        <a href="/dashboard/invite" class="dropdown-item">
+                            <i class="fas fa-share"></i>
+                            <span>Invite</span>
+                        </a>
+                        <a href="/dashboard/wallet" class="dropdown-item">
+                            <i class="fas fa-wallet"></i>
+                            <span>Wallet</span>
+                        </a>
+                        <a href="/dashboard/account-settings" class="dropdown-item">
+                            <i class="fas fa-cog"></i>
+                            <span>Settings</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="/logout" class="dropdown-item" id="logoutBtn">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Logout</span>
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+  
+    <main class="main">
+        <div id="reportModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Report Bot</h2>
+                    <button class="close" onclick="closeReportModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="reportForm">
+                        <input type="hidden" id="reportBotId" name="botId">
+                        <div class="form-group">
+                            <label for="reportType">Issue Type:</label>
+                            <select id="reportType" name="reportType" required>
+                                <option value="">Select an issue type</option>
+                                <option value="not-working">Not working</option>
+                                <option value="connected-and-not-working">Connected but not working</option>
+                                <option value="Banned-my-WhatsAapp">Banned my WhatsApp</option>
+                                <option value="spam">Spam/Advertising</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="reportDescription">Description:</label>
+                            <textarea 
+                                id="reportDescription" 
+                                name="description" 
+                                required 
+                                placeholder="Please describe the issue in detail..."
+                            ></textarea>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">Submit Report</button>
+                            <button type="button" class="btn btn-secondary" onclick="closeReportModal()">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div id="coinInfo">
+            <span id="coinBalance">Coins: loading...</span>
+        </div>
+        <div class="search-container">
+            <div class="search-box">
+                <i class="fas fa-search search-icon"></i>
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    placeholder="Search bots by name..."
+                    oninput="filterBots()"
+                >
+            </div>
+            <div class="filter-buttons">
+                <button class="btn btn-secondary" onclick="toggleFavoriteFilter()">
+                    <i class="fas fa-heart"></i> Favorites
+                </button>
+                <button class="btn btn-secondary" onclick="resetFilters()">
+                    <i class="fas fa-times"></i> Reset
+                </button>
+            </div>
+        </div>
+    
+        <div class="bot-grid">
+            <% bots.forEach(function(bot, index) { %>
+                <div 
+                    class="bot-card <%= bot.popularity_tier %> <%= index === 0 ? 'most-deployed' : '' %>" 
+                    data-bot-id="<%= bot.id %>" 
+                    data-bot-name="<%= bot.name.toLowerCase() %>"
+                    data-deployments="<%= bot.deployment_count %>"
+                    data-favorite="<%= bot.is_favorite %>"
+                    onclick="selectBot(this, '<%= bot.id %>', event)"
+                >
+                    <div class="bot-header">
+                        <i class="fas fa-robot bot-icon"></i>
+                        <div class="bot-actions">
+                            <button class="menu-dots" onclick="toggleMenu(event, '<%= bot.id %>')">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </button>
+                            <div class="menu-dropdown" id="menu-<%= bot.id %>">
+                                <div class="menu-item" onclick="toggleFavorite(event, '<%= bot.id %>')">
+                                    <i class="fas fa-heart <%= bot.is_favorite ? 'active' : '' %>"></i>
+                                    <%= bot.is_favorite ? 'Remove from favorites' : 'Add to favorites' %>
+                                </div>
+                                <div class="menu-item" onclick="shareBot(event, '<%= bot.id %>')">
+                                    <i class="fas fa-share-alt"></i>
+                                    Share
+                                </div>
+                                <div class="menu-item" onclick="reportBot(event, '<%= bot.id %>')">
+                                    <i class="fas fa-flag"></i>
+                                    Report
+                                </div>
+                            </div>
+                        </div>
+                        <% if (index === 0) { %>
+                            <div class="top-badge">
+                                <i class="fas fa-crown"></i> Most Deployed
+                            </div>
+                        <% } %>
+                        <% if (bot.popularity_tier === 'popular') { %>
+                            <div class="popularity-badge">
+                                <i class="fas fa-fire"></i> Popular
+                            </div>
+                        <% } %>
+                    </div>
+                    <div class="bot-name"><%= bot.name %></div>
+                    <div class="bot-info">
+                        <div class="bot-cost">
+                            <i class="fas fa-coins"></i>
+                            <%= bot.deployment_cost %> coins
+                        </div>
+                        <div class="bot-deployments">
+                            <i class="fas fa-rocket"></i>
+                            <%= bot.deployment_count %> deployments
+                        </div>
+                    </div>
+                    <div class="deployment-bar" style="--deployment-percentage: <%= (bot.deployment_count / bots[0].deployment_count) * 100 %>%"></div>
+        
+                    <!-- Comments Button -->
+                    <button class="btn btn-secondary btn-comments" data-bot-id="<%= bot.id %>">
+                        <i class="fas fa-comments"></i> Comments
+                    </button>
+                </div>
+       
+     
+            <% }); %>
+            <div class="no-results">No bots found matching your search</div>
+            
+        </div>
+        
+                      <!-- Comments Modal -->
+<div id="commentsModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Comments</h2>
+            <button class="close" onclick="closeCommentsModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div id="commentsList" class="comments-list">
+                <!-- Comments will be loaded here dynamically -->
+            </div>
+            <div class="add-comment">
+                <textarea id="commentInput" placeholder="Add a comment..."></textarea>
+                <button class="btn btn-primary" onclick="submitComment()">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+         
+    
+    </main>
+    <% if (totalPages > 1) { %>
+        <div class="pagination">
+            <div class="pagination-controls">
+                <% if (currentPage > 1) { %>
+                    <a href="?page=<%= currentPage - 1 %>" class="btn btn-secondary">
+                        <i class="fas fa-chevron-left"></i> Previous
+                    </a>
+                <% } %>
+                
+                <% for(let i = 1; i <= totalPages; i++) { %>
+                    <a href="?page=<%= i %>" 
+                       class="btn <%= currentPage === i ? 'btn-primary' : 'btn-secondary' %>">
+                        <%= i %>
+                    </a>
+                <% } %>
+                
+                <% if (currentPage < totalPages) { %>
+                    <a href="?page=<%= currentPage + 1 %>" class="btn btn-secondary">
+                        Next <i class="fas fa-chevron-right"></i>
+                    </a>
+                <% } %>
+            </div>
+            <div class="pagination-info">
+                Showing <%= (currentPage - 1) * 5 + 1 %> to <%= Math.min(currentPage * 10, totalBots) %> of <%= totalBots %> bots
+            </div>
+        </div>
+    <% } %>
+    <script>
+        let currentBotId = null;
+
+        function openCommentsModal(botId) {
+    currentBotId = botId;
+    const modal = document.getElementById('commentsModal');
+    modal.classList.add('show');
+    document.body.classList.add('modal-open');
+    loadComments(botId);
+}
+
+function closeCommentsModal() {
+    const modal = document.getElementById('commentsModal');
+    modal.classList.remove('show');
+    currentBotId = null;
+    document.getElementById('commentInput').value = '';
+    document.body.classList.remove('modal-open');
+}
+
+function loadComments(botId) {
+    fetch(`/api/bot-comments?botId=${botId}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch comments');
+            }
+            return response.json();
+        })
+        .then(comments => {
+            const commentsList = document.getElementById('commentsList');
+            commentsList.innerHTML = comments.map(comment => `
+                <div class="comment">
+                    <div class="comment-author">${comment.username}</div>
+                    <div class="comment-date">${new Date(comment.created_at).toLocaleString()}</div>
+                    <div class="comment-text">${comment.comment}</div>
+                </div>
+            `).join('');
+        })
+        .catch(error => {
+            console.error('Error loading comments:', error);
+            showNotification('Failed to load comments', 'error');
+        });
+}
+function submitComment() {
+    const commentText = document.getElementById('commentInput').value.trim();
+    if (commentText && currentBotId) {
+        fetch('/api/bot-comments', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ botId: currentBotId, comment: commentText }),
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to submit comment');
+            }
+            return response.json();
+        })
+        .then(() => {
+            loadComments(currentBotId); // Reload comments after submission
+            document.getElementById('commentInput').value = ''; // Clear the input
+            showNotification('Comment submitted successfully', 'success');
+        })
+        .catch(error => {
+            console.error('Error submitting comment:', error);
+            showNotification('Failed to submit comment', 'error');
+        });
+    }
+}
+// Event listener for comments button
+document.addEventListener('click', function(event) {
+    if (event.target.closest('.btn-comments')) {
+        event.preventDefault();
+        event.stopPropagation();
+        const botId = event.target.closest('.btn-comments').getAttribute('data-bot-id');
+        openCommentsModal(botId);
+    }
+});
+
+// Close modal when clicking outside
+document.addEventListener('click', function(event) {
+    const modal = document.getElementById('commentsModal');
+    if (event.target === modal) {
+        closeCommentsModal();
+    }
+});
+
+// Close modal when pressing Escape key
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        closeCommentsModal();
+    }
+});
+function showNotification(message, type = 'info') {
+    // Create notification element if it doesn't exist
+    let notification = document.getElementById('notification');
+    if (!notification) {
+        notification = document.createElement('div');
+        notification.id = 'notification';
+        document.body.appendChild(notification);
+    }
+    
+    // Set notification content and style
+    notification.textContent = message;
+    notification.className = `notification ${type}`;
+    
+    // Show notification
+    notification.style.display = 'block';
+    
+    // Hide after 3 seconds
+    setTimeout(() => {
+        notification.style.display = 'none';
+    }, 3000);
+}
+    let selectedBotId = null;
+    let showingFavorites = false;
+    
+// 5. Modified selectBot function to check for modal-open state
+function selectBot(card, botId, event) {
+    // Don't select bot if modal is open or if click came from comments button
+    if (document.body.classList.contains('modal-open') || 
+        (event && (event.target.closest('.btn-comments') || event.target.closest('.modal')))) {
+        return;
+    }
+
+    const previousSelected = document.querySelector('.bot-card.selected');
+    if (previousSelected) {
+        previousSelected.classList.remove('selected');
+    }
+    card.classList.add('selected');
+    selectedBotId = botId;
+
+    // Redirect to deployment page
+    window.location.href = `/dashboard/select-bot/prepare-deployment?botId=${botId}`;
+} 
+
+const style = document.createElement('style');
+style.textContent = `
+    .notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px 25px;
+        border-radius: 4px;
+        color: white;
+        z-index: 1000;
+        display: none;
+        animation: slideIn 0.3s ease-out;
+    }
+
+    .notification.success {
+        background-color: #4CAF50;
+    }
+
+    .notification.error {
+        background-color: #f44336;
+    }
+
+    .notification.info {
+        background-color: #2196F3;
+    }
+
+    @keyframes slideIn {
+        from { transform: translateX(100%); }
+        to { transform: translateX(0); }
+    }
+`;
+document.head.appendChild(style);
+
+// Updated toggleFavorite function with better error handling
+async function toggleFavorite(event, botId) {
+    event.stopPropagation();
+    const btn = event.currentTarget;
+    const card = btn.closest('.bot-card');
+    
+    try {
+        // Check if user is logged in by attempting to get session data
+
+
+        const response = await fetch('/api/favorite-bot', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({ botId }),
+            credentials: 'include' // Important: include credentials for session cookie
+        });
+        
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Failed to update favorite');
+        }
+        
+        const data = await response.json();
+        btn.classList.toggle('active', data.isFavorite);
+        card.setAttribute('data-favorite', data.isFavorite);
+        
+        showNotification(
+            data.isFavorite ? 'Added to favorites' : 'Removed from favorites',
+            'success'
+        );
+        
+        // Update UI if showing favorites
+        if (showingFavorites && !data.isFavorite) {
+            card.classList.add('fade-out');
+            setTimeout(() => {
+                card.remove();
+                checkNoResults();
+            }, 300);
+        }
+    } catch (error) {
+        console.error('Error toggling favorite:', error);
+        showNotification(error.message || 'Failed to update favorites', 'error');
+    }
+}
+
+    function shareBot(event, botId) {
+        event.stopPropagation(); // Prevent bot selection when clicking share
+        
+        const shareUrl = `${window.location.origin}/share-bot/${botId}`;
+        
+        // Use Web Share API if available
+        if (navigator.share) {
+            navigator.share({
+                title: `Hey checkout this bot, on Host.TalkDrove.com`,
+                url: shareUrl
+            }).catch(console.error);
+        } else {
+            // Fallback to copying to clipboard
+            navigator.clipboard.writeText(shareUrl)
+                .then(() => showNotification('Share link copied to clipboard', 'success'))
+                .catch(() => showNotification('Failed to copy share link', 'error'));
+        }
+    }
+    
+    function toggleFavoriteFilter() {
+    showingFavorites = !showingFavorites;
+    const filterBtn = document.querySelector('.filter-buttons .btn:first-child');
+    filterBtn.classList.toggle('btn-primary', showingFavorites);
+    filterBtn.classList.toggle('btn-secondary', !showingFavorites);
+    
+    // Update URL and reload page with favorites filter
+    const url = new URL(window.location);
+    url.searchParams.set('favorites', showingFavorites);
+    url.searchParams.set('page', '1'); // Reset to first page when toggling filter
+    window.location.href = url.toString();
+}
+function checkNoResults() {
+    const visibleCards = document.querySelectorAll('.bot-card:not(.hidden)');
+    const noResults = document.querySelector('.no-results');
+    noResults.style.display = visibleCards.length === 0 ? 'block' : 'none';
+}
+
+
+
+// Updated createBotCard function for search results
+function createBotCard(bot, botsArray) {
+    const card = document.createElement('div');
+    card.className = `bot-card ${bot.popularity_tier}`;
+    card.setAttribute('data-bot-id', bot.id);
+    card.setAttribute('data-bot-name', bot.name.toLowerCase());
+    card.setAttribute('data-deployments', bot.deployment_count);
+    card.setAttribute('data-favorite', bot.is_favorite);
+    
+    const maxDeployments = Math.max(...botsArray.map(b => b.deployment_count));
+    const deploymentPercentage = maxDeployments > 0 ? 
+        (bot.deployment_count / maxDeployments) * 100 : 0;
+    
+    card.innerHTML = `
+        <div class="bot-header">
+            <i class="fas fa-robot bot-icon"></i>
+            <div class="bot-actions">
+                <button class="menu-dots" onclick="toggleMenu(event, '${bot.id}')">
+                    <i class="fas fa-ellipsis-v"></i>
+                </button>
+                <div class="menu-dropdown" id="menu-${bot.id}">
+                    <div class="menu-item" onclick="toggleFavorite(event, '${bot.id}')">
+                        <i class="fas fa-heart ${bot.is_favorite ? 'active' : ''}"></i>
+                        ${bot.is_favorite ? 'Remove from favorites' : 'Add to favorites'}
+                    </div>
+                    <div class="menu-item" onclick="shareBot(event, '${bot.id}')">
+                        <i class="fas fa-share-alt"></i>
+                        Share
+                    </div>
+                    <div class="menu-item" onclick="reportBot(event, '${bot.id}')">
+                        <i class="fas fa-flag"></i>
+                        Report
+                    </div>
+                </div>
+            </div>
+            ${bot.popularity_tier === 'popular' ? 
+                '<div class="popularity-badge"><i class="fas fa-fire"></i> Popular</div>' : ''}
+        </div>
+        <div class="bot-name-container">
+            <svg class="santa-hat" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 40">
+                <path d="M5 35 C15 35, 25 35, 40 35 C35 25, 30 15, 25 10 C20 15, 15 25, 5 35" fill="#D42426"/>
+                <path d="M5 35 C15 35, 25 35, 40 35 C40 33, 40 32, 40 31 C25 31, 15 31, 5 31 C5 32, 5 33, 5 35" fill="white"/>
+                <circle cx="25" cy="8" r="4" fill="white"/>
+            </svg>
+            <div class="bot-name">${bot.name}</div>
+        </div>
+        <div class="bot-info">
+            <div class="bot-cost">
+                <i class="fas fa-coins"></i> ${bot.deployment_cost} coins
+            </div>
+            <div class="bot-deployments">
+                <i class="fas fa-rocket"></i> ${bot.deployment_count} deployments
+            </div>
+        </div>
+        <div class="deployment-bar" style="--deployment-percentage: ${deploymentPercentage}%"></div>
+    `;
+
+    card.onclick = () => selectBot(card, bot.id);
+    return card;
+}
+
+// Call this function when the page loads
+document.addEventListener('DOMContentLoaded', () => {
+ 
+    
+    // Also call it after pagination changes
+    const paginationLinks = document.querySelectorAll('.pagination-controls a');
+    paginationLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            // Short timeout to allow page to update
+        
+        });
+    });
+});
+
+
+
+const debounce = (func, wait) => {
+    let timeout;
+    return function(...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), wait);
+    };
+};
+function filterBots() {
+    const searchValue = document.getElementById('searchInput').value.toLowerCase().trim();
+    
+    // If search is empty, restore original pagination view
+    if (!searchValue) {
+        // Reset to original paginated view
+        const url = new URL(window.location);
+        // Preserve favorites filter if it exists
+        const showingFavorites = url.searchParams.get('favorites');
+        url.searchParams.forEach((value, key) => {
+            if (key !== 'favorites') {
+                url.searchParams.delete(key);
+            }
+        });
+        if (!url.searchParams.has('page')) {
+            url.searchParams.set('page', '1');
+        }
+        window.location.href = url.toString();
+        return;
+    }
+
+    // Show loading state
+    const botGrid = document.querySelector('.bot-grid');
+    botGrid.style.opacity = '0.5';
+
+    // Only perform search if there's a search term
+    fetch(`/api/search-bots?term=${encodeURIComponent(searchValue)}&favorites=${showingFavorites}`)
+        .then(response => response.json())
+        .then(searchResults => {
+            // Clear existing bot cards
+            const existingCards = document.querySelectorAll('.bot-card');
+            existingCards.forEach(card => card.remove());
+
+            // Handle no results
+            const noResults = document.querySelector('.no-results');
+            if (!searchResults.length) {
+                noResults.style.display = 'block';
+                botGrid.style.opacity = '1';
+                return;
+            }
+            noResults.style.display = 'none';
+
+            // Create and append new bot cards
+            searchResults.forEach((bot, index) => {
+                const card = createBotCard(bot, searchResults);
+                botGrid.appendChild(card);
+            });
+
+            // Hide pagination when searching
+            const pagination = document.querySelector('.pagination');
+            if (pagination) {
+                pagination.style.display = 'none';
+            }
+
+            botGrid.style.opacity = '1';
+        })
+        .catch(error => {
+            console.error('Error searching bots:', error);
+            showNotification('Failed to search bots', 'error');
+            botGrid.style.opacity = '1';
+        });
+}
+
+// Update the event listener initialization
+document.addEventListener('DOMContentLoaded', () => {
+    // Initialize coin balance and favorite filters
+    updateCoinBalance();
+    showingFavorites = new URLSearchParams(window.location.search).get('favorites') === 'true';
+    if (showingFavorites) {
+        const filterBtn = document.querySelector('.filter-buttons .btn:first-child');
+        filterBtn.classList.add('btn-primary');
+        filterBtn.classList.remove('btn-secondary');
+    }
+
+    // Add event listener to search input with debounce
+    const searchInput = document.getElementById('searchInput');
+    let debounceTimeout;
+    
+    searchInput.addEventListener('input', (e) => {
+        clearTimeout(debounceTimeout);
+        
+        // Only trigger search if there's actual input
+        if (e.target.value.trim()) {
+            debounceTimeout = setTimeout(() => filterBots(), 300);
+        } else {
+            // If input is cleared, restore original pagination view
+            const url = new URL(window.location);
+            const currentFavorites = url.searchParams.get('favorites');
+            url.search = currentFavorites ? `?favorites=${currentFavorites}&page=1` : '?page=1';
+            window.location.href = url.toString();
+        }
+    });
+});
+    
+    function resetFilters() {
+        showingFavorites = false;
+        document.getElementById('searchInput').value = '';
+        const filterBtn = document.querySelector('.filter-buttons .btn:first-child');
+        filterBtn.classList.remove('btn-primary');
+        filterBtn.classList.add('btn-secondary');
+        
+        // Reset URL and reload page
+        const url = new URL(window.location);
+        url.searchParams.delete('favorites');
+        url.searchParams.set('page', '1');
+        window.location.href = url.toString();
+    }
+    async function updateCoinBalance() {
+        try {
+            const response = await fetch('/user-coins');
+            const data = await response.json();
+            document.getElementById('coinBalance').textContent = `${data.coins} Coins`;
+        } catch (error) {
+            console.error('Error fetching coin balance:', error);
+            showNotification('Failed to update coin balance', 'error');
+        }
+    }
+
+// Updated JavaScript functions for the report modal
+function openReportModal(botId) {
+    const modal = document.getElementById('reportModal');
+    document.getElementById('reportBotId').value = botId;
+    modal.style.display = 'block';
+    // Use setTimeout to trigger the animation
+    setTimeout(() => {
+        modal.classList.add('show');
+    }, 10);
+}
+
+
+// Initialize event listeners
+document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.getElementById('searchInput');
+    searchInput.addEventListener('input', debounce(filterBots, 300));
+
+    // Check URL for existing search term
+    const urlParams = new URLSearchParams(window.location.search);
+    const searchTerm = urlParams.get('term');
+    if (searchTerm) {
+        searchInput.value = searchTerm;
+        filterBots();
+    }
+});
+function closeReportModal() {
+    const modal = document.getElementById('reportModal');
+    modal.classList.remove('show');
+    // Wait for animation to complete before hiding
+    setTimeout(() => {
+        modal.style.display = 'none';
+        document.getElementById('reportForm').reset();
+    }, 300);
+}
+
+function reportBot(event, botId) {
+    event.stopPropagation();
+    openReportModal(botId);
+}
+
+// Updated form submission handler
+document.getElementById('reportForm').addEventListener('submit', async (event) => {
+    event.preventDefault();
+    
+    const formData = new FormData(event.target);
+    const reportData = {
+        botId: formData.get('botId'),
+        reportType: formData.get('reportType'),
+        description: formData.get('description')
+    };
+    
+    try {
+        const response = await fetch('/api/report-bot', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify(reportData),
+            credentials: 'include'
+        });
+        
+        const data = await response.json();
+        
+        if (response.status === 429) {
+            showNotification(data.error || 'Please wait 24 hours before submitting another report.', 'error');
+        } else if (!response.ok) {
+            throw new Error(data.error || 'Failed to submit report');
+        } else {
+            showNotification('Report submitted successfully', 'success');
+            closeReportModal();
+        }
+    } catch (error) {
+        console.error('Error submitting report:', error);
+        showNotification(error.message || 'Failed to submit report', 'error');
+    }
+});
+// Close modal when clicking outside
+// Close modal when clicking outside
+window.onclick = function(event) {
+    const modal = document.getElementById('reportModal');
+    if (event.target === modal) {
+        closeReportModal();
+    }
+}
+
+// Close modal when escape key is pressed
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        closeReportModal();
+    }
+});
+    
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
+    updateCoinBalance();
+    showingFavorites = new URLSearchParams(window.location.search).get('favorites') === 'true';
+    if (showingFavorites) {
+        const filterBtn = document.querySelector('.filter-buttons .btn:first-child');
+        filterBtn.classList.add('btn-primary');
+        filterBtn.classList.remove('btn-secondary');
+    }
+});
+
+let openMenuId = null;
+
+// Toggle menu function
+function toggleMenu(event, botId) {
+    event.stopPropagation(); // Prevent bot selection
+    
+    const menuId = `menu-${botId}`;
+    const clickedMenu = document.getElementById(menuId);
+    
+    // If there's an open menu and it's not the one we clicked
+    if (openMenuId && openMenuId !== menuId) {
+        document.getElementById(openMenuId).classList.remove('show');
+    }
+    
+    // Toggle the clicked menu
+    clickedMenu.classList.toggle('show');
+    openMenuId = clickedMenu.classList.contains('show') ? menuId : null;
+}
+
+// Close menu when clicking outside
+document.addEventListener('click', (event) => {
+    if (openMenuId && !event.target.closest('.bot-actions')) {
+        document.getElementById(openMenuId).classList.remove('show');
+        openMenuId = null;
+    }
+});
+
+// Close menu when pressing Escape
+document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && openMenuId) {
+        document.getElementById(openMenuId).classList.remove('show');
+        openMenuId = null;
+    }
+});
+    </script>
+<script src="/js/main.js"></script>    
+
+</body>
+</html>

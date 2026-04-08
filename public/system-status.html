@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="refresh" content="300">
+
+    
+    <title>Live System Status & Service Health | Host.|| H.TD WhatsApp Bot Hosting Platform</title>
+    <meta name="description" content="Real-time system status and performance metrics for Host.TalkDrove WhatsApp bot platform. Monitor server uptime, deployment status, and service health. 24/7 status updates.">
+    <meta name="keywords" content="system status, server health, bot platform status, TalkDrove uptime, WhatsApp bot hosting status, service monitoring, platform performance, real-time metrics, server status, deployment status, bot analytics, WhatsApp automation, chatbot performance, AI bot metrics, WhatsApp business solution, bot hosting performance, chatbot deployment, business messaging platform, automated customer service, WhatsApp API status">
+    <meta name="author" content="TalkDrove">
+    <meta name="robots" content="index, follow, max-image-preview:large">
+    <meta name="language" content="English">
+    <meta name="theme-color" content="#4CAF50">
+    <meta name="generator" content="TalkDrove Status Monitor v1.0">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5279011797376172" crossorigin="anonymous"></script>
+    
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Host.TalkDrove Status">
+    <meta property="og:title" content="Live System Status & Service Health | Host.TalkDrove Bot Platform">
+    <meta property="og:description" content="Real-time status monitoring for Host.TalkDrove WhatsApp bot platform. Check server uptime, deployment status, and system performance metrics.">
+    <meta property="og:url" content="https://host.talkdrove.com/system-status">
+    <meta property="og:image" content="https://cdn.talkdrove.com/host/Images/host-talkdrove.jpeg">
+    <meta property="og:image:alt" content="TalkDrove System Status Dashboard">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:updated_time" content="2024-11-19T12:00:00+00:00">
+
+    
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@TalkDrove">
+    <meta name="twitter:creator" content="@TalkDrove">
+    <meta name="twitter:title" content="System Status | Host.TalkDrove Bot Platform">
+    <meta name="twitter:description" content="Live system status monitoring for Host.TalkDrove. Check real-time performance metrics and service health.">
+    <meta name="twitter:image" content="https://cdn.talkdrove.com/host/Images/host-talkdrove.jpeg">
+    <meta name="twitter:image:alt" content="TalkDrove Status Monitor Dashboard">
+
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="https://cdn.talkdrove.com/host/Images/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://cdn.talkdrove.com/host/Images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://cdn.talkdrove.com/host/Images/favicon/favicon-16x16.png">
+    <meta name="apple-mobile-web-app-title" content="TalkDrove Status">
+    <meta name="application-name" content="TalkDrove Status">
+
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #4F46E5;
+            --success-color: #10B981;
+            --warning-color: #F59E0B;
+            --danger-color: #EF4444;
+            --background-gradient: linear-gradient(135deg, #f6f9fc 0%, #f1f4f8 100%);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--background-gradient);
+            color: #000000;
+        }
+
+        .glass-morphism {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(229, 231, 235, 0.5);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .status-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .status-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .server-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+            position: relative;
+        }
+
+        .status-indicator::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+            z-index: -1;
+        }
+
+        .status-active {
+            background-color: var(--success-color);
+        }
+
+        .status-active::after {
+            background-color: var(--success-color);
+        }
+
+        .status-warning {
+            background-color: var(--warning-color);
+        }
+
+        .status-warning::after {
+            background-color: var(--warning-color);
+        }
+
+        .status-inactive {
+            background-color: var(--danger-color);
+        }
+
+        .status-inactive::after {
+            background-color: var(--danger-color);
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 0.7;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.3;
+                transform: scale(1.3);
+            }
+            100% {
+                opacity: 0.7;
+                transform: scale(1);
+            }
+        }
+
+        .metric-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), #818CF8);
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .loading-skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            from { background-position: 200% 0; }
+            to { background-position: -200% 0; }
+        }
+        
+        .chart-container {
+            height: 200px;
+            width: 100%;
+        }
+        
+        .article-container {
+            line-height: 1.8;
+        }
+        
+        .bot-type-indicator {
+            width: 10px;
+            height: 10px;
+            display: inline-block;
+            margin-right: 5px;
+            border-radius: 50%;
+        }
+        
+        .ad-container {
+            margin: 2rem 0;
+            padding: 1rem;
+            background: #f9f9f9;
+            border-radius: 0.5rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body class="min-h-screen py-8">
+    <div class="container mx-auto px-4 max-w-7xl">
+        
+        <header class="mb-8">
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h1 class="text-4xl font-bold text-gray-900 mb-2">System Status</h1>
+                    <p class="text-gray-600">Real-time monitoring dashboard for WhatsApp Bot Platform</p>
+                </div>
+                <div class="flex items-center space-x-2 bg-white rounded-full px-4 py-2 shadow-sm">
+                    <span class="status-indicator status-active"></span>
+                    <span class="font-medium text-gray-700">All Systems Operational</span>
+                </div>
+            </div>
+            
+            <div style="color: #000000;" class="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg p-6 text-white glass-morphism mb-8">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="text-2xl font-semibold mb-2">Platform Overview</h2>
+                        <p class="opacity-90">Last updated: <span id="lastUpdate">Just now</span></p>
+                    </div>
+                    <button class="px-4 py-2 bg-white bg-opacity-20 rounded-lg hover:bg-opacity-30 transition-all duration-200">
+                        Refresh Data
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        
+        <div class="glass-morphism rounded-xl p-6 mb-8 article-container">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">WhatsApp Bot Hosting Platform: Enterprise-Grade Reliability</h2>
+            <p class="mb-4">
+                Welcome to the TalkDrove WhatsApp Bot Hosting Platform status page, your comprehensive source for real-time monitoring of our enterprise-grade WhatsApp automation infrastructure. This dashboard provides vital statistics on server health, bot performance, and system availability to ensure your business messaging operations run smoothly.
+            </p>
+            <p class="mb-4">
+                Our WhatsApp bot hosting solution powers thousands of businesses worldwide with 99.9% uptime, enabling seamless customer interactions, automated support, and personalized messaging at scale. With enterprise-level security, redundant infrastructure, and continuous monitoring, TalkDrove ensures your business messaging never skips a beat.
+            </p>
+            <p class="mb-4">
+                Track your WhatsApp business messaging deployment status, server performance metrics, and bot analytics all in one place. Our platform's real-time monitoring ensures optimal performance for your automated customer service solutions, lead generation bots, and WhatsApp marketing campaigns.
+            </p>
+        </div>
+        
+        
+<div class="ad-container">
+  <ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-5279011797376172" data-ad-slot="3592398670"></ins>
+  <script>
+       (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+</div>
+
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            
+            <div class="status-card glass-morphism rounded-xl p-6 metric-card fade-in">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="bg-indigo-100 p-3 rounded-full">
+                        <i class="fas fa-server text-indigo-600 text-xl"></i>
+                    </div>
+                    <span class="text-sm font-medium text-indigo-600 bg-indigo-100 px-3 py-1 rounded-full">Live</span>
+                </div>
+                <h3 class="text-gray-600 text-sm font-medium mb-2">Total Servers</h3>
+                <div class="flex items-end justify-between">
+                    <span class="text-3xl font-bold text-gray-900" id="totalServers">12</span>
+                    <span class="text-green-600 text-sm flex items-center">
+                        <i class="fas fa-arrow-up mr-1"></i>
+                        2.5%
+                    </span>
+                </div>
+            </div>
+
+            
+            <div class="status-card glass-morphism rounded-xl p-6 metric-card fade-in">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="bg-green-100 p-3 rounded-full">
+                        <i class="fas fa-check-circle text-green-600 text-xl"></i>
+                    </div>
+                    <span class="text-sm font-medium text-green-600 bg-green-100 px-3 py-1 rounded-full">Active</span>
+                </div>
+                <h3 class="text-gray-600 text-sm font-medium mb-2">Active Servers</h3>
+                <div class="flex items-end justify-between">
+                    <span class="text-3xl font-bold text-gray-900" id="activeServers">11</span>
+                    <span class="text-green-600 text-sm flex items-center">
+                        <i class="fas fa-arrow-up mr-1"></i>
+                        98.2%
+                    </span>
+                </div>
+            </div>
+
+            
+            <div class="status-card glass-morphism rounded-xl p-6 metric-card fade-in">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="bg-purple-100 p-3 rounded-full">
+                        <i class="fas fa-robot text-purple-600 text-xl"></i>
+                    </div>
+                    <span class="text-sm font-medium text-purple-600 bg-purple-100 px-3 py-1 rounded-full">Deployed</span>
+                </div>
+                <h3 class="text-gray-600 text-sm font-medium mb-2">Total Bots</h3>
+                <div class="flex items-end justify-between">
+                    <span class="text-3xl font-bold text-gray-900" id="totalBots">245</span>
+                    <span class="text-green-600 text-sm flex items-center">
+                        <i class="fas fa-arrow-up mr-1"></i>
+                        12.8%
+                    </span>
+                </div>
+            </div>
+
+
+
+            
+            <div class="status-card glass-morphism rounded-xl p-6 metric-card fade-in">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="bg-yellow-100 p-3 rounded-full">
+                        <i class="fas fa-microchip text-yellow-600 text-xl"></i>
+                    </div>
+                    <span class="text-sm font-medium text-yellow-600 bg-yellow-100 px-3 py-1 rounded-full">Load</span>
+                </div>
+                <h3 class="text-gray-600 text-sm font-medium mb-2">Average Load</h3>
+                <div class="flex items-end justify-between">
+                    <span class="text-3xl font-bold text-gray-900" id="avgLoad">42%</span>
+                    <span class="text-green-600 text-sm flex items-center">
+                        <i class="fas fa-arrow-down mr-1"></i>
+                        3.2%
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        
+        <div class="glass-morphism rounded-xl p-6 mb-8">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-gray-900">Server Details</h2>
+                <div class="flex space-x-2">
+                    <button class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-all duration-200">
+                        <i class="fas fa-filter mr-2"></i>Filter
+                    </button>
+                    <button class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-all duration-200">
+                        <i class="fas fa-sort mr-2"></i>Sort
+                    </button>
+                </div>
+            </div>
+            
+            <div id="serverList" class="server-grid">
+                
+                <div class="status-card glass-morphism rounded-xl p-6 fade-in">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center">
+                            <span class="status-indicator status-active"></span>
+                            <span class="font-semibold text-gray-900">Server ID: SRV-001</span>
+                        </div>
+                        <span class="text-sm font-medium text-green-600 bg-green-100 px-3 py-1 rounded-full">Active</span>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Uptime</span>
+                            <span class="font-medium">99.9%</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Load</span>
+                            <div class="w-32 bg-gray-200 rounded-full h-2">
+                                <div class="bg-green-500 rounded-full h-2" style="width: 45%"></div>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Memory Usage</span>
+                            <span class="font-medium">4.2 GB / 8 GB</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Active Bots</span>
+                            <span class="font-medium">24</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+        <div class="glass-morphism rounded-xl p-6 mb-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">System Health Timeline</h2>
+            <div class="space-y-4">
+                <div class="flex items-center">
+                    <div class="w-16 text-sm text-gray-600">Now</div>
+                    <div class="ml-4 flex items-center">
+                        <span class="status-indicator status-active"></span>
+                        <span class="text-gray-900">All systems operational</span>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <div class="w-16 text-sm text-gray-600">2h ago</div>
+                    <div class="ml-4 flex items-center">
+                        <span class="status-indicator status-warning"></span>
+                        <span class="text-gray-900">Minor latency detected</span>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <div class="w-16 text-sm text-gray-600">6h ago</div>
+                    <div class="ml-4 flex items-center">
+                        <span class="status-indicator status-active"></span>
+                        <span class="text-gray-900">Performance optimizations completed</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <script>
+      // Function to format numbers with commas and handle undefined values
+function formatNumber(num) {
+    if (num === undefined || num === null) return '0';
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+// Function to format dates
+function formatDate(date) {
+    return new Intl.DateTimeFormat('en-US', {
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true,
+        month: 'short',
+        day: 'numeric'
+    }).format(date);
+}
+      // Function to update server status indicators
+function updateStatusIndicator(element, status) {
+    const indicators = {
+        active: 'status-active',
+        warning: 'status-warning',
+        inactive: 'status-inactive'
+    };
+    element.className = `status-indicator ${indicators[status] || indicators.inactive}`;
+}
+// Function to create server card with your API's data structure
+function createServerCard(server) {
+    const isActive = server.isActive === 1;
+    const load = parseFloat(server.load);
+    const loadColor = load > 80 ? 'red' : load > 60 ? 'yellow' : 'green';
+    
+    return `
+        <div class="status-card glass-morphism rounded-xl p-6 fade-in">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center">
+                    <span class="status-indicator status-${isActive ? 'active' : 'inactive'}"></span>
+                    <span class="font-semibold text-gray-900">Server ID: ${server.id}</span>
+                </div>
+                <span class="text-sm font-medium text-${isActive ? 'green' : 'red'}-600 
+                      bg-${isActive ? 'green' : 'red'}-100 px-3 py-1 rounded-full">
+                    ${isActive ? 'Active' : 'Inactive'}
+                </span>
+            </div>
+            <div class="space-y-4">
+                <div class="flex justify-between items-center">
+                    <span class="text-gray-600">Last Active</span>
+                    <span class="font-medium">${server.lastActive}</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-gray-600">Load</span>
+                    <div class="w-32 bg-gray-200 rounded-full h-2">
+                        <div class="bg-${loadColor}-500 rounded-full h-2" 
+                             style="width: ${load}%"></div>
+                    </div>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-gray-600">Apps Deployed</span>
+                    <span class="font-medium">${server.appsCount}</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-gray-600">Current Load</span>
+                    <span class="font-medium">${server.load}%</span>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+// Updated fetchServerStats function to match your API response
+async function fetchServerStats() {
+    try {
+        // Show loading state
+        const serverList = document.getElementById('serverList');
+        serverList.innerHTML = `
+            <div class="text-center p-6">
+                <i class="fas fa-spinner fa-spin text-gray-500 text-4xl mb-4"></i>
+                <p class="text-gray-600">Loading server statistics...</p>
+            </div>
+        `;
+
+        const response = await fetch('/api/server-stats');
+        const data = await response.json();
+        
+        // Update main stats
+        document.getElementById('totalServers').textContent = formatNumber(data.totalServers);
+        document.getElementById('activeServers').textContent = formatNumber(data.activeServers);
+        document.getElementById('totalBots').textContent = formatNumber(data.totalApps); // Changed to match your API
+        document.getElementById('avgLoad').textContent = `${data.avgLoad}%`;
+        document.getElementById('lastUpdate').textContent = formatDate(new Date());
+
+        // Calculate some additional stats for the header
+        const activeServersCount = data.servers.filter(server => server.isActive === 1).length;
+        const totalApps = data.servers.reduce((sum, server) => sum + server.appsCount, 0);
+        const avgServerLoad = (data.servers.reduce((sum, server) => sum + parseFloat(server.load), 0) / data.servers.length).toFixed(1);
+
+        // Update header stats if they exist
+        const systemStatusElement = document.querySelector('.flex.items-center span:last-child');
+        if (systemStatusElement) {
+            const activeServerPercent = ((activeServersCount / data.totalServers) * 100).toFixed(1);
+            systemStatusElement.textContent = `${activeServersCount} of ${data.totalServers} Servers Active (${activeServerPercent}%)`;
+        }
+
+        // Update server list
+        if (data.servers && data.servers.length > 0) {
+            serverList.innerHTML = data.servers
+                .sort((a, b) => b.isActive - a.isActive || parseFloat(b.load) - parseFloat(a.load))
+                .map(server => createServerCard(server))
+                .join('');
+        } else {
+            serverList.innerHTML = `
+                <div class="text-center p-6">
+                    <i class="fas fa-server text-gray-400 text-4xl mb-4"></i>
+                    <p class="text-gray-600">No servers found</p>
+                </div>
+            `;
+        }
+
+    } catch (error) {
+        console.error('Error fetching server stats:', error);
+        const errorMessage = `
+            <div class="text-center p-6">
+                <i class="fas fa-exclamation-circle text-red-500 text-4xl mb-4"></i>
+                <p class="text-gray-600">Unable to fetch server statistics.</p>
+                <button onclick="fetchServerStats()" class="mt-4 px-4 py-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors">
+                    Try Again
+                </button>
+            </div>
+        `;
+        document.getElementById('serverList').innerHTML = errorMessage;
+
+        // Set default values for main stats
+        document.getElementById('totalServers').textContent = '0';
+        document.getElementById('activeServers').textContent = '0';
+        document.getElementById('totalBots').textContent = '0';
+        document.getElementById('avgLoad').textContent = '0%';
+        document.getElementById('lastUpdate').textContent = formatDate(new Date());
+    }
+}
+
+// Initial fetch and set up auto-refresh
+fetchServerStats();
+const refreshInterval = setInterval(fetchServerStats, 30000);
+
+// Add loading states and refresh button handler
+document.addEventListener('DOMContentLoaded', () => {
+    const refreshButton = document.querySelector('button');
+    if (refreshButton) {
+        refreshButton.addEventListener('click', async () => {
+            refreshButton.disabled = true;
+            refreshButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Refreshing...';
+            await fetchServerStats();
+            refreshButton.disabled = false;
+            refreshButton.innerHTML = 'Refresh Data';
+        });
+    }
+});
+    </script>
+</body>
+</html>

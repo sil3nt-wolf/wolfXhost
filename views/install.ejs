@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Install Host TalkDrove</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {font-family: 'Inter', sans-serif; background:#f5f5f5; padding:2rem;}
+        form {max-width:500px;margin:0 auto;background:#fff;padding:2rem;border-radius:8px;box-shadow:0 0 10px rgba(0,0,0,0.1);}
+        label {display:block;margin-top:1rem;}
+        input {width:100%;padding:0.5rem;margin-top:0.25rem;}
+        button {margin-top:1rem;padding:0.5rem 1rem;}
+    </style>
+</head>
+<body>
+    <form id="installForm" method="post" action="/install">
+        <h2>Database Settings</h2>
+        <label>Host<input name="host" required></label>
+        <label>User<input name="user" required></label>
+        <label>Password<input name="password" type="password"></label>
+        <label>Database Name<input name="database" required></label>
+        <label>Port<input name="port" value="3306"></label>
+        <button type="button" id="checkBtn">Check Connection</button>
+        <div id="checkResult"></div>
+        <h2>Admin Account</h2>
+        <label>Username<input name="adminUsername" required></label>
+        <label>Email<input name="adminEmail" required type="email"></label>
+        <label>Password<input name="adminPassword" type="password" required></label>
+        <button type="submit">Install</button>
+    </form>
+<script>
+    document.getElementById('checkBtn').addEventListener('click', async () => {
+        const form = document.getElementById('installForm');
+        const data = new URLSearchParams(new FormData(form));
+        const res = await fetch('/install/check-db', {method:'POST', body:data});
+        const json = await res.json();
+        document.getElementById('checkResult').textContent = json.success ? 'Connection successful' : 'Connection failed: ' + json.message;
+    });
+</script>
+</body>
+</html>

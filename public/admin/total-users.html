@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Fetch Total Users</title>
+</head>
+<body>
+    <h1>Total Users</h1>
+    <p id="userCount">Loading...</p>
+
+    <script>
+        // Fetch total users from the /admin/users/count route
+        fetch('/admin/users/count')
+            .then(response => response.json()) // Parse the JSON from the response
+            .then(data => {
+                // Display the total number of users
+                const userCountElement = document.getElementById('userCount');
+                userCountElement.textContent = `Total Users: ${data.totalUsers}`;
+            })
+            .catch(error => {
+                // Handle errors and update the content accordingly
+                const userCountElement = document.getElementById('userCount');
+                userCountElement.textContent = 'Error fetching user count.';
+                console.error('Error fetching total users:', error);
+            });
+    </script>
+</body>
+</html>

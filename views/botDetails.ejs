@@ -1,0 +1,1889 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Host.TalkDrove - Manage your WhatsApp bot details">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Favicon and App Icons -->
+    <link rel="apple-touch-icon" sizes="180x180"
+        href="https://cdn.talkdrove.com/host/Images/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32"
+        href="https://cdn.talkdrove.com/host/Images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16"
+        href="https://cdn.talkdrove.com/host/Images/favicon/favicon-16x16.png">
+    <title>BOT Details | <%= app.display_name %> || H.TD</title>
+    <link rel="stylesheet" href="/styles/main.css">
+        <!-- <link rel="stylesheet" href="../styles/main.css"> -->
+    <style>
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, var(--base-200), var(--base-300));
+            color: var(--neutral);
+            margin: 0;
+            min-height: 100vh;
+        }
+
+        .main {
+            max-width: 1280px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        #config-vars {
+            background-color: var(--base-100);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            border: 1px solid rgba(229, 231, 235, 0.2);
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .config-var {
+            margin-bottom: 1rem;
+        }
+
+        .config-var label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--neutral);
+            font-weight: 500;
+        }
+
+        .config-var input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid var(--base-300);
+            border-radius: 0.5rem;
+            background-color: var(--base-200);
+            color: var(--neutral);
+        }
+
+        #deleteAppBtn {
+            background-color: var(--error);
+            color: white;
+        }
+
+        #deleteAppBtn:hover {
+            background-color: #f65656;
+        }
+
+        #loading-screen {
+            position: fixed;
+            inset: 0;
+            background-color: var(--loader);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        #loading-text {
+            color: var(--loaderText);
+            font-size: 1.5rem;
+            font-weight: 500;
+        }
+
+        .loader {
+            border: 3px solid var(--base-300);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .controls {
+                margin-top: 1rem;
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .btn span {
+                display: none;
+            }
+
+            .main {
+                padding: 1rem;
+            }
+        }
+
+        .message {
+            position: fixed;
+            top: 1.5rem;
+            right: 1.5rem;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            color: rgb(0, 0, 0);
+            font-weight: 500;
+            z-index: 100;
+            animation: slideIn 0.3s ease;
+            display: none;
+        }
+
+        .error {
+            background-color: var(--error);
+        }
+
+        .success {
+            background-color: var(--success);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 0;
+            }
+        }
+
+        .tab-container {
+            margin: 20px 0;
+        }
+
+        .tab-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tab-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background: var(--secondary-bg);
+            color: var(--text-color);
+            transition: all 0.3s ease;
+        }
+
+        .tab-button.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        #logs-container {
+            background: var(--secondary-bg);
+            padding: 15px;
+            border-radius: 5px;
+            max-height: 500px;
+            overflow-y: auto;
+            font-family: monospace;
+        }
+
+        .log-entry {
+            margin: 5px 0;
+            padding: 5px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .log-timestamp {
+            color: var(--secondary-text);
+            margin-right: 10px;
+        }
+
+        .log-source {
+            color: var(--primary-color);
+            margin-right: 10px;
+        }
+
+        .log-controls {
+            margin-bottom: 15px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .auto-scroll {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        #clear-logs {
+            margin-left: auto;
+        }
+
+        .config-var {
+            margin-bottom: 15px;
+        }
+
+        .config-var label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .config-var input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background: var(--input-bg);
+            color: var(--text-color);
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        .delete-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.95);
+            background-color: var(--base-100);
+            border-radius: 1rem;
+            padding: 2rem;
+            max-width: 450px;
+            width: 90%;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            opacity: 0;
+            transition: all 0.3s ease-out;
+        }
+
+        .modal-overlay.active .delete-modal {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+
+        .delete-modal-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .delete-modal-header i {
+            color: var(--error);
+            font-size: 1.5rem;
+        }
+
+        .delete-modal-title {
+            color: var(--error);
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .delete-modal-content {
+            margin-bottom: 1.5rem;
+        }
+
+        .delete-warning {
+            background-color: rgba(239, 68, 68, 0.1);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+
+        .delete-warning h4 {
+            color: var(--error);
+            font-weight: 600;
+            margin: 0 0 0.5rem 0;
+        }
+
+        .delete-warning ul {
+            margin: 0;
+            padding-left: 1.5rem;
+            color: var(--neutral);
+        }
+
+        .delete-modal-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+
+        .btn-cancel {
+            background-color: var(--base-200);
+            color: var(--neutral);
+        }
+
+        .btn-delete {
+            background-color: var(--error);
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background-color: #dc2626;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Enhance existing styles */
+        .config-var input {
+            transition: all 0.2s ease;
+            border: 2px solid transparent;
+        }
+
+        .config-var input:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
+        }
+
+        .tab-button {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab-button::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .tab-button.active::after {
+            width: 100%;
+        }
+
+        /* Add loading animation for save button */
+        .btn-loading {
+            position: relative;
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        .btn-loading::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            top: 50%;
+            left: 50%;
+            margin: -8px 0 0 -8px;
+            border: 2px solid transparent;
+            border-top-color: currentColor;
+            border-radius: 50%;
+            animation: button-loading-spinner 0.6s linear infinite;
+        }
+
+        @keyframes button-loading-spinner {
+            from {
+                transform: rotate(0turn);
+            }
+
+            to {
+                transform: rotate(1turn);
+            }
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+            color: var(--neutral);
+        }
+
+        .config-var {
+            margin-bottom: 1rem;
+        }
+
+        .config-var label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--neutral);
+        }
+
+        .config-var input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid var(--base-300);
+            border-radius: 0.5rem;
+            background-color: var(--base-200);
+            color: var(--neutral);
+            transition: all 0.2s ease;
+        }
+
+        .config-var input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.1);
+        }
+
+        .no-vars {
+            text-align: center;
+            color: var(--neutral);
+            padding: 1rem;
+        }
+
+
+        /* Terminal Container */
+        .terminal-container {
+            background-color: var(--base-100);
+            border-radius: 0.75rem;
+            border: 1px solid rgba(229, 231, 235, 0.2);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+
+        /* Terminal Header */
+        .terminal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            background-color: var(--base-200);
+            border-bottom: 1px solid rgba(229, 231, 235, 0.2);
+        }
+
+        .terminal-header h3 {
+            margin: 0;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--neutral);
+        }
+
+        #clear-terminal {
+            padding: 0.25rem 0.75rem;
+            font-size: 0.75rem;
+            color: var(--neutral);
+            background-color: var(--base-300);
+            border: none;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        #clear-terminal:hover {
+            background-color: var(--base-400);
+        }
+
+        /* Terminal Output Area */
+        .terminal-output {
+            background-color: var(--base-100);
+            color: var(--neutral);
+            font-family: 'Fira Code', 'Consolas', monospace;
+            font-size: 0.875rem;
+            line-height: 1.5;
+            padding: 1rem;
+            height: 400px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--base-300) var(--base-100);
+        }
+
+        /* Terminal Output Scrollbar */
+        .terminal-output::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .terminal-output::-webkit-scrollbar-track {
+            background: var(--base-100);
+        }
+
+        .terminal-output::-webkit-scrollbar-thumb {
+            background-color: var(--base-300);
+            border-radius: 3px;
+        }
+
+        /* Terminal Output Lines */
+        .output-line {
+            margin: 0.25rem 0;
+            padding: 0.125rem 0;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .output-line.command {
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        .output-line.error {
+            color: var(--error);
+        }
+
+        .output-line.success {
+            color: var(--base-400);
+        }
+
+        .output-line.info {
+            color: var(--info);
+        }
+
+        /* Terminal Input Area */
+        .terminal-input {
+            display: flex;
+            gap: 0.5rem;
+            padding: 1rem;
+            background-color: var(--base-200);
+            border-top: 1px solid rgba(229, 231, 235, 0.2);
+        }
+
+        .terminal-input input {
+            flex: 1;
+            padding: 0.5rem 0.75rem;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            font-size: 0.875rem;
+            color: var(--neutral);
+            background-color: var(--base-100);
+            border: 1px solid var(--base-300);
+            border-radius: 0.375rem;
+            transition: all 0.2s ease;
+        }
+
+        .terminal-input input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(var(--primary-rgb), 0.1);
+        }
+
+        .terminal-input button {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: white;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border: none;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .terminal-input button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Supported Commands Section */
+        .supported-commands {
+            padding: 1rem;
+            margin: 1rem;
+            background-color: var(--base-200);
+            border-radius: 0.5rem;
+            border: 1px solid rgba(229, 231, 235, 0.2);
+        }
+
+        .supported-commands strong {
+            display: block;
+            margin-bottom: 0.75rem;
+            color: var(--neutral);
+        }
+
+        .supported-commands ul {
+            margin: 0;
+            padding-left: 1.25rem;
+            list-style-type: none;
+        }
+
+        .supported-commands li {
+            margin: 0.5rem 0;
+            color: var(--neutral);
+        }
+
+        .supported-commands code {
+            padding: 0.125rem 0.375rem;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            font-size: 0.8125rem;
+            color: var(--primary);
+            background-color: var(--base-300);
+            border-radius: 0.25rem;
+        }
+
+        /* Terminal Prompt */
+        .terminal-prompt {
+            color: var(--primary);
+            margin-right: 0.5rem;
+        }
+
+        /* Command History Navigation */
+        .terminal-input input.history-active {
+            font-style: italic;
+            background-color: var(--base-200);
+        }
+
+        /* Loading Animation */
+        .terminal-loading {
+            display: inline-block;
+            margin-left: 0.5rem;
+            animation: terminal-pulse 1.5s infinite;
+        }
+
+        @keyframes terminal-pulse {
+            0% {
+                opacity: .2;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: .2;
+            }
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 640px) {
+            .terminal-container {
+                margin: 0.5rem 0;
+            }
+
+            .terminal-output {
+                height: 300px;
+            }
+
+            .terminal-input {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+
+            .terminal-input input,
+            .terminal-input button {
+                width: 100%;
+            }
+        }
+
+/* Modal Overlay Styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* Keeping background overlay commented out as in original */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Config Var Modal Container */
+.config-var-modal {
+    background-color: var(--base-100);
+    border-radius: 12px;
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+    padding: 30px;
+    position: relative;
+    transform: scale(0.7);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.modal-overlay.active .config-var-modal {
+    transform: scale(1);
+    opacity: 1;
+}
+
+/* Modal Header */
+.config-var-modal h3 {
+    font-size: 1.5rem;
+    color: var(--text-primary);
+    margin-bottom: 20px;
+    font-weight: 600;
+    text-align: center;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.config-var-modal h3::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background-color: var(--primary);
+    border-radius: 2px;
+}
+
+/* Form Groups */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid var(--base-300);
+    border-radius: 8px;
+    font-size: 1rem;
+    color: var(--text-primary);
+    transition: all 0.3s ease;
+    outline: none;
+    background-color: var(--base-100);
+}
+
+.form-control:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+}
+
+/* Modal Actions */
+.modal-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 25px;
+}
+
+.modal-actions .btn {
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+}
+
+.btn-secondary {
+    background-color: var(--secondary);
+    color: var(--text-primary);
+    border: 2px solid transparent;
+}
+
+.btn-secondary:hover {
+    background-color: var(--base-300);
+}
+
+.btn-primary {
+    background-color: var(--primary);
+    color: white;
+    border: 2px solid transparent;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 600px) {
+    .config-var-modal {
+        width: 95%;
+        margin: 0 10px;
+        padding: 20px;
+    }
+
+    .modal-actions {
+        flex-direction: column;
+    }
+
+    .modal-actions .btn {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.7);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: scale(0.7);
+    }
+}
+    </style>
+</head>
+
+<body>
+    <div id="message" class="message"></div>
+    <header class="header">
+        <div class="header-content">
+            <h1><a class="logo" href="/dashboard">H.TD</a></h1>
+            <nav class="nav-controls">
+
+                <!-- Add Bot Button with Dropdown -->
+                <button id="deployBotBtn" class="btn btn-primary"
+                    onclick="window.location.href='/dashboard/select-bot'">
+                    <i class="fas fa-plus"></i>
+                    <span>Deploy Bot</span>
+                </button>
+                <button id="themeToggle" class="btn btn-secondary">
+                    <i class="fas fa-adjust"></i>
+                </button>
+
+                <!-- Profile Picture with Dropdown -->
+                <div class="profile-container">
+                    <img src="https://cdn.talkdrove.com/host/Images/profile.webp" alt="Profile" class="profile-pic"
+                        id="profileBtn">
+                    <div class="dropdown" id="profileDropdown">
+                        <a href="/dashboard/invite" class="dropdown-item">
+                            <i class="fas fa-share"></i>
+                            <span>Invite</span>
+                        </a>
+                        <a href="/dashboard/wallet" class="dropdown-item">
+                            <i class="fas fa-wallet"></i>
+                            <span>Wallet</span>
+                        </a>
+                        <a href="/dashboard/my-heroku" class="dropdown-item">
+                            <i class="fas fa-server"></i>
+                            <span>My Heroku</span>
+                            <a href="/dashboard/account-settings" class="dropdown-item">
+                                <i class="fas fa-cog"></i>
+                                <span>Settings</span>
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="/logout" class="dropdown-item" id="logoutBtn">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span>Logout</span>
+                            </a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main">
+        <div id="coinInfo">
+            <span id="coinBalance">Coins: loading...</span>
+        </div>
+        <h2>
+            <%= app.display_name %>
+        </h2>
+        <p>Deployed At: <%= app.deployed_at %>
+        </p>
+
+        <div class="tab-container">
+            <div class="tab-buttons">
+                <button class="tab-button active" data-tab="config">Config Vars</button>
+                <button class="tab-button" data-tab="logs">Logs</button>
+                <button class="tab-button" data-tab="terminal">Terminal</button>
+            </div>
+
+            <div id="config-tab" class="tab-content active">
+                <h3>BOT Config Vars</h3>
+                <div id="config-vars">
+                    <div class="loader" id="loader"></div>
+                </div>
+                <button id="save-vars-btn" class="btn btn-primary">Save Changes</button>
+            </div>
+
+            <div id="logs-tab" class="tab-content">
+                <h3>BOT Logs</h3>
+                <div class="log-controls">
+                    <select id="log-lines" class="btn btn-secondary">
+                        <option value="50">50 lines</option>
+                        <option value="100" selected>100 lines</option>
+                        <option value="200">200 lines</option>
+                        <option value="500">500 lines</option>
+                    </select>
+                    <div class="auto-scroll">
+                        <input type="checkbox" id="auto-scroll" checked>
+                        <label for="auto-scroll">Auto-scroll</label>
+                    </div>
+                    <button id="clear-logs" class="btn btn-secondary">Clear</button>
+                </div>
+                <div id="logs-container"></div>
+            </div>
+        </div>
+        <div id="terminal-tab" class="tab-content">
+            <div class="terminal-container">
+                <div class="terminal-header">
+                    <h3 id="current-app-name"></h3>
+                    <button id="clear-terminal">Clear Terminal</button>
+                </div>
+                <div id="terminal-output" class="terminal-output"></div>
+                <div class="supported-commands">
+                    <strong>Supported Commands:</strong>
+                    <ul>
+                        <li><code>ps</code>: List dynos and their status</li>
+                        <li><code>config</code>: Show configuration variables</li>
+                        <li><code>releases</code>: Show last 10 releases</li>
+                        <li><code>restart</code>: Restart all dynos</li>
+                    </ul>
+                </div>
+                <div class="terminal-input">
+                    <input type="text" id="command-input" placeholder="Enter command (ps, config, releases, restart)">
+                    <button id="send-command">Run</button>
+                </div>
+            </div>
+        </div>
+        <button id="deleteAppBtn" class="btn" data-app-name="<%= app.display_name %>">
+            <i class="fas fa-trash-alt"></i>
+            Delete Bot
+        </button>
+        <!-- Add the modal HTML -->
+        <div class="modal-overlay" id="deleteModal">
+            <div class="delete-modal">
+                <div class="delete-modal-header">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <h3 class="delete-modal-title">Delete Bot Confirmation</h3>
+                </div>
+                <div class="delete-modal-content">
+                    <p>Are you sure you want to delete "<b>
+                            <%= app.display_name %>
+                        </b>" bot?</p>
+                    <div class="delete-warning">
+                        <h4>This will:</h4>
+                        <ul>
+                            <li>Permanently delete all bot data</li>
+                            <li>Remove all configurations and settings</li>
+                            <li>Stop all running instances</li>
+                            <li>Cancel any associated subscriptions</li>
+                        </ul>
+                    </div>
+                    <p>This action cannot be undone.</p>
+                </div>
+                <div class="delete-modal-actions">
+                    <button class="btn btn-cancel" id="cancelDelete">Cancel</button>
+                    <button class="btn btn-delete" id="confirmDelete">Delete Bot</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+      const tabButtons = document.querySelectorAll('.tab-button');
+const tabContents = document.querySelectorAll('.tab-content');
+
+tabButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        if (!button) return; // Guard clause
+
+        const tabName = button.getAttribute('data-tab');
+        if (!tabName) return;
+
+        const targetTab = document.getElementById(`${tabName}-tab`);
+        if (!targetTab) return;
+
+        // Update active states
+        tabButtons.forEach(btn => btn?.classList?.remove('active'));
+        tabContents.forEach(content => content?.classList?.remove('active'));
+
+        button.classList.add('active');
+        targetTab.classList.add('active');
+
+        // Initialize content based on tab
+        try {
+            if (tabName === 'logs') {
+                initializeLogs();
+            } else if (tabName === 'config') {
+                fetchConfigVars();
+            } else if (tabName === 'terminal') {
+                initializeTerminal();
+            }
+        } catch (error) {
+            console.error(`Error initializing ${tabName} tab:`, error);
+            showMessage('error', `Failed to load ${tabName} tab. Please try again.`);
+        }
+    });
+});
+function showMessage(type, text) {
+    const messageElement = document.getElementById('message');
+    messageElement.textContent = text;
+    messageElement.className = `message ${type}`;
+    messageElement.style.display = 'block';
+
+    setTimeout(() => {
+        messageElement.style.animation = 'fadeOut 0.5s ease';
+        setTimeout(() => {
+            messageElement.style.display = 'none';
+            messageElement.style.animation = '';
+        }, 500);
+    }, 3000);
+}
+async function fetchConfigVars() {
+    try {
+        const appName = '<%= app.display_name %>';
+        const response = await fetch(`/api/config-vars/${appName}`);
+        if (!response.ok) {
+            throw new Error('Failed to fetch config vars');
+        }
+        const configVars = await response.json();
+        displayConfigVars(configVars);
+    } catch (error) {
+        // // // // // // console.error('Failed to fetch config vars:', error);
+        showMessage('error', 'Failed to load config vars. Please try again.');
+    }
+}
+
+function displayConfigVars(configVars) {
+    const configVarsContainer = document.getElementById('config-vars');
+    configVarsContainer.innerHTML = '';
+
+    // Add "New Variable" button
+    const newVarBtn = document.createElement('button');
+    newVarBtn.className = 'btn btn-secondary mb-4';
+    newVarBtn.innerHTML = '<i class="fas fa-plus"></i> Add New Variable';
+    newVarBtn.addEventListener('click', addNewVariable);
+    configVarsContainer.appendChild(newVarBtn);
+
+    if (Object.keys(configVars).length === 0) {
+        configVarsContainer.innerHTML += '<p class="no-vars">No configuration variables found.</p>';
+        return;
+    }
+
+    for (const [key, value] of Object.entries(configVars)) {
+        const varElement = document.createElement('div');
+        varElement.classList.add('config-var');
+
+        const inputGroup = document.createElement('div');
+        inputGroup.className = 'input-group';
+
+        const input = document.createElement('input');
+        input.type = key.toLowerCase().includes('token') ||
+            key.toLowerCase().includes('secret') ||
+            key.toLowerCase().includes('password') ? 'password' : 'text';
+        input.id = key;
+        input.value = value;
+        input.setAttribute('data-original-value', value);
+
+        const label = document.createElement('label');
+        label.htmlFor = key;
+        label.textContent = key;
+
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'btn btn-danger delete-var';
+        deleteBtn.innerHTML = '<i class="fas fa-trash"></i>';
+        deleteBtn.addEventListener('click', () => deleteVariable(key));
+
+        if (input.type === 'password') {
+            const toggleBtn = document.createElement('button');
+            toggleBtn.type = 'button';
+            toggleBtn.className = 'toggle-password btn btn-secondary';
+            toggleBtn.innerHTML = '<i class="fas fa-eye"></i>';
+            toggleBtn.addEventListener('click', () => togglePasswordVisibility(input, toggleBtn));
+
+            inputGroup.appendChild(input);
+            inputGroup.appendChild(toggleBtn);
+            inputGroup.appendChild(deleteBtn);
+        } else {
+            inputGroup.appendChild(input);
+            inputGroup.appendChild(deleteBtn);
+        }
+
+        varElement.appendChild(label);
+        varElement.appendChild(inputGroup);
+        configVarsContainer.appendChild(varElement);
+    }
+}
+
+function addNewVariable() {
+    const existingModal = document.querySelector('.modal-overlay.active');
+    if (existingModal) {
+        existingModal.remove();
+    }
+
+    const modal = document.createElement('div');
+    modal.className = 'modal-overlay active';
+    modal.innerHTML = `
+    <div class="config-var-modal">
+        <h3>Add New Environment Variable</h3>
+        <div class="form-group">
+            <label for="new-var-key">Variable Name:</label>
+            <input type="text" id="new-var-key" class="form-control" placeholder="VARIABLE_NAME">
+        </div>
+        <div class="form-group">
+            <label for="new-var-value">Value:</label>
+            <input type="text" id="new-var-value" class="form-control" placeholder="variable_value">
+        </div>
+        <div class="modal-actions">
+            <button class="btn btn-secondary" id="cancel-new-var">Cancel</button>
+            <button class="btn btn-primary" id="save-new-var">Add Variable</button>
+        </div>
+    </div>
+`;
+    document.body.appendChild(modal);
+
+    // Cancel button handler
+    document.getElementById('cancel-new-var').addEventListener('click', () => {
+        const modal = document.querySelector('.modal-overlay.active');
+        if (modal) {
+            modal.remove();
+        }
+    });
+
+    // Save button handler
+    document.getElementById('save-new-var').addEventListener('click', async () => {
+        const key = document.getElementById('new-var-key').value.trim();
+        const value = document.getElementById('new-var-value').value.trim();
+
+        if (!key || !value) {
+            showMessage('error', 'Both variable name and value are required');
+            return;
+        }
+
+        try {
+            const appName = '<%= app.display_name %>';
+            const response = await fetch(`/api/config-vars/${appName}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ key, value })
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            showMessage('success', 'New variable added successfully!');
+
+            // Remove the modal
+            const modal = document.querySelector('.modal-overlay.active');
+            if (modal) {
+                modal.remove();
+            }
+
+            // Refresh the config vars
+            fetchConfigVars();
+        } catch (error) {
+            console.error('Failed to add new variable:', error);
+            showMessage('error', 'Failed to add new variable. Please try again.');
+        }
+    });
+}
+async function deleteVariable(key) {
+    if (!confirm(`Are you sure you want to delete ${key}?`)) {
+        return;
+    }
+
+    const appName = '<%= app.display_name %>';
+    const fullAppName = `${appName}`;
+
+    try {
+        const response = await fetch(`/api/config-vars/${fullAppName}/${key}`, {
+            method: 'DELETE'
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            showMessage('success', data.message || 'Variable deleted successfully!');
+            await fetchConfigVars(); // Refresh the list
+        } else {
+            showMessage('error', data.message || 'Failed to delete variable');
+        }
+    } catch (error) {
+        console.error('Error deleting variable:', error);
+        showMessage('error', 'Failed to delete variable. Please try again.');
+    }
+}
+function togglePasswordVisibility(input, button) {
+    if (input.type === 'password') {
+        input.type = 'text';
+        button.innerHTML = '<i class="fas fa-eye-slash"></i>';
+    } else {
+        input.type = 'password';
+        button.innerHTML = '<i class="fas fa-eye"></i>';
+    }
+}
+// Add loading state for save button
+const saveVarsBtn = document.getElementById('save-vars-btn');
+async function saveConfigVars() {
+    const saveButton = document.getElementById('save-vars-btn');
+    const configVarsContainer = document.getElementById('config-vars');
+    const inputs = configVarsContainer.querySelectorAll('input');
+    const updatedVars = {};
+    let hasChanges = false;
+
+    inputs.forEach(input => {
+        if (input.value !== input.getAttribute('data-original-value')) {
+            hasChanges = true;
+        }
+        updatedVars[input.id] = input.value;
+    });
+
+    if (!hasChanges) {
+        showMessage('error', 'No changes detected');
+        return;
+    }
+
+    try {
+        saveButton.classList.add('btn-loading');
+        saveButton.disabled = true;
+
+        const appName = '<%= app.display_name %>';
+        const response = await fetch(`/api/config-vars/${appName}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(updatedVars)
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        // Update the original values after successful save
+        inputs.forEach(input => {
+            input.setAttribute('data-original-value', input.value);
+        });
+
+        showMessage('success', 'Configuration variables updated successfully!');
+    } catch (error) {
+        console.error('Failed to update config vars:', error);
+        showMessage('error', 'Failed to update configuration variables. Please try again.');
+    } finally {
+        saveButton.classList.remove('btn-loading');
+        saveButton.disabled = false;
+    }
+}
+
+// Replace the delete button event listener with this
+const deleteModal = document.getElementById('deleteModal');
+const deleteAppBtn = document.getElementById('deleteAppBtn');
+const cancelDeleteBtn = document.getElementById('cancelDelete');
+const confirmDeleteBtn = document.getElementById('confirmDelete');
+
+deleteAppBtn.addEventListener('click', () => {
+    deleteModal.style.display = 'block';
+    setTimeout(() => deleteModal.classList.add('active'), 10);
+});
+
+function closeModal() {
+    deleteModal.classList.remove('active');
+    setTimeout(() => deleteModal.style.display = 'none', 300);
+}
+
+cancelDeleteBtn.addEventListener('click', closeModal);
+
+deleteModal.addEventListener('click', (e) => {
+    if (e.target === deleteModal) {
+        closeModal();
+    }
+});
+
+confirmDeleteBtn.addEventListener('click', async () => {
+    const appName = deleteAppBtn.getAttribute('data-app-name');
+    confirmDeleteBtn.classList.add('btn-loading');
+
+    try {
+        const response = await fetch(`/delete-app/${appName}`, { method: 'DELETE' });
+        if (!response.ok) {
+            throw new Error('Failed to delete app');
+        }
+        showMessage('success', 'Bot deleted successfully. Redirecting to dashboard...');
+        setTimeout(() => {
+            window.location.href = '/dashboard';
+        }, 2000);
+    } catch (error) {
+        showMessage('error', 'Failed to delete bot. Please try again.');
+        closeModal();
+    } finally {
+        confirmDeleteBtn.classList.remove('btn-loading');
+    }
+});
+
+
+// Logs functionality
+let logsWebSocket = null;
+let autoScrollEnabled = true;
+let reconnectAttempts = 0;
+const MAX_RECONNECT_ATTEMPTS = 100;
+const RECONNECT_INTERVAL = 100;
+
+function createStatusIndicator() {
+    const logsContainer = document.getElementById('logs-container');
+    if (!logsContainer) return null;
+
+    let statusIndicator = document.getElementById('connection-status');
+    if (!statusIndicator) {
+        statusIndicator = document.createElement('div');
+        statusIndicator.id = 'connection-status';
+        statusIndicator.className = 'connection-status connecting';
+        logsContainer.parentElement.insertBefore(statusIndicator, logsContainer);
+    }
+    return statusIndicator;
+}
+
+function updateStatus(status, message) {
+    const statusIndicator = createStatusIndicator();
+    if (statusIndicator) {
+        statusIndicator.className = `connection-status ${status}`;
+        statusIndicator.textContent = message;
+    }
+}
+
+function initializeLogs() {
+    const logsContainer = document.getElementById('logs-container');
+    if (!logsContainer) {
+        // // // // // // console.error('Logs container not found');
+        return;
+    }
+
+    const autoScrollCheckbox = document.getElementById('auto-scroll');
+    const clearLogsButton = document.getElementById('clear-logs');
+    const logLinesSelect = document.getElementById('log-lines');
+
+    // Reset state
+    reconnectAttempts = 0;
+
+    // Clear any existing logs
+    logsContainer.innerHTML = '';
+
+    // Create initial status indicator
+    createStatusIndicator();
+    updateStatus('connecting', 'Connecting...');
+
+    // Initial logs fetch
+    fetchInitialLogs(logLinesSelect.value);
+
+    // Setup WebSocket for real-time logs
+    setupLogsWebSocket();
+
+    // Auto-scroll functionality
+    if (autoScrollCheckbox) {
+        autoScrollCheckbox.addEventListener('change', (e) => {
+            autoScrollEnabled = e.target.checked;
+            if (autoScrollEnabled) {
+                scrollToBottom();
+            }
+        });
+    }
+
+    // Clear logs
+    if (clearLogsButton) {
+        clearLogsButton.addEventListener('click', () => {
+            logsContainer.innerHTML = '';
+            createStatusIndicator(); // Recreate status indicator after clear
+        });
+    }
+
+    // Change number of lines
+    if (logLinesSelect) {
+        logLinesSelect.addEventListener('change', () => {
+            logsContainer.innerHTML = '';
+            createStatusIndicator(); // Recreate status indicator after clear
+            fetchInitialLogs(logLinesSelect.value);
+        });
+    }
+}
+
+async function fetchInitialLogs(lines) {
+    try {
+        updateStatus('connecting', 'Fetching initial logs...');
+
+        const appName = '<%= app.display_name %>';
+        const response = await fetch(`/api/logs/${appName}?lines=${lines}`);
+        if (!response.ok) throw new Error('Failed to fetch logs');
+
+        const data = await response.json();
+        if (data.success && data.logs) {
+            displayLogs(data.logs);
+            updateStatus('connected', 'Initial logs loaded');
+        }
+    } catch (error) {
+        // // // // // // console.error('Error fetching initial logs:', error);
+        updateStatus('error', 'Failed to fetch initial logs');
+        showMessage('error', 'Failed to fetch initial logs. Please try again.');
+    }
+}
+function setupLogsWebSocket() {
+    const appName = '<%= app.display_name %>';
+
+    // Close existing connection if any
+    if (logsWebSocket && logsWebSocket.readyState !== WebSocket.CLOSED) {
+        logsWebSocket.close();
+    }
+
+    // Determine correct WebSocket protocol (ws:// or wss://)
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const wsUrl = `${protocol}//${window.location.host}/api/logs/${appName}/stream`;
+
+    try {
+        // Create new WebSocket connection with error handling
+        logsWebSocket = new WebSocket(wsUrl);
+
+        // Set timeout for connection
+        const connectionTimeout = setTimeout(() => {
+            if (logsWebSocket.readyState === WebSocket.CONNECTING) {
+                logsWebSocket.close();
+                updateStatus('error', 'Connection timeout');
+            }
+        }, 5000);
+
+        logsWebSocket.onopen = () => {
+            clearTimeout(connectionTimeout);
+            // // // // // // // console.log('WebSocket connection established');
+            reconnectAttempts = 0;
+            updateStatus('connected', 'Connected to log stream');
+
+            // Send initial ping to keep connection alive
+            sendPing();
+        };
+
+        logsWebSocket.onmessage = (event) => {
+            try {
+                const data = JSON.parse(event.data);
+
+                switch (data.type) {
+                    case 'pong':
+                        // Reset connection timeout on pong
+                        lastPongReceived = Date.now();
+                        break;
+                    case 'status':
+                        updateStatus('connected', data.message);
+                        break;
+                    case 'log':
+                        appendLog(data.data);
+                        break;
+                    case 'error':
+                        // // // // // // console.error('Log stream error:', data.message);
+                        updateStatus('error', data.message);
+                        break;
+                    default:
+                        appendLog(data);
+                }
+            } catch (error) {
+                // // // // // // console.error('Error processing WebSocket message:', error);
+            }
+        };
+
+        logsWebSocket.onerror = (error) => {
+            clearTimeout(connectionTimeout);
+            // // // // // // console.error('WebSocket error:', error);
+            updateStatus('error', 'Connection error');
+        };
+
+        logsWebSocket.onclose = (event) => {
+            clearTimeout(connectionTimeout);
+            // // // // // // // console.log('WebSocket connection closed:', event.code, event.reason);
+
+            // Don't attempt to reconnect if we're intentionally closing
+            if (event.code === 1000) {
+                updateStatus('disconnected', 'Connection closed');
+                return;
+            }
+
+            // Implement exponential backoff for reconnection
+            if (reconnectAttempts < MAX_RECONNECT_ATTEMPTS) {
+                const backoffDelay = Math.min(1000 * Math.pow(2, reconnectAttempts), 30000);
+                reconnectAttempts++;
+                updateStatus('disconnected',
+                    `Reconnecting in ${backoffDelay / 1000}s (attempt ${reconnectAttempts}/${MAX_RECONNECT_ATTEMPTS})...`
+                );
+                setTimeout(setupLogsWebSocket, backoffDelay);
+            } else {
+                updateStatus('error', 'Failed to connect after multiple attempts');
+                // showMessage('error', 'Failed to connect to log stream. Please refresh the page to try again.');
+            }
+        };
+
+    } catch (error) {
+        // // // // // // // console.error('Error setting up WebSocket:', error);
+        updateStatus('error', 'Failed to setup WebSocket connection');
+    }
+}
+
+// Keep-alive mechanism
+let pingInterval;
+let lastPongReceived = Date.now();
+const PING_INTERVAL = 30000; // 30 seconds
+const PONG_TIMEOUT = 10000;  // 10 seconds
+
+function sendPing() {
+    if (logsWebSocket && logsWebSocket.readyState === WebSocket.OPEN) {
+        logsWebSocket.send(JSON.stringify({ type: 'ping' }));
+
+        // Check if we received a pong
+        setTimeout(() => {
+            if (Date.now() - lastPongReceived > PONG_TIMEOUT) {
+                // // // // // // // console.log('Pong timeout - reconnecting');
+                logsWebSocket.close();
+            }
+        }, PONG_TIMEOUT);
+    }
+}
+
+// Start ping interval when connection is established
+function startPingInterval() {
+    stopPingInterval();
+    pingInterval = setInterval(sendPing, PING_INTERVAL);
+}
+
+function stopPingInterval() {
+    if (pingInterval) {
+        clearInterval(pingInterval);
+        pingInterval = null;
+    }
+}
+
+// Clean up on page unload
+window.addEventListener('beforeunload', () => {
+    stopPingInterval();
+    if (logsWebSocket) {
+        logsWebSocket.close(1000, 'Page unload');
+    }
+});
+
+function displayLogs(logs) {
+    const logsContainer = document.getElementById('logs-container');
+    if (!logsContainer) return;
+
+    logs.forEach(log => appendLog(log));
+    if (autoScrollEnabled) {
+        scrollToBottom();
+    }
+}
+
+function appendLog(log) {
+    const logsContainer = document.getElementById('logs-container');
+    if (!logsContainer) return;
+
+    const logEntry = document.createElement('div');
+    logEntry.className = 'log-entry';
+
+    if (log.type === 'structured') {
+        logEntry.innerHTML = `
+    <span class="log-timestamp">${log.timestamp}</span>
+    <span class="log-source">${log.source}[${log.dyno}]:</span>
+    <span class="log-message">${escapeHtml(log.message)}</span>
+`;
+    } else {
+        logEntry.innerHTML = `<span class="log-message">${escapeHtml(log.message || log)}</span>`;
+    }
+
+    logsContainer.appendChild(logEntry);
+
+    // Limit the number of log entries to prevent memory issues
+    while (logsContainer.children.length > 1000) {
+        logsContainer.removeChild(logsContainer.firstChild);
+    }
+
+    if (autoScrollEnabled) {
+        scrollToBottom();
+    }
+}
+
+function escapeHtml(unsafe) {
+    if (typeof unsafe !== 'string') {
+        unsafe = String(unsafe);
+    }
+    return unsafe
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+function scrollToBottom() {
+    const logsContainer = document.getElementById('logs-container');
+    if (logsContainer) {
+        logsContainer.scrollTop = logsContainer.scrollHeight;
+    }
+}
+
+// Add necessary styles
+const style = document.createElement('style');
+style.textContent = `
+.connection-status {
+padding: 8px;
+margin-bottom: 10px;
+border-radius: 4px;
+font-size: 14px;
+}
+
+.connection-status.connecting {
+background-color: #fff3cd;
+color: #856404;
+}
+
+.connection-status.connected {
+background-color: #d4edda;
+color: #155724;
+}
+
+.connection-status.disconnected {
+background-color: #fff3cd;
+color: #856404;
+}
+
+.connection-status.error {
+background-color: #f8d7da;
+color: #721c24;
+}
+
+.log-entry {
+padding: 4px 8px;
+border-bottom: 1px solid rgba(0,0,0,0.1);
+font-family: monospace;
+white-space: pre-wrap;
+word-break: break-all;
+}
+
+.log-timestamp {
+color: #666;
+margin-right: 8px;
+}
+
+.log-source {
+color: #007bff;
+margin-right: 8px;
+}
+
+.log-message {
+color: var(--text-color);
+}
+
+#logs-container {
+max-height: 500px;
+overflow-y: auto;
+border: 1px solid #ddd;
+border-radius: 4px;
+background: var(--background-color);
+}
+`;
+document.head.appendChild(style);
+
+// Cleanup WebSocket on page unload
+window.addEventListener('beforeunload', () => {
+    if (logsWebSocket) {
+        logsWebSocket.close();
+    }
+});
+
+// Initialize logs when the logs tab is shown
+document.addEventListener('DOMContentLoaded', () => {
+    const saveButton = document.getElementById('save-vars-btn');
+    if (saveButton) {
+        saveButton.addEventListener('click', saveConfigVars);
+    }
+    const logsTab = document.querySelector('[data-tab="logs"]');
+    if (logsTab) {
+        logsTab.addEventListener('click', () => {
+            initializeLogs();
+        });
+    }
+});
+
+
+function initializeTerminal() {
+    // Check if elements exist before proceeding
+    const terminalTab = document.getElementById('terminal-tab');
+    const terminalOutput = document.getElementById('terminal-output');
+    const commandInput = document.getElementById('command-input');
+    const sendCommandBtn = document.getElementById('send-command');
+    const clearTerminalBtn = document.getElementById('clear-terminal');
+    const currentAppName = document.getElementById('current-app-name');
+
+    // Guard clause - return if required elements don't exist
+    if (!terminalTab || !terminalOutput || !commandInput || !sendCommandBtn || !clearTerminalBtn || !currentAppName) {
+        console.warn('Terminal elements not found');
+        return;
+    }
+
+    // Get app name from URL
+    function getAppNameFromUrl() {
+        const pathParts = window.location.pathname.split('/');
+        return pathParts.filter(part => part !== '').pop();
+    }
+
+    const BotName = getAppNameFromUrl();
+    currentAppName.textContent = `Terminal - ${BotName}`;
+
+    // Move command history outside of addOutputLine
+    let commandHistory = [];
+    let historyIndex = -1;
+
+    // Add output to terminal
+    function addOutputLine(text, type = 'default') {
+        const line = document.createElement('div');
+        line.textContent = text;
+        line.classList.add('output-line', type);
+        terminalOutput.appendChild(line);
+        terminalOutput.scrollTop = terminalOutput.scrollHeight;
+    }
+
+    async function sendCommand() {
+        // Debug log to check the input value
+        console.log('Command input value:', document.getElementById('command-input').value);
+
+        const command = document.getElementById('command-input').value.trim();
+        console.log('Trimmed command:', command);
+
+        if (!command) {
+            addOutputLine('Please enter a command.', 'error');
+            return;
+        }
+
+        sendCommandBtn.disabled = true;
+        sendCommandBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+        try {
+            const endpoint = '/api/npm-command';
+            const response = await fetch(endpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    app: BotName,
+                    command,
+                }),
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                addOutputLine('> ' + command, 'command');
+                addOutputLine(result.message, 'successs');
+                // Add command to history only if successful
+                commandHistory.push(command);
+                historyIndex = commandHistory.length;
+            } else {
+                addOutputLine('> ' + command, 'command');
+                addOutputLine(result.error, 'error');
+            }
+        } catch (error) {
+            addOutputLine('Error executing command: ' + error.message, 'error');
+        } finally {
+            sendCommandBtn.disabled = false;
+            sendCommandBtn.innerHTML = 'Run';
+            document.getElementById('command-input').value = '';
+        }
+    }
+
+    // Remove previous event listeners if they exist
+    const newCommandInput = commandInput.cloneNode(true);
+    const newSendCommandBtn = sendCommandBtn.cloneNode(true);
+    const newClearTerminalBtn = clearTerminalBtn.cloneNode(true);
+
+    commandInput.parentNode.replaceChild(newCommandInput, commandInput);
+    sendCommandBtn.parentNode.replaceChild(newSendCommandBtn, sendCommandBtn);
+    clearTerminalBtn.parentNode.replaceChild(newClearTerminalBtn, clearTerminalBtn);
+
+    // Add event listeners to new elements
+    newCommandInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            sendCommand();
+        } else if (e.key === 'ArrowUp') {
+            if (historyIndex > 0) {
+                historyIndex--;
+                newCommandInput.value = commandHistory[historyIndex];
+            }
+            e.preventDefault();
+        } else if (e.key === 'ArrowDown') {
+            if (historyIndex < commandHistory.length - 1) {
+                historyIndex++;
+                newCommandInput.value = commandHistory[historyIndex];
+            } else {
+                historyIndex = commandHistory.length;
+                newCommandInput.value = '';
+            }
+            e.preventDefault();
+        }
+    });
+
+    newSendCommandBtn.addEventListener('click', sendCommand);
+    newClearTerminalBtn.addEventListener('click', () => {
+        terminalOutput.innerHTML = '';
+    });
+    const BOT = appName.slice(0, -3);
+    // Add welcome message only if terminal is empty
+    if (terminalOutput.children.length === 0) {
+    
+        addOutputLine(`Connected to ${BOT}`, 'success');
+        addOutputLine('Type a command and press Enter to execute', 'info');
+    }
+}
+
+// Initialize terminal when the tab is shown
+document.addEventListener('DOMContentLoaded', () => {
+    const terminalButton = document.querySelector('[data-tab="terminal"]');
+    if (terminalButton) {
+        terminalButton.addEventListener('click', initializeTerminal);
+    }
+});
+
+fetchConfigVars();
+    </script>
+<script src="/js/main.js"></script>
+</body>
+
+</html>

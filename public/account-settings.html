@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="description" content="Bot.TalkDrove get unlimited free WhatsApp bots on your number here!">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://cdn.talkdrove.com/host/Images/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://cdn.talkdrove.com/host/Images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://cdn.talkdrove.com/host/Images/favicon/favicon-16x16.png">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>Account settings || H.TD</title>
+        <link rel="stylesheet" href="./styles/main.css">
+    <style>
+     
+
+     
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+       
+
+        /* Settings Container and Tabs */
+        .settings-wrapper {
+            max-width: 600px;
+            margin: 2rem auto;
+            background-color: var(--base-100);
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+
+        .settings-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--base-300);
+            background-color: var(--base-200);
+        }
+
+        .tab-button {
+            padding: 1rem 2rem;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--neutral);
+            opacity: 0.7;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .tab-button::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--primary);
+            transform: scaleX(0);
+            transition: transform 0.2s ease;
+        }
+
+        .tab-button.active {
+            opacity: 1;
+        }
+
+        .tab-button.active::after {
+            transform: scaleX(1);
+        }
+
+        .tab-content {
+            padding: 2rem;
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+      
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--neutral);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--base-300);
+            border-radius: 0.5rem;
+            background-color: var(--base-200);
+            color: var(--neutral);
+            transition: all 0.2s ease;
+        }
+
+        .btn-update {
+            background-color: var(--primary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 500;
+            width: 100%;
+            transition: all 0.2s ease;
+        }
+
+        /* Devices styles */
+        .devices-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .device-card {
+            background-color: var(--base-200);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .device-info {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .device-icon {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .device-details h3 {
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .device-details p {
+            font-size: 0.875rem;
+            color: var(--neutral);
+            opacity: 0.8;
+        }
+
+        .device-actions button {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.25rem;
+            background-color: var(--error);
+            color: white;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: opacity 0.2s;
+        }
+
+        .current-device {
+            border: 2px solid var(--primary);
+        }
+
+        /* Toast notifications */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            color: white;
+            animation: slideIn 0.3s ease;
+            z-index: 1000;
+        }
+
+        .toast.success {
+            background-color: var(--success);
+        }
+
+        .toast.error {
+            background-color: var(--error);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        .profile-info {
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.info-group {
+    margin-bottom: 20px;
+}
+
+.info-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #666;
+}
+
+.info-group p {
+    margin: 0;
+    padding: 8px 0;
+    color: #333;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 1000;
+}
+
+.modal-content {
+    position: relative;
+    background-color: #fff;
+    margin: 5% auto;
+    padding: 20px;
+    width: 80%;
+    max-width: 600px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.close {
+    position: absolute;
+    right: 20px;
+    top: 10px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #666;
+}
+
+.close:hover {
+    color: #333;
+}
+/* Profile Tab Styles */
+.profile-view {
+    padding: 1rem;
+}
+
+.profile-view h1 {
+    color: var(--neutral);
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+}
+
+.profile-info {
+    background-color: var(--base-100);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.info-group {
+    margin-bottom: 1.25rem;
+}
+
+.info-group label {
+    display: block;
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: var(--neutral);
+    opacity: 0.8;
+    margin-bottom: 0.5rem;
+}
+
+.info-group p {
+    color: var(--neutral);
+    padding: 0.75rem;
+    background-color: var(--base-200);
+    border-radius: 0.5rem;
+    margin: 0;
+}
+
+/* Edit Button Styles */
+.btn-edit {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    margin-top: 1rem;
+}
+
+.btn-edit:hover {
+    background-color: var(--primary-hover);
+}
+
+/* Email Section Styles */
+.email-section {
+    margin-bottom: 2rem;
+}
+
+.email-display {
+    margin-bottom: 1.5rem;
+}
+
+.email-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem;
+    background-color: var(--base-200);
+    border-radius: 0.5rem;
+}
+
+#currentEmail {
+    color: var(--neutral);
+    flex-grow: 1;
+}
+
+/* Modal Styles */
+.modal {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: var(--base-100);
+    color: var(--neutral);
+    max-width: 500px;
+    width: 90%;
+    margin: 2rem auto;
+    padding: 2rem;
+    border-radius: 1rem;
+    position: relative;
+}
+
+.modal h2 {
+    color: var(--neutral);
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+}
+
+.close {
+    position: absolute;
+    right: 1.5rem;
+    top: 1.5rem;
+    font-size: 1.5rem;
+    color: var(--neutral);
+    opacity: 0.7;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.close:hover {
+    opacity: 1;
+}
+
+/* Form Elements */
+#profileDetailsForm .form-group {
+    margin-bottom: 1.5rem;
+}
+
+#profileDetailsForm input[type="text"],
+#profileDetailsForm input[type="password"],
+#profileDetailsForm textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--base-300);
+    border-radius: 0.5rem;
+    background-color: var(--base-200);
+    color: var(--neutral);
+    transition: border-color 0.2s ease;
+}
+
+#profileDetailsForm input[type="text"]:focus,
+#profileDetailsForm input[type="password"]:focus,
+#profileDetailsForm textarea:focus {
+    border-color: var(--primary);
+    outline: none;
+}
+
+/* Gender Options */
+.gender-options {
+    display: flex;
+    gap: 2rem;
+    padding: 0.75rem;
+    background-color: var(--base-200);
+    border-radius: 0.5rem;
+}
+
+.gender-options label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    color: var(--neutral);
+}
+
+.gender-options input[type="radio"] {
+    accent-color: var(--primary);
+    cursor: pointer;
+}
+
+/* Bio Character Count */
+#bioCharCount {
+    display: block;
+    text-align: right;
+    font-size: 0.875rem;
+    color: var(--neutral);
+    opacity: 0.7;
+    margin-top: 0.5rem;
+}
+
+/* Availability Message */
+.availability-message {
+    display: block;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+}
+
+.availability-message.available {
+    color: var(--success);
+}
+
+.availability-message.unavailable {
+    color: var(--error);
+}
+
+/* Dark Theme Specific Overrides */
+[data-theme="dark"] .modal-content {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="dark"] .profile-info {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="dark"] #profileDetailsForm input[type="text"],
+[data-theme="dark"] #profileDetailsForm input[type="password"],
+[data-theme="dark"] #profileDetailsForm textarea {
+    border-color: var(--base-300);
+}
+
+[data-theme="dark"] .gender-options {
+    border: 1px solid var(--base-300);
+}
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <h1><a class="logo" href="/dashboard">H.TD</a></h1>
+            <nav class="nav-controls">
+     
+                <button class="btn btn-primary" onclick="window.location.href='/dashboard/select-bot'">
+                    <i class="fas fa-plus"></i>
+                    <span>Deploy Bot</span>
+                </button>
+                <button id="themeToggle" class="btn btn-secondary">
+                    <i class="fas fa-adjust"></i>
+                </button>
+                <div class="profile-container">
+                    <img alt="Profile" class="profile-pic" id="profileBtn" loading="lazy">
+                       
+                    <div class="dropdown" id="profileDropdown">
+                        <a href="/dashboard/settings" class="dropdown-item">
+                            <i class="fas fa-cog"></i>
+                            <span>Settings</span>
+                        </a>
+                        <a href="/dashboard/invite" class="dropdown-item">
+                            <i class="fas fa-share"></i>
+                            <span>Invite</span>
+                        </a>
+                        <a href="/dashboard/wallet" class="dropdown-item">
+                            <i class="fas fa-wallet"></i>
+                            <span>Wallet</span>
+                        </a>
+                        <a href="/dashboard/my-heroku" class="dropdown-item">
+                            <i class="fas fa-server"></i>
+                            <span>My Heroku</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="/logout" class="dropdown-item" id="logoutBtn">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Logout</span>
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <div class="settings-wrapper">
+        <div class="settings-tabs">
+            <button class="tab-button active" data-tab="account">Account Settings</button>
+            <button class="tab-button" data-tab="profile">Profile Details</button>
+            <button class="tab-button" data-tab="devices">Manage Devices</button>
+            <button class="tab-button" data-tab="extra">Extra Details</button>
+        </div>
+    
+   
+  
+  <div class="tab-content" id="profileTab">
+    
+    <div class="profile-view">
+        <h1>Profile Details</h1>
+        <div class="profile-info">
+            <div class="info-group">
+                <label>First Name</label>
+                <p id="viewFirstName">-</p>
+            </div>
+            
+            <div class="info-group">
+                <label>Last Name</label>
+                <p id="viewLastName">-</p>
+            </div>
+            
+            <div class="info-group">
+                <label>Username</label>
+                <p id="viewUsername">-</p>
+            </div>
+            
+            <div class="info-group">
+                <label>Gender</label>
+                <p id="viewGender">-</p>
+            </div>
+            
+            <div class="info-group">
+                <label>Bio</label>
+                <p id="viewBio">-</p>
+            </div>
+            
+            <button id="editProfileBtn" class="btn-edit">Edit Profile</button>
+        </div>
+    </div>
+
+    
+    <div id="editProfileModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <form id="profileDetailsForm">
+                <h2>Edit Profile</h2>
+                <input id="profilePicInput" type="file" accept="image/*">
+                <div class="form-group">
+                    <label for="firstName">First Name</label>
+                    <input type="text" id="firstName" name="firstName" placeholder="Enter first name">
+                </div>
+                
+                <div class="form-group">
+                    <label for="lastName">Last Name</label>
+                    <input type="text" id="lastName" name="lastName" placeholder="Enter last name">
+                </div>
+                
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" placeholder="Choose a unique username">
+                    <span id="usernameAvailability" class="availability-message"></span>
+                </div>
+                
+                <div class="form-group">
+                    <label>Gender</label>
+                    <div class="gender-options">
+                        <label>
+                            <input type="radio" name="gender" value="male"> Male
+                        </label>
+                        <label>
+                            <input type="radio" name="gender" value="female"> Female
+                        </label>
+                        <label>
+                            <input type="radio" name="gender" value="other"> Other
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="bio">Bio</label>
+                    <textarea id="bio" name="bio" placeholder="Tell us about yourself" maxlength="500"></textarea>
+                    <span id="bioCharCount">0/500</span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="currentPassword">Current Password</label>
+                    <input placeholder="Enter your current password" type="password" id="currentPassword" name="currentPassword" required>
+                </div>
+                
+                <button type="submit" class="btn-update">Update Profile</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+        <div class="tab-content active" id="accountTab">
+            <div class="email-section">
+                <div class="email-display">
+                    <label>Current Email</label>
+                    <div class="email-container">
+                        <span id="currentEmail"></span>
+                        <button id="editEmailBtn" class="btn-edit">Edit</button>
+                    </div>
+                </div>
+    
+                <div id="emailUpdateForm" class="email-update-form" style="display:none;">
+                    <div class="form-group">
+                        <label for="newEmail">New Email</label>
+                        <input type="email" id="newEmail" name="newEmail" placeholder="Enter new email">
+                    </div>
+                    <div class="form-group">
+                        <label for="updateCurrentPassword">Current Password</label>
+                        <input placeholder="Enter your current password" type="password" id="updateCurrentPassword" name="currentPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <button id="requestEmailUpdateBtn" class="btn">Request Email Update</button>
+                    </div>
+                </div>
+    
+                <div id="emailVerificationForm" class="email-verification-form" style="display:none;">
+                    <div class="form-group">
+                        <label for="emailVerificationCode">Verification Code</label>
+                        <input type="text" id="emailVerificationCode" name="verificationCode" placeholder="Enter verification code">
+                    </div>
+                    <div class="form-group">
+                        <button id="verifyEmailUpdateBtn" class="btn">Verify Email</button>
+                    </div>
+                </div>
+            </div>
+            <hr>
+    <br>
+            <form id="updateProfileForm">
+                <h1>Change password:</h1>
+                <div class="form-group">
+                    <label for="currentPassword">Current Password</label>
+                    <input placeholder="Enter your current password" type="password" id="currentPassword" name="currentPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="newPassword">New Password</label>
+                    <input placeholder="Enter a new and strong password" type="password" id="newPassword" name="newPassword">
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm New Password</label>
+                    <input placeholder="Confirm that strong password" type="password" id="confirmPassword" name="confirmPassword">
+                </div>
+                <button type="submit" class="btn-update">Update Profile</button>
+            </form>
+        </div>
+    
+        <div class="tab-content" id="devicesTab">
+            <div id="devicesList" class="devices-list">
+                
+            </div>
+        </div>
+
+         
+    <div class="tab-content" id="extraTab">
+        <div class="extra-details-form">
+            <h1>Social & Contact Links</h1>
+            <form id="extraDetailsForm">
+                <div class="form-group">
+                    <label for="whatsappLink">WhatsApp Channel</label>
+                    <input type="url" id="whatsappLink" name="whatsappLink" placeholder="WhatsApp channel link">
+                </div>
+                
+                <div class="form-group">
+                    <label for="youtubeLink">YouTube Channel</label>
+                    <input type="url" id="youtubeLink" name="youtubeLink" placeholder="YouTube channel link">
+                </div>
+                
+                <div class="form-group">
+                    <label for="websiteLink">Personal Website</label>
+                    <input type="url" id="websiteLink" name="websiteLink" placeholder="Personal website URL">
+                </div>
+                
+                <div class="form-group">
+                    <label for="githubLink">GitHub Profile</label>
+                    <input type="url" id="githubLink" name="githubLink" placeholder="GitHub profile link">
+                </div>
+                
+                <div class="form-group">
+                    <label for="linkedinLink">LinkedIn Profile</label>
+                    <input type="url" id="linkedinLink" name="linkedinLink" placeholder="LinkedIn profile link">
+                </div>
+                
+                <div class="form-group">
+                    <label for="twitterLink">Twitter/X Profile</label>
+                    <input type="url" id="twitterLink" name="twitterLink" placeholder="Twitter profile link">
+                </div>
+                
+                <div class="form-group">
+                    <label for="instagramLink">Instagram Profile</label>
+                    <input type="url" id="instagramLink" name="instagramLink" placeholder="Instagram profile link">
+                </div>
+                
+                <div class="form-group">
+                    <label for="currentPassword">Current Password</label>
+                    <input type="password" id="extraDetailsPassword" name="currentPassword" placeholder="Enter your current password" required>
+                </div>
+                
+                <button type="submit" class="btn-update">Update Extra Details</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching functionality
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabContents = document.querySelectorAll('.tab-content');
+        // Modal functionality
+const modal = document.getElementById('editProfileModal');
+const editBtn = document.getElementById('editProfileBtn');
+const closeBtn = document.querySelector('.close');
+
+editBtn.onclick = function() {
+    modal.style.display = "block";
+}
+
+closeBtn.onclick = function() {
+    modal.style.display = "none";
+}
+
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove active class from all buttons and contents
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                tabContents.forEach(content => content.classList.remove('active'));
+
+                // Add active class to clicked button and corresponding content
+                button.classList.add('active');
+                document.getElementById(`${button.dataset.tab}Tab`).classList.add('active');
+
+                // Load devices if devices tab is selected
+                if (button.dataset.tab === 'devices') {
+                    loadDevices();
+                }
+            });
+        });
+
+        // Profile dropdown
+        const profileBtn = document.getElementById('profileBtn');
+        const profileDropdown = document.getElementById('profileDropdown');
+        
+        profileBtn.addEventListener('click', () => {
+            profileDropdown.classList.toggle('active');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!profileBtn.contains(e.target) && !profileDropdown.contains(e.target)) {
+                profileDropdown.classList.remove('active');
+            }
+        });
+
+        // Toast notification function
+        function showToast(message, type) {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
+        // Form submission
+        document.getElementById('updateProfileForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (newPassword && newPassword !== confirmPassword) {
+                showToast('New passwords do not match', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('/update-user', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        name,
+                        currentPassword,
+                        newPassword
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showToast('Profile updated successfully', 'success');
+                    document.getElementById('updateProfileForm').reset();
+                } else {
+                    showToast(data.error || 'An error occurred', 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showToast('An error occurred while updating profile', 'error');
+            }
+        });
+
+     // ... (previous HTML and CSS code remains the same until the devices management script)
+
+        // Devices management
+        async function loadDevices() {
+            try {
+                const response = await fetch('/api/devices');
+                const data = await response.json();
+                
+                if (data.success) {
+                    const devicesList = document.getElementById('devicesList');
+                    devicesList.innerHTML = '';
+                    
+                    data.devices.forEach(device => {
+                        const deviceInfo = JSON.parse(device.device_info);
+                        const isCurrentDevice = device.id === data.currentDeviceId;
+                        
+                        const deviceElement = document.createElement('div');
+                        deviceElement.className = `device-card ${isCurrentDevice ? 'current-device' : ''}`;
+                        
+                        deviceElement.innerHTML = `
+                            <div class="device-info">
+                                <div class="device-icon">
+                                    <i class="fas ${deviceInfo.device.toLowerCase().includes('mobile') ? 'fa-mobile-alt' : 'fa-laptop'}"></i>
+                                </div>
+                                <div class="device-details">
+                                    <h3>${deviceInfo.browser} on ${deviceInfo.os}</h3>
+                                    <p>Last used: ${new Date(device.last_used).toLocaleDateString()}</p>
+                                    <p>Location: ${device.location}</p>
+                                    ${isCurrentDevice ? '<p><strong>Current Device</strong></p>' : ''}
+                                </div>
+                            </div>
+                            <div class="device-actions">
+                                ${!isCurrentDevice ? `
+                                    <button onclick="removeDevice('${device.id}')" class="remove-device">
+                                        Remove Device
+                                    </button>
+                                ` : ''}
+                            </div>
+                        `;
+                        
+                        devicesList.appendChild(deviceElement);
+                    });
+                } else {
+                    showToast('Error loading devices', 'error');
+                }
+            } catch (error) {
+                console.error('Error loading devices:', error);
+                showToast('Error loading devices', 'error');
+            }
+        }
+
+        async function removeDevice(deviceId) {
+            try {
+                const response = await fetch('/api/devices/remove', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ deviceId })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showToast('Device removed successfully', 'success');
+                    loadDevices();
+                } else {
+                    showToast(data.error || 'Error removing device', 'error');
+                }
+            } catch (error) {
+                console.error('Error removing device:', error);
+                showToast('Error removing device', 'error');
+            }
+        }
+
+        // Load current email on page load
+    async function loadCurrentEmail() {
+        try {
+            const response = await fetch('/get-current-user');
+            const data = await response.json();
+            
+            if (data.success) {
+                document.getElementById('currentEmail').textContent = data.email;
+            }
+        } catch (error) {
+            console.error('Error loading current email:', error);
+        }
+    }
+
+    // Edit email button click handler
+    document.getElementById('editEmailBtn').addEventListener('click', () => {
+        document.querySelector('.email-display').style.display = 'none';
+        document.getElementById('emailUpdateForm').style.display = 'block';
+    });
+
+    // Request email update
+    document.getElementById('requestEmailUpdateBtn').addEventListener('click', async () => {
+        const newEmail = document.getElementById('newEmail').value;
+        const currentPassword = document.getElementById('updateCurrentPassword').value;
+
+        try {
+            const response = await fetch('/request-email-update', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    newEmail,
+                    currentPassword
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                showToast('Verification code sent to new email', 'success');
+                document.getElementById('emailUpdateForm').style.display = 'none';
+                document.getElementById('emailVerificationForm').style.display = 'block';
+            } else {
+                showToast(data.error || 'Error requesting email update', 'error');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            showToast('An error occurred', 'error');
+        }
+    });
+
+    // Verify email update
+    document.getElementById('verifyEmailUpdateBtn').addEventListener('click', async () => {
+        const verificationCode = document.getElementById('emailVerificationCode').value;
+
+        try {
+            const response = await fetch('/verify-email-update', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ verificationCode })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                showToast('Email updated successfully', 'success');
+                document.getElementById('currentEmail').textContent = data.newEmail;
+                document.getElementById('emailVerificationForm').style.display = 'none';
+                document.querySelector('.email-display').style.display = 'block';
+            } else {
+                showToast(data.error || 'Error verifying email update', 'error');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            showToast('An error occurred', 'error');
+        }
+    });
+
+    // Call on page load
+    loadCurrentEmail();
+
+
+    // profile   // Username availability check
+    document.getElementById('username').addEventListener('input', async () => {
+        const username = document.getElementById('username').value;
+        const availabilitySpan = document.getElementById('usernameAvailability');
+
+        if (username.length < 3) {
+            availabilitySpan.textContent = 'Username must be at least 3 characters';
+            availabilitySpan.style.color = 'red';
+            return;
+        }
+
+        try {
+            const response = await fetch(`/check-username?username=${username}`);
+            const data = await response.json();
+
+            if (data.success) {
+                if (data.isAvailable) {
+                    availabilitySpan.textContent = '✓ Username is available';
+                    availabilitySpan.style.color = 'green';
+                } else {
+                    availabilitySpan.textContent = '✗ Username is already taken';
+                    availabilitySpan.style.color = 'red';
+                }
+            }
+        } catch (error) {
+            console.error('Error checking username:', error);
+            availabilitySpan.textContent = 'Error checking username';
+            availabilitySpan.style.color = 'red';
+        }
+    });
+
+    // Bio character count
+    document.getElementById('bio').addEventListener('input', (e) => {
+        const bioLength = e.target.value.length;
+        document.getElementById('bioCharCount').textContent = `${bioLength}/500`;
+        
+        if (bioLength > 500) {
+            e.target.value = e.target.value.slice(0, 500);
+        }
+    });
+// Update profile form submission
+document.getElementById('profileDetailsForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const formData = {
+        firstName: document.getElementById('firstName').value,
+        lastName: document.getElementById('lastName').value,
+        username: document.getElementById('username').value,
+        bio: document.getElementById('bio').value,
+        gender: document.querySelector('input[name="gender"]:checked')?.value,
+        currentPassword: document.getElementById('currentPassword').value
+    };
+
+    try {
+        const response = await fetch('/update-user', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData)
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            showToast('Profile updated successfully', 'success');
+            modal.style.display = "none";
+            loadProfileDetails(); // Reload the profile view
+            document.getElementById('currentPassword').value = ''; // Clear password field
+        } else {
+            showToast(data.error || 'An error occurred', 'error');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        showToast('An error occurred while updating profile', 'error');
+    }
+});
+
+  // Load and display profile details
+async function loadProfileDetails() {
+    try {
+        const response = await fetch('/get-current-user');
+        const data = await response.json();
+        
+        if (data.success) {
+            // Update view elements
+            document.getElementById('viewFirstName').textContent = data.first_name || '-';
+            document.getElementById('viewLastName').textContent = data.last_name || '-';
+            document.getElementById('viewUsername').textContent = data.username || '-';
+            document.getElementById('viewGender').textContent = data.gender || '-';
+            document.getElementById('viewBio').textContent = data.bio || '-';
+            
+            // Update form elements
+            document.getElementById('firstName').value = data.first_name || '';
+            document.getElementById('lastName').value = data.last_name || '';
+            document.getElementById('username').value = data.username || '';
+            document.getElementById('bio').value = data.bio || '';
+            
+            // Set gender radio button
+            if (data.gender) {
+                const genderRadio = document.querySelector(`input[name="gender"][value="${data.gender}"]`);
+                if (genderRadio) genderRadio.checked = true;
+            }
+
+            // Update bio character count
+            document.getElementById('bioCharCount').textContent = `${data.bio ? data.bio.length : 0}/500`;
+        }
+    } catch (error) {
+        console.error('Error loading profile details:', error);
+        showToast('Error loading profile details', 'error');
+    }
+}
+
+    // Call on page load
+    loadProfileDetails();
+
+
+    document.getElementById('profilePicInput').addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Validate file type and size
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    const maxSize = 5 * 1024 * 1024; // 5MB
+
+    if (!allowedTypes.includes(file.type)) {
+        showToast('Invalid file type. Please upload a JPEG, PNG, or WebP image.', 'error');
+        return;
+    }
+
+    if (file.size > maxSize) {
+        showToast('File is too large. Maximum size is 5MB.', 'error');
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append('profilePicture', file);
+
+    try {
+        const response = await fetch('/upload-profile-picture', {
+            method: 'POST',
+            body: formData
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            showToast('Profile picture uploaded successfully', 'success');
+            
+            // Update profile picture in both header and modal
+            const profilePictures = document.querySelectorAll('.profile-pic');
+            profilePictures.forEach(pic => {
+                pic.src = data.profilePicture;
+            });
+
+            // Close the modal
+            modal.style.display = "none";
+        } else {
+            showToast(data.error || 'Error uploading profile picture', 'error');
+        }
+    } catch (error) {
+        console.error('Error uploading profile picture:', error);
+        showToast('An error occurred while uploading profile picture', 'error');
+    }
+});
+// Add to existing script section
+async function loadExtraDetails() {
+    try {
+        const response = await fetch('/get-extra-details');
+        const data = await response.json();
+        
+        if (data.success) {
+            document.getElementById('whatsappLink').value = data.whatsappLink || '';
+            document.getElementById('youtubeLink').value = data.youtubeLink || '';
+            document.getElementById('websiteLink').value = data.websiteLink || '';
+            document.getElementById('githubLink').value = data.githubLink || '';
+            document.getElementById('linkedinLink').value = data.linkedinLink || '';
+            document.getElementById('twitterLink').value = data.twitterLink || '';
+            document.getElementById('instagramLink').value = data.instagramLink || '';
+        }
+    } catch (error) {
+        console.error('Error loading extra details:', error);
+        showToast('Error loading extra details', 'error');
+    }
+}
+
+// Extra details form submission
+document.getElementById('extraDetailsForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const formData = {
+        whatsappLink: document.getElementById('whatsappLink').value,
+        youtubeLink: document.getElementById('youtubeLink').value,
+        websiteLink: document.getElementById('websiteLink').value,
+        githubLink: document.getElementById('githubLink').value,
+        linkedinLink: document.getElementById('linkedinLink').value,
+        twitterLink: document.getElementById('twitterLink').value,
+        instagramLink: document.getElementById('instagramLink').value,
+        currentPassword: document.getElementById('extraDetailsPassword').value
+    };
+
+    try {
+        const response = await fetch('/update-extra-details', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData)
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            showToast('Extra details updated successfully', 'success');
+            document.getElementById('extraDetailsPassword').value = ''; // Clear password field
+        } else {
+            showToast(data.error || 'An error occurred', 'error');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        showToast('An error occurred while updating extra details', 'error');
+    }
+});
+
+
+loadExtraDetails()
+    </script>
+    <script src="./js/main.js"></script>
+</div></body>
+</html>

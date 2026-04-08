@@ -1,0 +1,1326 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Deploy your WhatsApp bot on Bot.TalkDrove">
+    <title>Deploy <%= bot.name %> - || H.TD</title>
+          <!-- Favicon and App Icons -->
+  <link rel="apple-touch-icon" sizes="180x180" href="https://cdn.talkdrove.com/host/Images/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://cdn.talkdrove.com/host/Images/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://cdn.talkdrove.com/host/Images/favicon/favicon-16x16.png">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles/main.css">
+        <!-- <link rel="stylesheet" href="../styles/main.css"> -->
+ <style>
+
+
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+
+body {
+font-family: 'Inter', sans-serif;
+background-color: var(--base-100);
+color: var(--neutral);
+min-height: 100vh;
+background-image: 
+    radial-gradient(circle at 10% 20%, rgba(67, 97, 238, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 90% 80%, rgba(63, 55, 201, 0.05) 0%, transparent 50%);
+}
+
+
+
+
+.main {
+max-width: 1280px;
+margin: 2rem auto;
+padding: 0 1.5rem;
+padding-bottom: 5rem;
+
+}
+
+.deploy-container {
+max-width: 800px;
+margin: 2rem auto;
+padding: 0 1.5rem;
+}
+
+.deploy-form {
+background-color: var(--base-100);
+border-radius: 1.5rem;
+padding: 2rem;
+border: 1px solid rgba(229, 231, 235, 0.2);
+box-shadow: var(--card-shadow, 0 4px 20px -1px rgba(0, 0, 0, 0.1));
+backdrop-filter: blur(10px);
+}
+
+.form-section h3 {
+font-size: 1.5rem;
+font-weight: 700;
+color: var(--neutral);
+margin-bottom: 1.5rem;
+background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+background-clip: text;
+-webkit-text-fill-color: transparent;
+}
+
+.bot-info {
+display: flex;
+align-items: center;
+gap: 1rem;
+margin-bottom: 2rem;
+padding: 1.5rem;
+background-color: var(--base-200);
+border-radius: 1rem;
+border: 1px solid rgba(67, 97, 238, 0.1);
+transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.bot-info:hover {
+transform: translateY(-2px);
+box-shadow: 0 8px 16px -4px rgba(67, 97, 238, 0.1);
+}
+
+.docs-link {
+display: inline-flex;
+align-items: center;
+gap: 0.75rem;
+color: var(--primary);
+text-decoration: none;
+font-weight: 600;
+padding: 0.75rem 1.25rem;
+background-color: var(--secondary);
+border-radius: 0.75rem;
+transition: all 0.2s ease;
+}
+
+.docs-link:hover {
+background-color: var(--primary);
+color: white;
+}
+
+.env-var-item {
+margin-bottom: 2rem;
+}
+
+.env-var-item label {
+display: block;
+font-weight: 600;
+margin-bottom: 0.75rem;
+color: var(--neutral);
+}
+
+.env-var-item input {
+width: 100%;
+padding: 1rem;
+border-radius: 0.75rem;
+border: 2px solid var(--base-300);
+background-color: var(--base-200);
+color: var(--neutral);
+transition: all 0.2s ease;
+font-size: 1rem;
+}
+
+.env-var-item input:focus {
+border-color: var(--primary);
+outline: none;
+box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+}
+
+.app-name-container {
+margin-bottom: 2rem;
+position: relative;
+}
+
+.app-name-container label {
+display: flex;
+align-items: center;
+gap: 0.5rem;
+margin-bottom: 0.75rem;
+font-weight: 600;
+}
+
+.input-wrapper {
+position: relative;
+display: flex;
+align-items: center;
+}
+
+.app-name-container input {
+width: 100%;
+padding: 1rem;
+padding-right: 3rem;
+border-radius: 0.75rem;
+border: 2px solid var(--base-300);
+background-color: var(--base-200);
+color: var(--neutral);
+transition: all 0.2s ease;
+font-size: 1rem;
+}
+
+.app-name-container input:focus {
+border-color: var(--primary);
+outline: none;
+box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+}
+
+.validation-status {
+position: absolute;
+right: 1rem;
+top: 50%;
+transform: translateY(-50%);
+display: flex;
+align-items: center;
+justify-content: center;
+width: 24px;
+height: 24px;
+z-index: 2;
+}
+
+.spinner {
+display: none;
+width: 20px;
+height: 20px;
+border: 2px solid var(--base-300);
+border-top-color: var(--primary);
+border-radius: 50%;
+animation: spin 1s linear infinite;
+}
+
+.status-icon {
+display: none;
+font-size: 1.25rem;
+position: absolute;
+}
+
+.status-icon.success {
+color: var(--success);
+}
+
+.status-icon.error {
+color: var(--error);
+}
+
+.status-icon.warning {
+color: #f59e0b;
+}
+
+.validation-message {
+margin-top: 0.5rem;
+font-size: 0.875rem;
+display: none;
+padding: 0.5rem;
+border-radius: 0.5rem;
+animation: fadeIn 0.3s ease;
+}
+
+.validation-message.error {
+color: var(--error);
+background-color: rgba(248, 113, 113, 0.1);
+}
+
+.validation-message.success {
+color: var(--success);
+background-color: rgba(74, 222, 128, 0.1);
+}
+
+.validation-message.warning {
+color: #f59e0b;
+background-color: rgba(245, 158, 11, 0.1);
+}
+
+.help-text {
+display: block;
+margin-top: 0.5rem;
+font-size: 0.875rem;
+color: var(--neutral);
+opacity: 0.7;
+}
+
+.deploy-btn {
+width: 100%;
+padding: 1.25rem;
+font-size: 1.125rem;
+font-weight: 600;
+border-radius: 1rem;
+background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+color: var(--neutral);
+border: none;
+cursor: pointer;
+transition: all 0.2s ease;
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 0.75rem;
+margin-top: 2rem;
+}
+
+.deploy-btn:hover {
+transform: translateY(-2px);
+box-shadow: 0 8px 16px -4px rgba(67, 97, 238, 0.25);
+}
+
+.deploy-btn:disabled {
+opacity: 0.6;
+cursor: not-allowed;
+transform: none !important;
+box-shadow: none !important;
+}
+
+.text-error {
+color: var(--error);
+margin-left: 0.25rem;
+}
+
+.validation-requirements {
+margin-top: 1rem;
+padding: 1rem;
+background-color: var(--base-200);
+border-radius: 0.75rem;
+font-size: 0.875rem;
+}
+
+.requirement-item {
+display: flex;
+align-items: center;
+gap: 0.5rem;
+margin-bottom: 0.5rem;
+padding: 0.25rem 0;
+color: var(--neutral);
+opacity: 0.7;
+transition: all 0.2s ease;
+}
+
+.requirement-item i {
+width: 16px;
+text-align: center;
+transition: all 0.2s ease;
+}
+
+.requirement-item.valid {
+opacity: 1;
+color: var(--success);
+}
+
+.requirement-item.invalid {
+opacity: 1;
+color: var(--error);
+}
+
+.strength-meter {
+height: 4px;
+border-radius: 2px;
+background-color: var(--base-300);
+margin-top: 0.5rem;
+overflow: hidden;
+}
+
+.strength-meter-fill {
+height: 100%;
+width: 0%;
+background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+transition: width 0.3s ease;
+}
+
+.loading-overlay {
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background-color: rgba(0, 0, 0, 0.5);
+display: none;
+justify-content: center;
+align-items: center;
+z-index: 1000;
+}
+
+.loading-spinner {
+width: 50px;
+height: 50px;
+border: 3px solid var(--base-100);
+border-top-color: var(--primary);
+border-radius: 50%;
+animation: spin 1s linear infinite;
+}
+
+.tooltip {
+position: relative;
+display: inline-block;
+margin-left: 0.5rem;
+}
+
+.tooltip .tooltip-text {
+visibility: hidden;
+width: 200px;
+background-color: var(--base-300);
+color: var(--neutral);
+text-align: center;
+border-radius: 0.5rem;
+padding: 0.5rem;
+position: absolute;
+z-index: 1;
+bottom: 125%;
+left: 50%;
+transform: translateX(-50%);
+opacity: 0;
+transition: opacity 0.3s;
+}
+
+.tooltip:hover .tooltip-text {
+visibility: visible;
+opacity: 1;
+}
+
+.suggestions-container {
+margin-top: 1rem;
+display: flex;
+flex-wrap: wrap;
+gap: 0.5rem;
+}
+
+.suggestion-item {
+padding: 0.5rem 1rem;
+background-color: var(--base-200);
+border-radius: 0.5rem;
+cursor: pointer;
+transition: all 0.2s ease;
+font-size: 0.875rem;
+border: 1px solid var(--base-300);
+}
+
+.suggestion-item:hover {
+background-color: var(--primary);
+color: white;
+transform: translateY(-1px);
+}
+
+@keyframes spin {
+to {
+    transform: rotate(360deg);
+}
+}
+
+@keyframes fadeIn {
+from {
+    opacity: 0;
+    transform: translateY(-5px);
+}
+to {
+    opacity: 1;
+    transform: translateY(0);
+}
+}
+
+@media (max-width: 768px) {
+.deploy-form {
+    padding: 1.5rem;
+}
+
+.bot-info {
+    padding: 1rem;
+}
+
+.deploy-btn {
+    padding: 1rem;
+}
+
+.suggestions-container {
+    flex-direction: column;
+}
+
+.suggestion-item {
+    width: 100%;
+    text-align: center;
+}
+}
+#coinInfo {
+background-color: var(--base-100);
+border-radius: 1rem;
+padding: 1.5rem;
+border: 1px solid rgba(229, 231, 235, 0.2);
+margin-bottom: 2rem;
+box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+display: flex;
+justify-content: space-between;
+align-items: center;
+}
+
+#coinBalance {
+font-size: 1.25rem;
+font-weight: 600;
+color: var(--neutral);
+}
+.response-message {
+        display: none;
+        padding: 1.5rem;
+        border-radius: 1rem;
+        margin-top: 1.5rem;
+        font-weight: 500;
+        font-size: 1rem;
+        line-height: 1.6;
+        transition: all 0.3s ease;
+        animation: slideIn 0.4s ease-out;
+    }
+
+    @keyframes slideIn {
+        from {
+            transform: translateY(-20px);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    .response-message.success {
+        background-color: rgba(74, 222, 128, 0.1);
+        border: 1px solid rgba(74, 222, 128, 0.2);
+        color: var(--success);
+    }
+
+    .response-message.error {
+        background-color: rgba(248, 113, 113, 0.1);
+        border: 1px solid rgba(248, 113, 113, 0.2);
+        color: var(--error);
+    }
+
+    .deployment-details {
+        margin-top: 1rem;
+        padding: 1rem;
+        background-color: var(--base-200);
+        border-radius: 0.75rem;
+    }
+
+    .deployment-link {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem;
+        background-color: var(--base-100);
+        border-radius: 0.5rem;
+        margin-top: 0.5rem;
+        border: 1px solid var(--base-300);
+    }
+
+    .deployment-link input {
+        flex: 1;
+        border: none;
+        background: transparent;
+        color: var(--neutral);
+        padding: 0.25rem;
+    }
+
+    .copy-btn {
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        background-color: var(--primary);
+        color: white;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .copy-btn:hover {
+        background-color: var(--primary-hover);
+    }
+
+    .deployment-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    .action-btn {
+        flex: 1;
+        padding: 0.75rem;
+        border-radius: 0.5rem;
+        border: 1px solid var(--base-300);
+        background-color: var(--base-200);
+        color: var(--neutral);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .action-btn:hover {
+        background-color: var(--base-300);
+    }
+
+    .deployment-status {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .status-indicator {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: var(--success);
+    }
+
+    .coin-change {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        background-color: var(--base-200);
+        border-radius: 0.5rem;
+        margin-top: 0.5rem;
+    }
+
+    .coin-change i {
+        color: #f59e0b;
+    }
+    #inputVar{
+        padding: 7px;
+    }
+    .botName{
+    color: var(--text-primary);
+}
+ </style>
+ 
+</head>
+<body>
+    
+    <header class="header">
+        <div class="header-content">
+            <h1><a class="logo" href="/dashboard">H.TD</a></h1>
+            <nav class="nav-controls">
+                <button id="deployBotBtn" class="btn btn-primary" onclick="window.location.href='/dashboard/select-bot'">
+                    <i class="fas fa-plus"></i>
+                    <span>Deploy Bot</span>
+                </button>
+                <button id="themeToggle" class="btn btn-secondary">
+                    <i class="fas fa-adjust"></i>
+                </button>
+                <div class="profile-container">
+                    <img alt="Profile" class="profile-pic" id="profileBtn">
+                    <div class="dropdown" id="profileDropdown">
+                        <a href="/dashboard/my-bots" class="dropdown-item">
+                            <i class="fas fa-robot"></i>
+                            <span>My Bots</span>
+                        </a>
+                        <a href="/dashboard/wallet" class="dropdown-item">
+                            <i class="fas fa-wallet"></i>
+                            <span>Wallet</span>
+                        </a>
+                        <a href="/dashboard/account-settings" class="dropdown-item">
+                            <i class="fas fa-cog"></i>
+                            <span>Settings</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="/logout" class="dropdown-item" id="logoutBtn">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Logout</span>
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="deploy-container">
+        <div id="coinInfo">
+            <span id="coinBalance">Coins: loading...</span>
+        </div>
+        <form id="deployForm" class="deploy-form" action="/deploy" method="POST">
+            <input type="hidden" name="botId" value="<%= bot.id %>">
+
+            <div class="form-section">
+                <h2 class="botName"><%= bot.name %></h2>
+                
+                <div class="app-name-container">
+                    <label>
+                        Bot Name
+                        <span class="text-error">*</span>
+                        <div class="tooltip">
+                            <i class="fas fa-info-circle"></i>
+                            <span class="tooltip-text">Before deploying check the docs of this bot.</span>
+                        </div>
+                    </label>
+                
+                    <div class="input-wrapper">
+                        <input 
+                            type="text" 
+                            name="appName" 
+                            id="appNameInput"
+                            placeholder="Enter your app name"
+                            maxlength="28"
+                            required
+                        >
+                        <div class="validation-status">
+                            <div class="spinner"></div>
+                            <i class="fas fa-check status-icon success"></i>
+                            <i class="fas fa-times status-icon error"></i>
+                            <i class="fas fa-exclamation-triangle status-icon warning"></i>
+                        </div>
+                    </div>
+                    <div class="validation-message"></div>
+                    <div class="strength-meter">
+                        <div class="strength-meter-fill"></div>
+                    </div>
+                    <div class="validation-requirements">
+                        <div class="requirement-item" data-requirement="length">
+                            <i class="fas fa-circle"></i>
+                            Between 3 and 30 characters
+                        </div>
+                        <div class="requirement-item" data-requirement="start">
+                            <i class="fas fa-circle"></i>
+                            Must start with a letter
+                        </div>
+                        <div class="requirement-item" data-requirement="characters">
+                            <i class="fas fa-circle"></i>
+                            Only lowercase letters, numbers, and hyphens
+                        </div>
+                        <div class="requirement-item" data-requirement="hyphens">
+                            <i class="fas fa-circle"></i>
+                            No consecutive hyphens or hyphens at start/end
+                        </div>
+                    </div>
+                    <div class="suggestions-container" id="suggestions"></div>
+                </div>
+                <div class="bot-info">
+                    <% if (bot.website_url) { %>
+                        <a href="<%= bot.website_url %>" target="_blank" class="docs-link">
+                            <i class="fas fa-book"></i>
+                            <span>View Documentation</span>
+                        </a>
+                    <% } %>
+                </div>
+            
+                <div id="envVarsContainer">
+                    <% bot.envVars.forEach(function(envVar) { %>
+                        <div class="env-var-item">
+                            <label>
+                                <%= envVar.var_description %>
+                                <span>(<%= envVar.var_name %>)</span>
+                                <% if(envVar.is_required) { %>
+                                    <span class="text-error">*</span>
+                                <% } %>
+                            </label>
+                            <input id="inputVar"
+                                type="text" 
+                                name="envVars[<%= envVar.var_name %>]" 
+                                placeholder="Enter <%= envVar.var_name %>"
+                                <%= envVar.is_required ? 'required' : '' %>
+                            >
+                        </div>
+                    <% }); %>
+                </div>
+            </div>
+            <button type="submit" id="deployBtn" class="deploy-btn" disabled>
+                <i class="fas fa-rocket"></i>
+                <span>Deploy Bot</span>
+            </button>
+        </form>
+      
+<div id="responseMessage" class="response-message">
+    <div class="deployment-status">
+        <div class="status-indicator"></div>
+        <span class="status-text">Deployment Successful!</span>
+    </div>
+    <div class="deployment-details">
+      
+        </div>
+        <div class="deployment-actions">
+    
+
+        </div>
+    </div>
+</div>
+    </main>
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add the ad overlay HTML - with explicit dimensions for ad container
+        const adOverlayHTML = `
+        <div id="adOverlay" class="ad-overlay">
+          <div class="ad-container">
+            <div class="ad-header">
+              <h3>Please watch this ad to deploy your bot</h3>
+              <div class="timer-container">Time remaining: <span id="adTimer">10</span>s</div>
+            </div>
+            
+            <div class="ad-content">
+              <!-- Reserved space for ad - will be inserted dynamically -->
+              <div id="adPlaceholder" style="min-width:300px; min-height:250px; width:100%; display:flex; justify-content:center; align-items:center;">
+                <div>Loading advertisement...</div>
+              </div>
+            </div>
+            
+            <div class="ad-footer">
+              <button id="continueDeployment" class="action-btn" disabled>
+                <i class="fas fa-rocket"></i>
+                <span>Continue Deployment</span>
+              </button>
+              <button id="skipAd" class="secondary-btn">
+                <i class="fas fa-times"></i>
+                <span>Skip Ad & Cancel Deployment</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        `;
+        
+        // Add the CSS styles
+        const adStyles = `
+        .ad-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.8);
+          display: none;
+          align-items: center;
+          justify-content: center;
+          z-index: 1000;
+        }
+        
+        .ad-container {
+          background-color: white;
+          border-radius: 8px;
+          width: 90%;
+          max-width: 728px;
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+          overflow: hidden;
+          display: flex;
+          flex-direction: column;
+        }
+        
+        .ad-header {
+          background-color: #f8f9fa;
+          padding: 15px 20px;
+          border-bottom: 1px solid #e9ecef;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+        
+        .ad-header h3 {
+          margin: 0;
+          color: #343a40;
+        }
+        
+        .timer-container {
+          font-weight: bold;
+          color: #007bff;
+        }
+        
+        .ad-content {
+          padding: 20px;
+          min-height: 250px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        
+        .ad-footer {
+          padding: 15px 20px;
+          border-top: 1px solid #e9ecef;
+          display: flex;
+          justify-content: space-between;
+          gap: 10px;
+        }
+        
+        .action-btn {
+          background-color: #007bff;
+          color: white;
+          border: none;
+          border-radius: 4px;
+          padding: 8px 16px;
+          cursor: pointer;
+          font-weight: bold;
+          display: flex;
+          align-items: center;
+          gap: 5px;
+        }
+        
+        .action-btn:disabled {
+          background-color: #6c757d;
+          cursor: not-allowed;
+        }
+        
+        .secondary-btn {
+          background-color: #f8f9fa;
+          color: #343a40;
+          border: 1px solid #ced4da;
+          border-radius: 4px;
+          padding: 8px 16px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 5px;
+        }
+        
+        .secondary-btn:hover {
+          background-color: #e9ecef;
+        }
+        `;
+        
+        // Insert the ad overlay HTML and styles
+        document.querySelector('main').insertAdjacentHTML('beforeend', adOverlayHTML);
+        
+        const styleElement = document.createElement('style');
+        styleElement.textContent = adStyles;
+        document.head.appendChild(styleElement);
+
+        // Update the viewLogs function
+        function viewLogs() {
+            const appName = document.getElementById('appNameInput').value;
+            window.location.href = `/dashboard/bot-details/${appName}`;
+        }
+
+        const appNameInput = document.getElementById('appNameInput');
+        const deployBtn = document.getElementById('deployBtn');
+        const deployForm = document.getElementById('deployForm');
+        const validationMessage = document.querySelector('.validation-message');
+        const validationStatus = document.querySelector('.validation-status');
+        const spinner = validationStatus.querySelector('.spinner');
+        const successIcon = validationStatus.querySelector('.status-icon.success');
+        const errorIcon = validationStatus.querySelector('.status-icon.error');
+        const warningIcon = validationStatus.querySelector('.status-icon.warning');
+        const strengthMeter = document.querySelector('.strength-meter-fill');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const suggestionsContainer = document.getElementById('suggestions');
+        const adOverlay = document.getElementById('adOverlay');
+        const continueDeployBtn = document.getElementById('continueDeployment');
+        const skipAdBtn = document.getElementById('skipAd');
+        const adTimerElement = document.getElementById('adTimer');
+        const adPlaceholder = document.getElementById('adPlaceholder');
+         
+        let debounceTimer;
+        let isFormSubmitting = false;
+        let countdown = 10;
+        let countdownInterval;
+        let adLoaded = false;
+
+        // Enhanced validation rules
+        const nameRules = {
+            pattern: /^[a-z][a-z0-9-]*[a-z0-9]$/,
+            maxLength: 30,
+            minLength: 3,
+            noConsecutiveHyphens: /--/,
+            allowedChars: /^[a-z0-9-]+$/
+        };
+        
+        // Function to load AdSense ad
+        function loadAdSense() {
+            // Clear the placeholder
+            adPlaceholder.innerHTML = '';
+            
+            // Create AdSense script
+            const adScript = document.createElement('script');
+            adScript.async = true;
+            adScript.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5279011797376172";
+            adScript.crossOrigin = "anonymous";
+            adPlaceholder.appendChild(adScript);
+            
+            // Create AdSense ins element
+            const adIns = document.createElement('ins');
+            adIns.className = "adsbygoogle";
+            adIns.style.display = "block";
+            adIns.setAttribute("data-ad-client", "ca-pub-5279011797376172");
+            adIns.setAttribute("data-ad-slot", "3932521472");
+            adIns.setAttribute("data-ad-format", "auto");
+            adIns.setAttribute("data-full-width-responsive", "true");
+            adIns.style.width = "100%";
+            adIns.style.height = "250px";  // Explicit height
+            adPlaceholder.appendChild(adIns);
+            
+            // Create push script
+            const pushScript = document.createElement('script');
+            pushScript.textContent = "(adsbygoogle = window.adsbygoogle || []).push({});";
+            adPlaceholder.appendChild(pushScript);
+            
+            // Handle ad errors
+            window.addEventListener('error', function(e) {
+                if (e.message && e.message.includes('adsbygoogle')) {
+                    console.warn('Ad error detected:', e.message);
+                    adPlaceholder.innerHTML = '<div>Advertisement failed to load. You can still continue after the timer.</div>';
+                }
+            });
+        }
+        
+        // Common words to generate suggestions
+        const commonWords = ['app', 'bot', 'api', 'service', 'prod', 'dev', 'staging', 'test'];
+
+        function generateSuggestions(baseWord) {
+            const suggestions = [];
+            if (!baseWord) return suggestions;
+
+            const sanitizedBase = baseWord.toLowerCase().replace(/[^a-z0-9]/g, '');
+            if (sanitizedBase.length < 2) return suggestions;
+
+            commonWords.forEach(word => {
+                suggestions.push(`${sanitizedBase}-${word}`);
+                suggestions.push(`${word}-${sanitizedBase}`);
+            });
+
+            // Add random number suggestions
+            for (let i = 0; i < 3; i++) {
+                suggestions.push(`${sanitizedBase}-${Math.floor(Math.random() * 1000)}`);
+            }
+
+            return [...new Set(suggestions)].slice(0, 5); // Return unique suggestions, max 5
+        }
+
+        function updateSuggestions(value) {
+            const suggestions = generateSuggestions(value);
+            suggestionsContainer.innerHTML = suggestions.map(suggestion => 
+                `<span class="suggestion-item">${suggestion}</span>`
+            ).join('');
+
+            // Add click handlers
+            document.querySelectorAll('.suggestion-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    appNameInput.value = item.textContent;
+                    validateAppName(item.textContent);
+                });
+            });
+        }
+
+        function updateRequirements(value) {
+            const requirements = {
+                length: value.length >= nameRules.minLength && value.length <= nameRules.maxLength,
+                start: /^[a-z]/.test(value),
+                characters: nameRules.allowedChars.test(value),
+                hyphens: !nameRules.noConsecutiveHyphens.test(value) && 
+                        !value.startsWith('-') && 
+                        !value.endsWith('-')
+            };
+
+            Object.entries(requirements).forEach(([key, valid]) => {
+                const element = document.querySelector(`[data-requirement="${key}"]`);
+                element.classList.remove('valid', 'invalid');
+                element.classList.add(valid ? 'valid' : 'invalid');
+                element.querySelector('i').className = `fas ${valid ? 'fa-check-circle' : 'fa-times-circle'}`;
+            });
+
+            // Update strength meter
+            const validCount = Object.values(requirements).filter(Boolean).length;
+            const strength = (validCount / Object.keys(requirements).length) * 100;
+            strengthMeter.style.width = `${strength}%`;
+
+            return Object.values(requirements).every(Boolean);
+        }
+
+        function showValidationStatus(type, message) {
+            // Hide all status indicators
+            spinner.style.display = 'none';
+            successIcon.style.display = 'none';
+            errorIcon.style.display = 'none';
+            warningIcon.style.display = 'none';
+            
+            // Show validation message
+            validationMessage.style.display = 'block';
+            validationMessage.className = `validation-message ${type}`;
+            validationMessage.textContent = message;
+
+            // Show appropriate icon and set button state
+            switch(type) {
+                case 'success':
+                    successIcon.style.display = 'inline-block';
+                    deployBtn.disabled = false;
+                    break;
+                case 'error':
+                case 'warning':
+                    if (type === 'error') errorIcon.style.display = 'inline-block';
+                    if (type === 'warning') warningIcon.style.display = 'inline-block';
+                    deployBtn.disabled = true;
+                    break;
+            }
+
+            validationStatus.style.display = 'block';
+        }
+
+        function startValidation() {
+            validationStatus.style.display = 'block';
+            spinner.style.display = 'inline-block';
+            successIcon.style.display = 'none';
+            errorIcon.style.display = 'none';
+            warningIcon.style.display = 'none';
+            validationMessage.style.display = 'none';
+            deployBtn.disabled = true;
+        }
+
+        async function validateAppName(value) {
+            // Convert to lowercase and trim
+            value = value.toLowerCase().trim();
+            appNameInput.value = value;
+
+            // Start validation process
+            startValidation();
+
+            // Basic validation checks
+            if (!value) {
+                showValidationStatus('error', 'App name is required');
+                return false;
+            }
+
+            if (value.length < nameRules.minLength) {
+                showValidationStatus('error', 'App name must be at least 3 characters');
+                return false;
+            }
+
+            if (value.length > nameRules.maxLength) {
+                showValidationStatus('error', `App name must be no more than ${nameRules.maxLength} characters`);
+                return false;
+            }
+
+            if (!nameRules.pattern.test(value)) {
+                showValidationStatus('error', 'Only lowercase letters, numbers, and hyphens are allowed');
+                return false;
+            }
+
+            // Update requirements UI
+            const requirementsMet = updateRequirements(value);
+            
+            if (!requirementsMet) {
+                return false;
+            }
+
+            try {
+                const response = await fetch(`/api/check-app-name?name=${value}-td`);
+                if (!response.ok) throw new Error('Network response was not ok');
+                
+                const data = await response.json();
+                
+                if (data.error) {
+                    showValidationStatus('error', data.error);
+                    return false;
+                }
+
+                // Handle detailed availability checks
+                if (!data.isAvailable) {
+                    const { details } = data;
+                    
+                    // Show specific error messages based on why it's unavailable
+                    if (details.existsInDatabase) {
+                        showValidationStatus('error', 'This app name is already taken in our system');
+                        updateSuggestions(value);
+                        return false;
+                    }
+                    
+                    if (details.isReserved) {
+                        showValidationStatus('warning', 'This name is reserved and cannot be used');
+                        updateSuggestions(value);
+                        return false;
+                    }
+                    
+                    if (details.existsInHeroku) {
+                        showValidationStatus('error', 'This app name is already taken in Heroku');
+                        updateSuggestions(value);
+                        return false;
+                    }
+
+                    // Generic unavailability message if no specific reason is provided
+                    showValidationStatus('error', data.message || 'This app name is unavailable');
+                    updateSuggestions(value);
+                    return false;
+                }
+
+                // If we get here, the name is available everywhere
+                showValidationStatus('success', 'App name is available');
+                suggestionsContainer.innerHTML = ''; // Clear suggestions on success
+                return true;
+
+            } catch (error) {
+                console.error('Error checking app name:', error);
+                showValidationStatus('error', 'Error checking app name availability');
+                return false;
+            }
+        }
+          
+        // Update the showResponseMessage function
+        function showResponseMessage(type, data) {
+            const responseMessage = document.getElementById('responseMessage');
+            const statusIndicator = responseMessage.querySelector('.status-indicator');
+            const statusText = responseMessage.querySelector('.status-text');
+            const deploymentDetails = responseMessage.querySelector('.deployment-details');
+
+            responseMessage.className = `response-message ${type}`;
+
+            if (type === 'success') {
+                statusIndicator.style.backgroundColor = 'var(--success)';
+                statusText.textContent = 'Deployment Successful!';
+                // Create deployment details content
+                deploymentDetails.innerHTML = `
+                    <div class="deployment-info">
+                        <p><strong>Status:</strong> ${data.message}</p>
+                        <p><strong>Deployment Cost:</strong> ${data.coinsDeducted} coins</p>
+                        <p><strong>Remaining Balance:</strong> ${data.remainingCoins} coins</p>
+                    </div>
+                    <div class="deployment-actions">
+                        <button class="action-btn" onclick="viewLogs()">
+                            <i class="fas fa-list-alt"></i>
+                            View Logs
+                        </button>
+                    </div>
+                `;
+                deploymentDetails.style.display = 'block';
+            } else {
+                statusIndicator.style.backgroundColor = 'var(--error)';
+                statusText.textContent = data.message || 'Deployment Failed!';
+                deploymentDetails.style.display = 'none';
+            }
+
+            responseMessage.style.display = 'block';
+        }
+
+        // Input event listener with debounce
+        appNameInput.addEventListener('input', (e) => {
+            clearTimeout(debounceTimer);
+            deployBtn.disabled = true;
+            updateRequirements(e.target.value);
+            
+            debounceTimer = setTimeout(() => {
+                validateAppName(e.target.value);
+            }, 300);
+        });
+
+        // Convert FormData to JSON
+        function formDataToJson(formData) {
+            const jsonObject = {};
+            formData.forEach((value, key) => {
+                jsonObject[key] = value;
+            });
+            return JSON.stringify(jsonObject);
+        }
+
+        // NEW CODE: Modified form submission handler to show ad first
+        deployForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Validate form before showing ad
+            const isValid = validateAppName(appNameInput.value);
+            
+            if (isValid) {
+                // Show ad overlay first
+                adOverlay.style.display = 'flex';
+                
+                // Once overlay is visible, load the ad
+                setTimeout(() => {
+                    if (!adLoaded) {
+                        loadAdSense();
+                        adLoaded = true;
+                    }
+                    
+                    // Start countdown
+                    countdown = 10;
+                    adTimerElement.textContent = countdown;
+                    continueDeployBtn.disabled = true;
+                    
+                    countdownInterval = setInterval(() => {
+                        countdown--;
+                        adTimerElement.textContent = countdown;
+                        
+                        if (countdown <= 0) {
+                            clearInterval(countdownInterval);
+                            continueDeployBtn.disabled = false;
+                        }
+                    }, 1000);
+                }, 100); // Small delay to ensure the overlay is visible
+            }
+        });
+        
+        // Continue deployment after watching the ad
+        continueDeployBtn.addEventListener('click', async function() {
+            // Hide ad overlay
+            adOverlay.style.display = 'none';
+            clearInterval(countdownInterval);
+            
+            // Continue with actual deployment
+            await submitDeployment();
+        });
+        
+        // Skip ad and cancel deployment
+        skipAdBtn.addEventListener('click', function() {
+            // Show confirmation dialog
+            if (confirm('Are you sure you want to skip the ad? Your bot will not be deployed.')) {
+                adOverlay.style.display = 'none';
+                clearInterval(countdownInterval);
+                
+                // Show message that deployment was cancelled
+                showResponseMessage('error', { message: 'Deployment cancelled. You skipped the ad.' });
+            }
+        });
+        
+        // Actual deployment logic (extracted from original form submission)
+        async function submitDeployment() {
+            deployBtn.disabled = true;
+            loadingOverlay.style.display = 'flex';
+            
+            const formData = new FormData(deployForm);
+            const jsonData = formDataToJson(formData);
+            
+            try {
+                const response = await fetch('/deploy', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: jsonData
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showResponseMessage('success', {
+                        message: data.message,
+                        coinsDeducted: data.coinsDeducted,
+                        remainingCoins: data.remainingCoins
+                    });
+                    await updateCoinBalance();
+                } else {
+                    showResponseMessage('error', { message: data.message || 'Deployment Failed!' });
+                }
+            } catch (error) {
+                console.error('Error during deployment:', error);
+                showResponseMessage('error', { message: 'An error occurred during deployment. Please try again.' });
+            } finally {
+                deployBtn.disabled = false;
+                loadingOverlay.style.display = 'none';
+            }
+        }
+
+        // Initialize
+        deployBtn.disabled = true;
+        updateRequirements('');
+        
+        async function updateCoinBalance() {
+            try {
+                const response = await fetch('/user-coins');
+                const data = await response.json();
+                document.getElementById('coinBalance').textContent = `${data.coins} Coins`;
+            } catch (error) {
+                console.error('Error fetching coin balance:', error);
+            }
+        }
+
+        updateCoinBalance();
+    });
+
+    // Keep this outside if it's in your original code
+    function viewLogs() {
+        const appName = document.getElementById('appNameInput').value;
+        window.location.href = `/dashboard/bot-details/${appName}`;
+    }
+</script>
+<script src="/js/main.js"></script>
+</body>
+</html>

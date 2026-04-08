@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Buy Heroku Account || H.TD</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <link rel="stylesheet" href="./styles/main.css">
+      
+      <link rel="apple-touch-icon" sizes="180x180" href="https://cdn.talkdrove.com/host/Images/favicon/apple-touch-icon.png">
+      <link rel="icon" type="image/png" sizes="32x32" href="https://cdn.talkdrove.com/host/Images/favicon/favicon-32x32.png">
+      <link rel="icon" type="image/png" sizes="16x16" href="https://cdn.talkdrove.com/host/Images/favicon/favicon-16x16.png">  
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-hover: #3a53d0;
+            --secondary: #e6f0ff;
+            --accent: #3f37c9;
+            --neutral: #333333;
+            --base-100: #ffffff;
+            --base-200: #f8fafc;
+            --base-300: #f1f5f9;
+            --success: #28a745;
+            --success-hover: #218838;
+            --error: #dc3545;
+        }
+
+        [data-theme="dark"] {
+            --primary: #4361ee;
+            --primary-hover: #3a53d0;
+            --secondary: #1e293b;
+            --accent: #3f37c9;
+            --neutral: #f8fafc;
+            --base-100: #0f172a;
+            --base-200: #1e293b;
+            --base-300: #334155;
+            --success: #2ea043;
+            --success-hover: #238636;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--base-200), var(--base-300));
+            color: var(--neutral);
+            min-height: 100vh;
+        }
+
+        .header {
+            background-color: var(--base-100);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(229, 231, 235, 0.2);
+            padding: 1rem 1.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .header-content {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 a {
+            font-size: 1.4rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-decoration: none;
+        }
+
+        .nav-controls {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: none;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: var(--base-200);
+            color: var(--neutral);
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-container {
+            position: relative;
+        }
+
+        .profile-pic {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .dropdown {
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background-color: var(--base-100);
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            padding: 0.5rem;
+            min-width: 200px;
+            display: none;
+        }
+
+        .dropdown.active {
+            display: block;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            color: var(--neutral);
+            text-decoration: none;
+            border-radius: 0.25rem;
+            transition: background-color 0.2s;
+        }
+
+        .dropdown-item:hover {
+            background-color: var(--base-200);
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background-color: var(--base-300);
+            margin: 0.5rem 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .card {
+            background-color: var(--base-100);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            border: 1px solid rgba(229, 231, 235, 0.2);
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .card h1, .card h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .coins-display {
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: var(--neutral);
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background-color: var(--base-200);
+            border-radius: 0.5rem;
+            text-align: center;
+        }
+
+        .buy-button {
+            background-color: var(--success);
+            color: white;
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .buy-button:hover:not(:disabled) {
+            background-color: var(--success-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .buy-button:disabled {
+            background-color: var(--base-300);
+            cursor: not-allowed;
+        }
+
+        .message {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            display: none;
+        }
+
+        .success-message {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .error-message {
+            background-color: var(--error);
+            color: white;
+        }
+
+        .account-item {
+            background-color: var(--base-200);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin-top: 1.5rem;
+            animation: slideDown 0.3s ease;
+        }
+
+        .account-details {
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: var(--base-100);
+            border-radius: 0.5rem;
+            border: 1px solid rgba(229, 231, 235, 0.2);
+        }
+
+        .account-details div {
+            margin-bottom: 0.5rem;
+        }
+
+        .account-details pre {
+            background-color: var(--base-200);
+            padding: 0.75rem;
+            border-radius: 0.25rem;
+            overflow-x: auto;
+            margin-top: 0.5rem;
+            font-family: monospace;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .btn span {
+                display: none;
+            }
+
+            .btn {
+                padding: 0.5rem;
+            }
+
+            .nav-controls {
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <h1><a class="logo" href="/dashboard">H.TD</a></h1>
+                        <nav class="nav-controls">
+                <button id="deployBotBtn" class="btn btn-primary" onclick="window.location.href='/dashboard/select-bot'">
+                    <i class="fas fa-plus"></i>
+                    <span>Deploy Bot</span>
+                </button>
+                <button id="themeToggle" class="btn btn-secondary">
+                    <i class="fas fa-adjust"></i>
+                </button>
+                <div class="profile-container">
+                    <img src="https://cdn.talkdrove.com/host/Images/profile.webp" alt="Profile" class="profile-pic" id="profileBtn">
+                    <div class="dropdown" id="profileDropdown">
+                        <a href="/dashboard/my-bots" class="dropdown-item">
+                            <i class="fas fa-robot"></i>
+                            <span>My Bots</span>
+                        </a>
+                        <a href="/dashboard/wallet" class="dropdown-item">
+                            <i class="fas fa-wallet"></i>
+                            <span>Wallet</span>
+                        </a>
+                        <a href="/dashboard/my-heroku" class="dropdown-item">
+                            <i class="fas fa-server"></i>
+                            <span>My Heroku</span>
+                        </a>
+                        <a href="/dashboard/settings" class="dropdown-item">
+                            <i class="fas fa-cog"></i>
+                            <span>Settings</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="/logout" class="dropdown-item" id="logoutBtn">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Logout</span>
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <h1>Buy Heroku Account</h1>
+            <div id="coinsDisplay" class="coins-display">Your Coins: Loading...</div>
+            <button id="buyButton" class="buy-button">Buy Account (500 coins)</button>
+            <div id="successMessage" class="message success-message">Purchase successful! please see:<a href="/dashboard/my-heroku">My Heroku</a></div>
+            <div id="errorMessage" class="message error-message"></div>
+            <div id="lastPurchase"></div>
+        </div>
+    </div>
+
+    <script>
+   
+
+        // Profile dropdown functionality
+        const profileBtn = document.getElementById('profileBtn');
+        const profileDropdown = document.getElementById('profileDropdown');
+        profileBtn.addEventListener('click', () => {
+            profileDropdown.classList.toggle('active');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!profileBtn.contains(e.target) && !profileDropdown.contains(e.target)) {
+                profileDropdown.classList.remove('active');
+            }
+        });
+
+        // Load user's coins
+        async function loadCoins() {
+            try {
+                const response = await fetch('/user-coins');
+                const data = await response.json();
+                document.getElementById('coinsDisplay').textContent = `Your Coins: ${data.coins}`;
+                document.getElementById('buyButton').disabled = data.coins < 500;
+            } catch (error) {
+                console.error('Error loading coins:', error);
+            }
+        }
+
+   
+        // Load purchased accounts
+        async function loadPurchasedAccounts() {
+            try {
+                const response = await fetch('/my-heroku');
+                const accounts = await response.json();
+                
+                const accountsContainer = document.getElementById('myAccounts');
+                accountsContainer.innerHTML = accounts.length ? accounts.map(account => `
+                    <div class="account-item">
+                        <div>Purchased: ${new Date(account.purchased_at).toLocaleDateString()}</div>
+                        <div class="account-details">
+                            <div>Email: ${account.email}</div>
+                            <div>Password: ${account.password}</div>
+                            <div>Recovery Codes:</div>
+                            <pre>${account.recovery_codes}</pre>
+                        </div>
+                    </div>
+                `).join('') : '<p>No accounts purchased yet.</p>';
+            } catch (error) {
+                console.error('Error loading accounts:', error);
+            }
+        }
+
+        // Buy account
+        document.getElementById('buyButton').addEventListener('click', async () => {
+            try {
+                const response = await fetch('/buy-heroku-account', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    document.getElementById('successMessage').style.display = 'block';
+                    document.getElementById('errorMessage').style.display = 'none';
+                    loadCoins();
+                    loadPurchasedAccounts();
+                } else {
+                    const error = await response.json();
+                    throw new Error(error.error || 'Failed to purchase account');
+                }
+            } catch (error) {
+                document.getElementById('errorMessage').textContent = error.message;
+                document.getElementById('errorMessage').style.display = 'block';
+                document.getElementById('successMessage').style.display = 'none';
+            }
+        });
+
+        // Initial load
+        loadCoins();
+    </script>
+    <script src="./js/main.js"></script>
+</body>
+</html>

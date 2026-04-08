@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>My Heroku Account || H.TD</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="./styles/main.css">
+      
+      <link rel="apple-touch-icon" sizes="180x180" href="https://cdn.talkdrove.com/host/Images/favicon/apple-touch-icon.png">
+      <link rel="icon" type="image/png" sizes="32x32" href="https://cdn.talkdrove.com/host/Images/favicon/favicon-32x32.png">
+      <link rel="icon" type="image/png" sizes="16x16" href="https://cdn.talkdrove.com/host/Images/favicon/favicon-16x16.png">
+    <style>
+      
+        .card {
+            background-color: var(--base-100);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            border: 1px solid rgba(229, 231, 235, 0.2);
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .card h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .account-item {
+            background-color: var(--base-200);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .account-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px -2px rgba(0, 0, 0, 0.1);
+        }
+
+        .account-details {
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: var(--base-100);
+            border-radius: 0.5rem;
+            border: 1px solid rgba(229, 231, 235, 0.2);
+        }
+
+        .account-details div {
+            margin-bottom: 0.5rem;
+            color: var(--neutral);
+        }
+
+        .account-details pre {
+            background-color: var(--base-200);
+            padding: 0.75rem;
+            border-radius: 0.25rem;
+            overflow-x: auto;
+            margin-top: 0.5rem;
+            font-family: monospace;
+        }
+
+        @media (max-width: 768px) {
+            .btn span {
+                display: none;
+            }
+
+            .btn {
+                padding: 0.5rem;
+            }
+
+            .nav-controls {
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <h1><a class="logo" href="/dashboard">H.TD</a></h1>
+                        <nav class="nav-controls">
+                <button id="deployBotBtn" class="btn btn-primary">
+                    <i class="fas fa-plus"></i>
+                    <span>Deploy Bot</span>
+                </button>
+                <button id="themeToggle" class="btn btn-secondary">
+                    <i class="fas fa-adjust"></i>
+                </button>
+                <div class="profile-container">
+                    <img src="https://cdn.talkdrove.com/host/Images/profile.webp" alt="Profile" class="profile-pic" id="profileBtn">
+                    <div class="dropdown" id="profileDropdown">
+                        <a href="/dashboard/my-bots" class="dropdown-item">
+                            <i class="fas fa-robot"></i>
+                            <span>My Bots</span>
+                        </a>
+                        <a href="/dashboard/wallet" class="dropdown-item">
+                            <i class="fas fa-wallet"></i>
+                            <span>Wallet</span>
+                        </a>
+                        <a href="/dashboard/buy-heroku" class="dropdown-item">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>Buy Heroku</span>
+                        </a>
+                        <a href="/dashboard/settings" class="dropdown-item">
+                            <i class="fas fa-cog"></i>
+                            <span>Settings</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="/logout" class="dropdown-item" id="logoutBtn">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Logout</span>
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="card">
+            <h2>My Heroku Accounts</h2>
+            <div id="myAccounts"></div>
+        </div>
+    </main>
+
+    <script>
+     
+        // Profile dropdown functionality
+        const profileBtn = document.getElementById('profileBtn');
+        const profileDropdown = document.getElementById('profileDropdown');
+        profileBtn.addEventListener('click', () => {
+            profileDropdown.classList.toggle('active');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!profileBtn.contains(e.target) && !profileDropdown.contains(e.target)) {
+                profileDropdown.classList.remove('active');
+            }
+        });
+
+        // Load purchased accounts
+        async function loadPurchasedAccounts() {
+            try {
+                const response = await fetch('/my-heroku');
+                const accounts = await response.json();
+                
+                const accountsContainer = document.getElementById('myAccounts');
+                accountsContainer.innerHTML = accounts.length ? accounts.map(account => `
+                    <div class="account-item">
+                        <div>Purchased: ${new Date(account.purchased_at).toLocaleDateString()}</div>
+                        <div class="account-details">
+                            <div>Email: ${account.email}</div>
+                            <div>Password: ${account.password}</div>
+                            <div>Recovery Codes:</div>
+                            <pre>${account.recovery_codes}</pre>
+                        </div>
+                    </div>
+                `).join('') : '<p>No accounts purchased yet.</p>';
+            } catch (error) {
+                console.error('Error loading accounts:', error);
+            }
+        }
+
+        loadPurchasedAccounts();
+    </script>
+    <script src="./js/main.js"></script>
+</body>
+</html>

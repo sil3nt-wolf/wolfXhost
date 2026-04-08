@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Payment Method Management</title>
+    <link rel="stylesheet" href="../nav/app.css">
+    <style>
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .payment-methods-grid {
+            display: grid;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .method-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .method-card.inactive {
+            opacity: 0.7;
+            background: #f8f9fa;
+        }
+
+        .method-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .method-name {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .method-status {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-inactive {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .method-details {
+            display: grid;
+            gap: 10px;
+        }
+
+        .detail-item {
+            border: 1px solid #e9ecef;
+            padding: 10px;
+            border-radius: 4px;
+            background: #f8f9fa;
+        }
+
+        .detail-label {
+            font-weight: 500;
+            color: #495057;
+            margin-bottom: 5px;
+        }
+
+        .detail-value {
+            color: #212529;
+            white-space: pre-wrap;
+        }
+
+        .method-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+
+        .btn-edit {
+            background: #007bff;
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background: #0056b3;
+        }
+
+        .btn-toggle {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-toggle:hover {
+            background: #545b62;
+        }
+
+        .btn-delete {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background: #c82333;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            width: 90%;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .modal-title {
+            font-size: 1.25em;
+            font-weight: 600;
+            color: #212529;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5em;
+            cursor: pointer;
+            color: #6c757d;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #495057;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 1em;
+        }
+
+        textarea.form-control {
+            min-height: 100px;
+        }
+
+        .instruction-item {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .btn-add-instruction {
+            background: #28a745;
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        .btn-add-instruction:hover {
+            background: #218838;
+        }
+
+        .remove-instruction {
+            background: #dc3545;
+            color: white;
+            padding: 4px 8px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #dee2e6;
+        }
+    </style>
+</head>
+<body>
+ 
+
+    <div class="container">
+        <div class="method-header">
+            <h1>Payment Method Management</h1>
+            <button class="btn btn-add-instruction" onclick="openModal()">Add New Payment Method</button>
+        </div>
+
+        <div class="payment-methods-grid" id="paymentMethodsGrid">
+            
+        </div>
+    </div>
+
+    
+    <div class="modal" id="paymentMethodModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">Add Payment Method</h2>
+                <button class="close-modal" onclick="closeModal()">&times;</button>
+            </div>
+            <form id="paymentMethodForm">
+                <input type="hidden" id="methodId" name="methodId">
+                
+                <div class="form-group">
+                    <label for="methodName">Method Name</label>
+                    <input type="text" id="methodName" name="methodName" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="accountName">Account Name</label>
+                    <input type="text" id="accountName" name="accountName" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="accountNumber">Account Number</label>
+                    <input type="text" id="accountNumber" name="accountNumber" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Instructions</label>
+                    <div id="instructionsContainer">
+                        <div class="instruction-item">
+                            <input type="text" class="form-control" name="instructions[]" placeholder="Enter instruction">
+                            <button type="button" class="remove-instruction" onclick="removeInstruction(this)">×</button>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-add-instruction" onclick="addInstruction()">Add Instruction</button>
+                </div>
+
+                <div class="form-group">
+                    <label for="additionalInfo">Additional Information</label>
+                    <textarea id="additionalInfo" name="additionalInfo" class="form-control"></textarea>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-toggle" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn btn-edit">Save Payment Method</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let currentMethods = [];
+
+ // Modified loadPaymentMethods function with error handling and data validation
+async function loadPaymentMethods() {
+    try {
+        const response = await fetch('/api/payment-methods');
+        const data = await response.json();
+        
+        // Ensure methods exist and normalize the data
+        currentMethods = (data.methods || []).map(method => ({
+            id: method.id,
+            name: method.name || 'Unnamed Method',
+            account_name: method.account_name || '',
+            account_number: method.account_number || '',
+            status: method.status || 'inactive',
+            instructions: method.instructions || '[]',
+            additional_info: method.additional_info || ''
+        }));
+        
+        renderPaymentMethods();
+    } catch (error) {
+        console.error('Error loading payment methods:', error);
+        const grid = document.getElementById('paymentMethodsGrid');
+        grid.innerHTML = `
+            <div class="error-message" style="text-align: center; padding: 20px; color: #dc3545;">
+                Unable to load payment methods. Please try again later.
+            </div>
+        `;
+    }
+}
+        // Render payment methods
+
+// Modified renderPaymentMethods function with null checks
+function renderPaymentMethods() {
+    const grid = document.getElementById('paymentMethodsGrid');
+    grid.innerHTML = '';
+
+    if (!currentMethods.length) {
+        grid.innerHTML = `
+            <div style="text-align: center; padding: 20px; color: #6c757d;">
+                No payment methods found. Click "Add New Payment Method" to create one.
+            </div>
+        `;
+        return;
+    }
+
+    currentMethods.forEach(method => {
+        const card = document.createElement('div');
+        card.className = `method-card ${method.status === 'inactive' ? 'inactive' : ''}`;
+        
+        // Safely parse instructions
+        let instructionsHtml = '';
+        try {
+            const instructions = JSON.parse(method.instructions || '[]');
+            if (instructions.length > 0) {
+                instructionsHtml = `
+                    <div class="detail-item">
+                        <div class="detail-label">Instructions</div>
+                        <div class="detail-value">
+                            ${instructions.map(instruction => 
+                                `<div>• ${instruction}</div>`
+                            ).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+        } catch (e) {
+            console.error('Error parsing instructions:', e);
+            instructionsHtml = '';
+        }
+
+        card.innerHTML = `
+            <div class="method-header">
+                <span class="method-name">${method.name}</span>
+                <span class="method-status status-${method.status || 'inactive'}">
+                    ${(method.status || 'inactive').charAt(0).toUpperCase() + (method.status || 'inactive').slice(1)}
+                </span>
+            </div>
+            <div class="method-details">
+                <div class="detail-item">
+                    <div class="detail-label">Account Name</div>
+                    <div class="detail-value">${method.account_name || 'N/A'}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Account Number</div>
+                    <div class="detail-value">${method.account_number || 'N/A'}</div>
+                </div>
+                ${instructionsHtml}
+                ${method.additional_info ? `
+                    <div class="detail-item">
+                        <div class="detail-label">Additional Information</div>
+                        <div class="detail-value">${method.additional_info}</div>
+                    </div>
+                ` : ''}
+            </div>
+            <div class="method-actions">
+                <button class="btn btn-edit" onclick="editMethod(${method.id})">
+                    Edit
+                </button>
+                <button class="btn btn-toggle" onclick="toggleStatus(${method.id})">
+                    ${method.status === 'active' ? 'Deactivate' : 'Activate'}
+                </button>
+                <button class="btn btn-delete" onclick="deleteMethod(${method.id})">
+                    Delete
+                </button>
+            </div>
+        `;
+        grid.appendChild(card);
+    });
+}
+        // Modal functions
+        function openModal(methodId = null) {
+            const modal = document.getElementById('paymentMethodModal');
+            const form = document.getElementById('paymentMethodForm');
+            const title = document.getElementById('modalTitle');
+
+            if (methodId) {
+                const method = currentMethods.find(m => m.id === methodId);
+                title.textContent = 'Edit Payment Method';
+                fillFormWithMethod(method);
+            } else {
+                title.textContent = 'Add Payment Method';
+                form.reset();
+                document.getElementById('methodId').value = '';
+                resetInstructions();
+            }
+
+            modal.style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('paymentMethodModal').style.display = 'none';
+        }
+
+        // Form handling
+        function fillFormWithMethod(method) {
+            document.getElementById('methodId').value = method.id;
+            document.getElementById('methodName').value = method.name;
+            document.getElementById('accountName').value = method.account_name;
+            document.getElementById('accountNumber').value = method.account_number;
+            document.getElementById('additionalInfo').value = method.additional_info || '';
+
+            resetInstructions();
+            if (method.instructions) {
+                const instructions = JSON.parse(method.instructions);
+                instructions.forEach((instruction, index) => {
+                    if (index === 0) {
+                        document.querySelector('input[name="instructions[]"]').value = instruction;
+                    } else {
+                        addInstruction(instruction);
+                    }
+                });
+            }
+        }
+
+        function resetInstructions() {
+            const container = document.getElementById('instructionsContainer');
+            container.innerHTML = `
+                <div class="instruction-item">
+                    <input type="text" class="form-control" name="instructions[]" placeholder="Enter instruction">
+                    <button type="button" class="remove-instruction" onclick="removeInstruction(this)">×</button>
+                </div>
+            `;
+        }
+
+        function addInstruction(value = '') {
+            const container = document.getElementById('instructionsContainer');
+            const div = document.createElement('div');
+            div.className = 'instruction-item';
+            div.innerHTML = `
+                <input type="text" class="form-control" name="instructions[]" placeholder="Enter instruction" value="${value}">
+                <button type="button" class="remove-instruction" onclick="removeInstruction(this)">×</button>
+            `;
+            container.appendChild(div);
+        }
+
+        function removeInstruction(button) {
+            const container = document.getElementById('instructionsContainer');
+            if (container.children.length > 1) {
+                button.parentElement.remove();
+            }
+        }
+
+        // Form submission
+        document.getElementById('paymentMethodForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const methodId = formData.get('methodId');
+            const instructions = Array.from(formData.getAll('instructions[]')).filter(i => i.trim());
+            
+            const data = {
+                name: formData.get('methodName'),
+                account_name: formData.get('accountName'),
+                account_number: formData.get('accountNumber'),
+                instructions: JSON.stringify(instructions),
+                additional_info: formData.get('additionalInfo')
+            };
+
+            try {
+                const response = await fetch(`/api/payment-methods${methodId ? `/${methodId}` : ''}`, {
+                    method: methodId ? 'PUT' : 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (!response.ok) throw new Error('Failed to save payment method');
+
+                closeModal();
+                loadPaymentMethods();
+            } catch (error) {
+                console.error('Error saving payment method:', error);
+                alert('Failed to save payment method');
+            }
+        });
+
+      // Method actions
+async function toggleStatus(methodId) {
+    try {
+        const response = await fetch(`/api/payment-methods/${methodId}/toggle-status`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) throw new Error('Failed to toggle status');
+
+        loadPaymentMethods();
+    } catch (error) {
+        console.error('Error toggling status:', error);
+        alert('Failed to toggle payment method status');
+    }
+}
+
+// Update the deleteMethod function in your admin frontend
+async function deleteMethod(methodId) {
+    if (!confirm('Are you sure you want to delete this payment method? This action cannot be undone.')) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`/api/payment-methods/${methodId}`, {
+            method: 'DELETE'
+        });
+
+        if (!response.ok) throw new Error('Failed to delete payment method');
+
+        // Remove the method from currentMethods array
+        currentMethods = currentMethods.filter(method => method.id !== methodId);
+        renderPaymentMethods();
+    } catch (error) {
+        console.error('Error deleting payment method:', error);
+        alert('Failed to delete payment method');
+    }
+}
+function editMethod(methodId) {
+    openModal(methodId);
+}
+
+// Search and filter functions
+function setupSearchAndFilters() {
+    const searchInput = document.getElementById('searchMethods');
+    const statusFilter = document.getElementById('statusFilter');
+
+    searchInput.addEventListener('input', filterMethods);
+    statusFilter.addEventListener('change', filterMethods);
+}
+
+function filterMethods() {
+    const searchTerm = document.getElementById('searchMethods').value.toLowerCase();
+    const statusFilter = document.getElementById('statusFilter').value;
+    
+    const filteredMethods = currentMethods.filter(method => {
+        const matchesSearch = method.name.toLowerCase().includes(searchTerm) ||
+                            method.account_name.toLowerCase().includes(searchTerm) ||
+                            method.account_number.toLowerCase().includes(searchTerm);
+        
+        const matchesStatus = statusFilter === 'all' || method.status === statusFilter;
+        
+        return matchesSearch && matchesStatus;
+    });
+
+    renderPaymentMethods(filteredMethods);
+}
+
+// Validation functions
+function validateForm() {
+    const form = document.getElementById('paymentMethodForm');
+    const requiredFields = form.querySelectorAll('[required]');
+    let isValid = true;
+
+    requiredFields.forEach(field => {
+        if (!field.value.trim()) {
+            highlightError(field);
+            isValid = false;
+        } else {
+            removeError(field);
+        }
+    });
+
+    // Validate instructions
+    const instructions = Array.from(form.querySelectorAll('input[name="instructions[]"]'))
+        .map(input => input.value.trim())
+        .filter(value => value);
+
+    if (instructions.length === 0) {
+        alert('At least one instruction is required');
+        isValid = false;
+    }
+
+    return isValid;
+}
+
+function highlightError(field) {
+    field.classList.add('error');
+    const errorMsg = document.createElement('div');
+    errorMsg.className = 'error-message';
+    errorMsg.textContent = `${field.name} is required`;
+    field.parentNode.appendChild(errorMsg);
+}
+
+function removeError(field) {
+    field.classList.remove('error');
+    const errorMsg = field.parentNode.querySelector('.error-message');
+    if (errorMsg) {
+        errorMsg.remove();
+    }
+}
+
+// Add these styles to your existing CSS
+const additionalStyles = `
+    .error {
+        border-color: #dc3545;
+    }
+
+    .error-message {
+        color: #dc3545;
+        font-size: 0.875em;
+        margin-top: 4px;
+    }
+
+    .method-card .detail-item {
+        transition: background-color 0.2s;
+    }
+
+    .method-card .detail-item:hover {
+        background-color: #f1f3f5;
+    }
+
+    .search-filters {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .search-input {
+        flex: 1;
+        padding: 8px;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+    }
+
+    .status-filter {
+        padding: 8px;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        min-width: 120px;
+    }
+
+    @media (max-width: 768px) {
+        .search-filters {
+            flex-direction: column;
+        }
+
+        .method-card {
+            padding: 15px;
+        }
+
+        .method-actions {
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            flex: 1;
+            min-width: 120px;
+        }
+    }
+`;
+
+// Add search and filter HTML
+const searchAndFilterHTML = `
+    <div class="search-filters">
+        <input type="text" id="searchMethods" class="search-input" 
+               placeholder="Search payment methods...">
+        <select id="statusFilter" class="status-filter">
+            <option value="all">All Status</option>
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+        </select>
+    </div>
+`;
+
+// Initialize everything when the page loads
+document.addEventListener('DOMContentLoaded', () => {
+    // Add the search and filter HTML to the container
+    const container = document.querySelector('.container');
+    container.insertAdjacentHTML('afterbegin', searchAndFilterHTML);
+
+    // Add the additional styles
+    const styleSheet = document.createElement('style');
+    styleSheet.textContent = additionalStyles;
+    document.head.appendChild(styleSheet);
+
+    // Setup event listeners and load initial data
+    setupSearchAndFilters();
+    loadPaymentMethods();
+
+    // Add keyboard shortcuts for modal
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            closeModal();
+        }
+    });
+});
+
+
+</script>
+</body>
+</html>

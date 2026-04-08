@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><%= bot.name %> Has been banned! || H.TD</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="https://cdn.talkdrove.com/host/Images/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://cdn.talkdrove.com/host/Images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://cdn.talkdrove.com/host/Images/favicon/favicon-16x16.png">
+      <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+      <link rel="stylesheet" href="/styles/main.css">    <style>
+
+    .suspended-container {
+            max-width: 800px;
+
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .alert-box {
+            background-color: var(--base-100);
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+        }
+
+        .alert-header {
+            background-color: rgba(248, 113, 113, 0.1);
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-bottom: 1px solid rgba(248, 113, 113, 0.2);
+        }
+
+        .alert-icon {
+            width: 2rem;
+            height: 2rem;
+            color: var(--error);
+        }
+
+        .alert-title {
+            color: var(--text-primary);
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .alert-content {
+            padding: 1.5rem;
+        }
+
+        .message-text {
+            color: var(--text-primary);
+            font-size: 1.125rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .bot-info {
+            background-color: var(--base-200);
+            padding: 1.25rem;
+            border-radius: 0.375rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .bot-detail {
+            color: var(--text-primary);
+            margin: 0.5rem 0;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 0.375rem;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+
+        .back-button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        @media (max-width: 640px) {
+            .suspended-container {
+                margin: 1rem auto;
+            }
+
+            .alert-header {
+                padding: 1rem;
+            }
+
+            .alert-content {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <header class="header">
+            <div class="header-content">
+                <h1><a class="logo" href="/dashboard">H.TD</a></h1>   
+                         <nav class="nav-controls">
+                   
+                    <button id="themeToggle" class="btn btn-secondary">
+                        <i class="fas fa-adjust"></i>
+                    </button>
+            
+                    <div class="profile-container">
+                        <img src="https://cdn.talkdrove.com/host/Images/profile.webp" alt="Profile" class="profile-pic" id="profileBtn">
+                        <div class="dropdown" id="profileDropdown">
+                            <a href="/dashboard/my-bots" class="dropdown-item">
+                                <i class="fas fa-robot"></i>
+                                <span>My Bots</span>
+                            </a>
+                            <a href="/dashboard/invite" class="dropdown-item">
+                                <i class="fas fa-share"></i>
+                                <span>Invite</span>
+                            </a>
+                            <a href="/dashboard/wallet" class="dropdown-item">
+                                <i class="fas fa-wallet"></i>
+                                <span>Wallet</span>
+                            </a>
+                            <a href="/dashboard/account-settings" class="dropdown-item">
+                                <i class="fas fa-cog"></i>
+                                <span>Settings</span>
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="/logout" class="dropdown-item" id="logoutBtn">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span>Logout</span>
+                            </a>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </header>
+        
+        <div id="coinInfo">
+            <span id="coinBalance">Coins: loading...</span>
+        </div>
+        <main class="suspended-container">
+            <div class="alert-box">
+                <div class="alert-header">
+                    <svg class="alert-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                    </svg>
+                    <h1 class="alert-title">Bot Deployment Unavailable</h1>
+                </div>
+                
+                <div class="alert-content">
+                    <p class="message-text"><%= message %></p>
+                    
+                    <div class="bot-info">
+                        <p class="bot-detail">
+                            <strong>Bot Name:</strong> <%= bot.name %>
+                        </p>
+                        <p class="bot-detail">
+                            <strong>Bot ID:</strong> <%= bot.id %>
+                        </p>
+                    </div>
+                    
+                    <a href="/bots" class="back-button">
+                        Back to Bot Selection
+                    </a>
+                </div>
+            </div>
+        </main>
+
+<script src="/js/main.js"></script>
+</body>
+</html>
